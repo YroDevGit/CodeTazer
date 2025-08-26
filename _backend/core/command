@@ -234,7 +234,7 @@ if ($route == "+model") {
 
 
         static function test(){
-            echo 'Hello Basixs user. This is model file';
+            echo 'Hello CodeTazer user. This is model file';
         }
 
     
