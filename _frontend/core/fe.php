@@ -28,8 +28,11 @@ if (! function_exists("now")) {
 if (! function_exists('page')) {
     function page(string $path = "?")
     {
-        if ($path === "?") {
+        if ($path === "=") {
             return rootpath . "/?page=";
+        }
+        if($path === "?"){
+            return rootpath . "/?page"; 
         }
         $bb = explode("?", $path);
         $path = $bb[0];
