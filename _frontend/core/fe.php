@@ -26,7 +26,7 @@ if (! function_exists("now")) {
 
 
 if (! function_exists('page')) {
-    function page(string $path = "?")
+    function page(string $path = "=")
     {
         if ($path === "=") {
             return rootpath . "/?page=";
