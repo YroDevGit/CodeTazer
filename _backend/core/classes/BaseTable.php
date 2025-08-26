@@ -106,7 +106,10 @@ class BaseTable
 
         $data = $self->find($conditions);
         if ($data) {
-            return $data;
+            if(! $data[0]){
+                return false;
+            }
+            return $data[0];
         }
         return false;
     }
