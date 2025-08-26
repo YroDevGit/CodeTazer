@@ -265,7 +265,7 @@ if ($route == "+model") {
         exit(1);
     }
     $newname = ucfirst($filename);
-    $phpFile = "_backend/_routes/" . ucfirst($newname) . ".php";
+    $phpFile = "_backend/_routes/" . $newname . ".php";
 
     $phpContent = <<<EOT
     <?php 
