@@ -59,6 +59,24 @@ class Request
                 return $file['size'];
                 break;
 
+            case 'size_mb':
+                $fileSizeBytes = $file['size'];
+                $fileSizeBytes / 1024 / 1024;
+                return round($fileSizeMB, 2);
+                break;
+
+            case 'size_kb':
+                $fileSizeBytes = $file['size'];
+                $fileSizeBytes / 1024;
+                return round($fileSizeMB, 2);
+                break;
+
+            case 'size_gb':
+                $fileSizeBytes = $file['size'];
+                $fileSizeBytes / 1024 / 1024 / 1024;
+                return round($fileSizeMB, 2);
+                break;
+
             case 'tmp_name':
                 return $file['tmp_name'];
                 break;
