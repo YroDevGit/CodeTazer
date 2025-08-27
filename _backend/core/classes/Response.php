@@ -15,6 +15,7 @@ class Response
 
     static function success(string $message = "Success", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("success_code"),
             "message" => $message,
@@ -25,6 +26,7 @@ class Response
 
     static function error(string $message = "Error", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("error_code"),
             "message" => $message,
@@ -35,6 +37,7 @@ class Response
 
     static function failed(string $message = "Failed", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("failed_code"),
             "message" => $message,
@@ -45,6 +48,7 @@ class Response
 
     static function not_found(string $message = "Not found", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("notfound_code"),
             "message" => $message,
@@ -55,6 +59,7 @@ class Response
 
     static function forbidden(string $message = "Forbidden", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("forbidden_code"),
             "message" => $message,
@@ -65,6 +70,7 @@ class Response
 
     static function unauthorized(string $message = "Unauthorized", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("unauthorized_code"),
             "message" => $message,
@@ -73,8 +79,9 @@ class Response
         self::json($response);
     }
 
-    static function bad_request(string $message = "Bad Request", array $details = [])
+    static function bad_request(string $message = "Bad Request", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("badrequest_code"),
             "message" => $message,
@@ -83,8 +90,9 @@ class Response
         self::json($response);
     }
 
-    static function warning(string|null $message = "Warning", array $details = [])
+    static function warning(string|null $message = "Warning", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("warning_code"),
             "message" => $message,
@@ -93,8 +101,9 @@ class Response
         self::json($response);
     }
 
-    static function network_error(string|null $message = "Network error", array $details = [])
+    static function network_error(string|null $message = "Network error", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("no_internet_code"),
             "message" => $message,
@@ -103,8 +112,9 @@ class Response
         self::json($response);
     }
 
-    static function server_error(string|null $message = "Server error", array $details = [])
+    static function server_error(string|null $message = "Server error", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("backend_error_code"),
             "message" => $message,
@@ -113,8 +123,9 @@ class Response
         self::json($response);
     }
 
-    static function db_error(string|null $message = "Database error", array $details = [])
+    static function db_error(string|null $message = "Database error", array|null $details = [])
     {
+        $details = is_null($details) ? [] : $details;
         $response = [
             "code" => getenv("db_error_code"),
             "message" => $message,

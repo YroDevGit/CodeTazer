@@ -86,7 +86,8 @@ class Request
                 break;
 
             case 'blob':
-                return file_get_contents($file['tmp_name']);
+                $data = file_get_contents($file['tmp_name']);
+                return $data;
                 break;
 
             case 'filetype':
