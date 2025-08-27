@@ -89,6 +89,13 @@ class Request
                 return file_get_contents($file['tmp_name']);
                 break;
 
+            case 'filetype':
+            case 'extension':
+                $filename = $file['name'];
+                $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                return $extension;
+                break;
+
             default:
                 return $file;
                 break;
