@@ -31,8 +31,8 @@ if (! function_exists('page')) {
         if ($path === "=") {
             return rootpath . "/?page=";
         }
-        if($path === "?"){
-            return rootpath . "/?page"; 
+        if ($path === "?") {
+            return rootpath . "/?page";
         }
         $bb = explode("?", $path);
         $path = $bb[0];
@@ -67,8 +67,14 @@ if (! function_exists('function_page')) {
 
 
 if (! function_exists('back_end')) {
-    function back_end(string $path = "")
+    function back_end(string $path = "=")
     {
+        if ($path === "=") {
+            return rootpath . "/?be=";
+        }
+        if ($path === "?") {
+            return rootpath . "/?be";
+        }
         $bb = explode("?", $path);
         $path = $bb[0];
         $param = isset($bb[1]) ? "?" . $bb[1] : "";

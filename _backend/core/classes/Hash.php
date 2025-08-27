@@ -16,4 +16,19 @@ class Hash
         $hashed1 = self::encode($string);
         return $hashed1 === $hash;
     }
+
+    public static function hash(String $text, $length = 16)
+    {
+        return substr(md5($text), 0, $length);
+    }
+
+    public static function encrypt($string, string $key = null)
+    {
+        return encrypt($string, $key);
+    }
+
+    public static function decrypt($string, string $key = null)
+    {
+        return decrypt($string, $key);
+    }
 }
