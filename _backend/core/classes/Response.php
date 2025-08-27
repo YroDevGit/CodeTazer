@@ -24,7 +24,7 @@ class Response
         self::json($response);
     }
 
-    static function error(string $message = "Error", array|null $details = [])
+    static function error(string $message = "Error", array|null $details = [], int $status = 500)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
@@ -32,10 +32,10 @@ class Response
             "message" => $message,
             "details" => $details
         ];
-        self::json($response);
+        self::json($response, $status);
     }
 
-    static function failed(string $message = "Failed", array|null $details = [])
+    static function failed(string $message = "Failed", array|null $details = [], int $status = 200)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
@@ -43,10 +43,10 @@ class Response
             "message" => $message,
             "details" => $details
         ];
-        self::json($response);
+        self::json($response, $status);
     }
 
-    static function not_found(string $message = "Not found", array|null $details = [])
+    static function not_found(string $message = "Not found", array|null $details = [], int $status = 500)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
@@ -54,10 +54,10 @@ class Response
             "message" => $message,
             "details" => $details
         ];
-        self::json($response);
+        self::json($response, $status);
     }
 
-    static function forbidden(string $message = "Forbidden", array|null $details = [])
+    static function forbidden(string $message = "Forbidden", array|null $details = [], int $status = 500)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
@@ -65,10 +65,10 @@ class Response
             "message" => $message,
             "details" => $details
         ];
-        self::json($response);
+        self::json($response, $status);
     }
 
-    static function unauthorized(string $message = "Unauthorized", array|null $details = [])
+    static function unauthorized(string $message = "Unauthorized", array|null $details = [], int $status = 500)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
@@ -76,10 +76,10 @@ class Response
             "message" => $message,
             "details" => $details
         ];
-        self::json($response);
+        self::json($response, $status);
     }
 
-    static function bad_request(string $message = "Bad Request", array|null $details = [])
+    static function bad_request(string $message = "Bad Request", array|null $details = [], int $status = 205)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
@@ -87,10 +87,10 @@ class Response
             "message" => $message,
             "details" => $details
         ];
-        self::json($response);
+        self::json($response, $status);
     }
 
-    static function warning(string|null $message = "Warning", array|null $details = [])
+    static function warning(string|null $message = "Warning", array|null $details = [], int $status = 200)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
@@ -98,10 +98,10 @@ class Response
             "message" => $message,
             "details" => $details
         ];
-        self::json($response);
+        self::json($response, $status);
     }
 
-    static function network_error(string|null $message = "Network error", array|null $details = [])
+    static function network_error(string|null $message = "Network error", array|null $details = [], int $status = 500)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
@@ -109,10 +109,10 @@ class Response
             "message" => $message,
             "details" => $details
         ];
-        self::json($response);
+        self::json($response, $status);
     }
 
-    static function server_error(string|null $message = "Server error", array|null $details = [])
+    static function server_error(string|null $message = "Server error", array|null $details = [], int $status = 500)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
@@ -120,10 +120,10 @@ class Response
             "message" => $message,
             "details" => $details
         ];
-        self::json($response);
+        self::json($response, $status);
     }
 
-    static function db_error(string|null $message = "Database error", array|null $details = [])
+    static function db_error(string|null $message = "Database error", array|null $details = [], int $status = 500)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
@@ -131,6 +131,6 @@ class Response
             "message" => $message,
             "details" => $details
         ];
-        self::json($response);
+        self::json($response, $status);
     }
 }
