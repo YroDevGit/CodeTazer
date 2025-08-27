@@ -955,12 +955,8 @@ if (! function_exists("server_headers")) {
         $headers = [];
         foreach ($_SERVER as $serverKey => $value) {
             if (strpos($serverKey, 'HTTP_') === 0) {
-                $header = str_replace(
-                    ' ',
-                    '-',
-                    ucwords(strtolower(str_replace('_', ' ', substr($serverKey, 5))))
-                );
-                $headers[$header] = $value;
+                $exp = str_replace("HTTP_", "", $serverKey);
+                $headers[$exp] = $value;
             }
         }
         if ($searchKey === null) {
