@@ -41,4 +41,39 @@ class Request
     {
         return $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
     }
+
+    static function file($name, $type = null)
+    {
+        if (! $_FILES[$name]) {
+            return null;
+        }
+
+        $file = $_FILES[$name];
+
+        switch ($type) {
+            case 'name':
+                return $file['name'];
+                break;
+
+            case 'size':
+                return $file['size'];
+                break;
+
+            case 'tmp_name':
+                return $file['tmp_name'];
+                break;
+
+            case 'type':
+                return $file['type'];
+                break;
+
+            case 'blob':
+                return file_get_contents($file['tmp_name']);
+                break;
+
+            default:
+                return $file;
+                break;
+        }
+    }
 }
