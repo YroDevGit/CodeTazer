@@ -161,14 +161,14 @@ try {
             if($is_function){
                 die("Function page $get not found");
             }
-            include("_frontend/errors/$page404");
+            include("_frontend/extra/errors/$page404");
             exit;
         }
         if (!is_file($target)) {
             if($is_function){
                 die("Function page $get not found");
             }
-            include("_frontend/errors/$page404");
+            include("_frontend/extra/errors/$page404");
             exit;
         }
         $_SESSION['basixs_current_page'] = $get;
@@ -183,11 +183,11 @@ try {
         if ($get == "" || $get == null || $get == false) {
             $mainpage = php_file($mainpage);
             if (!file_exists("_frontend/pages/$mainpage")) {
-                include("_frontend/errors/$page404");
+                include("_frontend/extra/errors/$page404");
                 exit;
             }
             if (!is_file("_frontend/pages/$mainpage")) {
-                include("_frontend/errors/$page404");
+                include("_frontend/extra/errors/$page404");
                 exit;
             }
             $_SESSION['basixs_current_page'] = $mainpage;
