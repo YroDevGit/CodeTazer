@@ -20,7 +20,7 @@
 </head>
 <body class="h-screen flex flex-col justify-center items-center text-center px-4">
   <div class="glow text-6xl md:text-7xl font-bold mb-1">
-    ⚡CodeTazer v3.9⚡
+    ⚡CodeTazer v4.1⚡
   </div>
   <div class="mb-4"><span>The upgraded version of Basixs</span></div>
   <p class="text-xl md:text-2xl text-green-300 mb-8">
@@ -40,7 +40,7 @@
       <h2 style="font-weight: bold; font-size:large;">What's new?</h2>
       <ul>
         <li>-Composer</li>
-        <li>-Cors Management</li>
+        <li>-Collection</li>
         <li>-DB class</li>
         <li>-PostgreSQL</li>
       </ul>
