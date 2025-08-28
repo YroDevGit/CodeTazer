@@ -32,7 +32,7 @@ if ($route == "+functionpage") {
     }
 }
 
-if ($route == "run") {
+if ($route == "run" || $route == "serve" || $route == "start") {
     include "_frontend/core/loadenv.php";
     $host = getenv("rootpath");
     if ($host == null) {
@@ -328,6 +328,13 @@ if ($route == "+model") {
         echo getenv("database") == null ? "❌ No database yet" : "🗃️  Your Database:  " . getenv("database");
         exit;
     }
+}else if($route == "author"){
+    echo "\n";
+    echo "⚡CodeTazer⚡\n\n";
+    echo "💻 by: \033[32mTyrone Limen Malocon\033[0m\n\n";
+    echo "FB@: Tyrone Lee Emz\n";
+    echo "Negros Occidental, Philippines";
+    echo "\n\n";
 } else {
     echo "Invalid command.\n";
     exit(1);

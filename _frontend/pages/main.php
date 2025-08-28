@@ -20,7 +20,7 @@
 </head>
 <body class="h-screen flex flex-col justify-center items-center text-center px-4">
   <div class="glow text-6xl md:text-7xl font-bold mb-1">
-    ⚡CodeTazer v3.4⚡
+    ⚡CodeTazer v3.5⚡
   </div>
   <div class="mb-4"><span>The upgraded version of Basixs</span></div>
   <p class="text-xl md:text-2xl text-green-300 mb-8">
@@ -47,7 +47,7 @@
     </div>
   </section>
   <footer class="absolute bottom-4 text-green-500 text-sm opacity-60">
-    &copy; <?= date('Y') ?> Basixs Framework. Built with ❤️ in PHP <br>by <a href="https://www.tiktok.com/@codebasixs"><b>CodeYro</b></a>.
+    &copy; <?= date('Y') ?> CodeTazer Framework. Built with ❤️ in PHP <br>by <a href="https://www.tiktok.com/@codebasixs"><b>CodeYro</b></a>.
   </footer>
 </body>
 </html>
