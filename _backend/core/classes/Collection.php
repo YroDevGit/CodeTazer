@@ -36,6 +36,9 @@ class Collection
 
     public function pick(string|array $keys): array
     {
+        if ($this->trulyEmpty($this->items)) {
+            return [];
+        }
         if (is_string($keys)) {
             $keys = [$keys];
         }
@@ -55,6 +58,9 @@ class Collection
 
     public function except(string|array $keys): array
     {
+        if ($this->trulyEmpty($this->items)) {
+            return [];
+        }
         if (is_string($keys)) {
             $keys = [$keys];
         }
@@ -68,6 +74,9 @@ class Collection
 
     public function concat(array $definitions, string $separator = " ", bool $preserveColumns = false): array
     {
+        if ($this->trulyEmpty($this->items)) {
+            return [];
+        }
         $result = array_map(function ($item) use ($definitions, $separator, $preserveColumns) {
             $newItem = $preserveColumns ? $item : $item;
 
@@ -96,6 +105,9 @@ class Collection
 
     public function like(...$conditions): array
     {
+        if ($this->trulyEmpty($this->items)) {
+            return [];
+        }
         $result = array_filter($this->items, function ($item) use ($conditions) {
             foreach ($conditions as $cond) {
                 if (is_string($cond)) {
@@ -131,6 +143,9 @@ class Collection
 
     public function equal(...$conditions): array
     {
+        if ($this->trulyEmpty($this->items)) {
+            return [];
+        }
         $result = array_filter($this->items, function ($item) use ($conditions) {
             foreach ($conditions as $cond) {
                 if (is_string($cond)) {
@@ -166,6 +181,9 @@ class Collection
 
     public function limit(int $size, bool $reverse = false): array
     {
+        if ($this->trulyEmpty($this->items)) {
+            return [];
+        }
         if ($size <= 0) {
             return $this->singleRow ? [] : [];
         }
@@ -179,6 +197,20 @@ class Collection
 
     public function all(): array
     {
+        if ($this->trulyEmpty($this->items)) {
+            return [];
+        }
         return $this->singleRow ? $this->items[0] : $this->items;
+    }
+
+    private static function trulyEmpty(array $arr): bool
+    {
+        if (empty($arr)) {
+            return true;
+        }
+        if (count($arr) === 1 && is_array($arr[0]) && empty($arr[0])) {
+            return true;
+        }
+        return false;
     }
 }
