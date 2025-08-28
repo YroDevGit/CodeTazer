@@ -26,11 +26,13 @@ class Validator
         return new self($field);
     }
 
-    public static function body(string $field):self{
+    public static function body(string $field): self
+    {
         return new self($field);
     }
 
-    public static function post(string $field):self{
+    public static function post(string $field): self
+    {
         return new self($field);
     }
 
@@ -119,7 +121,10 @@ class Validator
         return self::check($this->field, $label, $rulesString);
     }
 
-
+    public function x()
+    {
+        return $this->validate();
+    }
 
     public static function check($postname, $label, $rules)
     {
