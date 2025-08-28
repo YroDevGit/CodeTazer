@@ -24,7 +24,7 @@ export class DOMclass {
         }
     }
 
-    add_html() {
+    add_html(selector, strhtml) {
         let elements = [];
 
         if (selector.charAt(0) === "#") {
