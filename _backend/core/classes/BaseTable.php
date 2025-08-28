@@ -84,20 +84,51 @@ class BaseTable
     }
 
 
-    public static function all()
+    public static function all(array $options = [])
     {
         $self = static::instance();
 
         $sql = "SELECT * FROM {$self->table}";
-        $self->lastQuery = $sql;
-        $self->lastBindings = [];
+        $bindings = [];
 
-        $stmt = $self->pdo->query($sql);
+        if (isset($options['where']) && is_array($options['where'])) {
+            $whereParts = [];
+            foreach ($options['where'] as $col => $val) {
+                $whereParts[] = "$col = ?";
+                $bindings[] = $val;
+            }
+            if ($whereParts) {
+                $sql .= " WHERE " . implode(" AND ", $whereParts);
+            }
+        }
+
+        if (isset($options['group by'])) {
+            $sql .= " GROUP BY " . $options['group by'];
+        }
+
+        if (isset($options['order by'])) {
+            $sql .= " ORDER BY " . $options['order by'];
+        }
+
+        if (isset($options['limit'])) {
+            $sql .= " LIMIT " . (int)$options['limit'];
+        }
+        if (isset($options['offset'])) {
+            $sql .= " OFFSET " . (int)$options['offset'];
+        }
+
+        $self->lastQuery = $sql;
+        $self->lastBindings = $bindings;
+
+        $stmt = $self->pdo->prepare($sql);
+        $stmt->execute($bindings);
+
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $self->rowcount = $stmt->rowCount();
 
         return array_map([$self, 'hydrate'], $rows);
     }
+
 
 
     public static function findOne(array $where)
@@ -114,24 +145,24 @@ class BaseTable
         return false;
     }
 
-    public static function get(array $where): array
+    public static function get(array $where, int|array $extra = null): array
     {
         $self = static::instance();
 
-        $data = $self->find($where);
+        $data = $self->find($where, $extra);
         if (empty($data)) {
             return [];
         }
         return $data;
     }
 
-    public static function getAll(array|null $where = null)
+    public static function getAll(array|null $where = null, int|array $extra = null)
     {
         if (is_null($where) || empty($where)) {
-            $all =  self::select();
+            $all =  self::select(null, $extra);
             return is_null($all) ? [] : $all;
         }
-        return self::get($where);
+        return self::get($where, $extra);
     }
 
 
@@ -144,8 +175,13 @@ class BaseTable
             throw new \InvalidArgumentException("Where conditions must be an associative array.");
         }
 
+        $select = "*";
+        if (is_array($extra) && isset($extra['select'])) {
+            $select = $extra['select'];
+        }
+
         $whereClause = implode(' AND ', array_map(fn($col) => "`$col` = :$col", array_keys($conditions)));
-        $sql = "SELECT * FROM {$self->table} WHERE $whereClause";
+        $sql = "SELECT {$select} FROM {$self->table} WHERE $whereClause";
 
         $limit = null;
         $offset = null;
@@ -160,6 +196,18 @@ class BaseTable
                     $page = max(1, (int)$extra['page']);
                     $offset = ($page - 1) * $limit;
                 }
+            }
+
+            if (isset($extra['group by'])) {
+                $sql .= " GROUP BY " . $extra['group by'];
+            }
+
+            if (isset($extra['having'])) {
+                $sql .= " HAVING " . $extra['having'];
+            }
+
+            if (isset($extra['order by'])) {
+                $sql .= " ORDER BY " . $extra['order by'];
             }
         }
 
@@ -207,13 +255,14 @@ class BaseTable
         return array_map([$self, 'hydrate'], $rows);
     }
 
+
     public function totalRows(): int
     {
         return $this->totalRecords ?? 0;
     }
 
 
-    public static function select(string|array|null $columns = null)
+    public static function select(string|array|null $columns = null, array $extra = [])
     {
         $self = static::instance();
 
@@ -226,6 +275,26 @@ class BaseTable
         }
 
         $sql = "SELECT $cols FROM {$self->table}";
+
+        if (isset($extra['group by'])) {
+            $sql .= " GROUP BY " . $extra['group by'];
+        }
+
+        if (isset($extra['having'])) {
+            $sql .= " HAVING " . $extra['having'];
+        }
+
+        if (isset($extra['order by'])) {
+            $sql .= " ORDER BY " . $extra['order by'];
+        }
+
+        if (isset($extra['limit'])) {
+            $sql .= " LIMIT " . (int)$extra['limit'];
+        }
+
+        if (isset($extra['offset'])) {
+            $sql .= " OFFSET " . (int)$extra['offset'];
+        }
 
         $self->lastQuery    = $sql;
         $self->lastBindings = [];
@@ -242,6 +311,7 @@ class BaseTable
 
         return array_map([$self, 'hydrate'], $rows);
     }
+
 
 
     public function totalPages(): int

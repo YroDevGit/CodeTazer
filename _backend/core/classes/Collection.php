@@ -72,6 +72,67 @@ class Collection
         return $this->singleRow ? $result[0] : $result;
     }
 
+
+    public function take(array $conditions, string $option = "equal"): self
+    {
+        if ($this->trulyEmpty($this->items) || empty($conditions)) {
+            return $this;
+        }
+
+        $this->items = array_filter($this->items, function ($item) use ($conditions, $option) {
+            foreach ($conditions as $col => $val) {
+                $itemVal = $item[$col] ?? '';
+
+                if ($option === "equal" && (string)$itemVal !== (string)$val) {
+                    return false;
+                }
+
+                if ($option === "like" && stripos((string)$itemVal, (string)$val) === false) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+
+        $this->items = array_values($this->items);
+
+        $this->singleRow = count($this->items) === 1;
+
+        return $this;
+    }
+
+
+
+    public function skip(array $conditions, string $option = "equal"): self
+    {
+        if ($this->trulyEmpty($this->items) || empty($conditions)) {
+            return $this;
+        }
+
+        $this->items = array_filter($this->items, function ($item) use ($conditions, $option) {
+            foreach ($conditions as $col => $val) {
+                $itemVal = $item[$col] ?? '';
+
+                if ($option === "equal" && (string)$itemVal === (string)$val) {
+                    return false;
+                }
+
+                if ($option === "like" && stripos((string)$itemVal, (string)$val) !== false) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        $this->items = array_values($this->items);
+
+        $this->singleRow = count($this->items) === 1;
+
+        return $this;
+    }
+
+
     public function concat(array $definitions, string $separator = " ", bool $preserveColumns = false): array
     {
         if ($this->trulyEmpty($this->items)) {
@@ -194,6 +255,49 @@ class Collection
 
         return $this->singleRow ? ($items[0] ?? []) : $items;
     }
+
+
+    public function sort(string|array $columns = "firstname"): self
+    {
+        if ($this->trulyEmpty($this->items)) {
+            return $this;
+        }
+
+        $sortColumns = [];
+        if (is_string($columns)) {
+            $sortColumns[$columns] = "asc";
+        } elseif (is_array($columns)) {
+            foreach ($columns as $col => $dir) {
+                if (is_int($col)) {
+                    // numeric keys, value is column name, default asc
+                    $sortColumns[$dir] = "asc";
+                } else {
+                    $sortColumns[$col] = strtolower($dir) === "desc" ? "desc" : "asc";
+                }
+            }
+        }
+
+        usort($this->items, function ($a, $b) use ($sortColumns) {
+            foreach ($sortColumns as $col => $dir) {
+                $valA = $a[$col] ?? null;
+                $valB = $b[$col] ?? null;
+
+                if (is_numeric($valA) && is_numeric($valB)) {
+                    $cmp = $valA <=> $valB;
+                } else {
+                    $cmp = strcasecmp((string)$valA, (string)$valB);
+                }
+
+                if ($cmp !== 0) {
+                    return $dir === "desc" ? -$cmp : $cmp;
+                }
+            }
+            return 0;
+        });
+
+        return $this;
+    }
+
 
     public function all(): array
     {
