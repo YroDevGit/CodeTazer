@@ -167,18 +167,21 @@ class Response
 
     public static function details(mixed $details)
     {
+        $details = is_null($details) ? [] : $details;
         self::$details = $details;
         return new self;
     }
 
     public static function errors(mixed $errors)
     {
+        $errors = is_null($errors) ? [] : $errors;
         self::$errors = $errors;
         return new self;
     }
 
     public static function data(mixed $data)
     {
+        $data = is_null($data) ? [] : $data;
         self::$data = $data;
         return new self;
     }
