@@ -158,6 +158,7 @@ class BaseTable
 
     public static function getAll(array|null $where = null, int|array $extra = null)
     {
+        $extra = is_null($extra) ? [] : $extra;
         if (is_null($where) || empty($where)) {
             $all =  self::select(null, $extra);
             return is_null($all) ? [] : $all;
@@ -570,8 +571,6 @@ class BaseTable
 
         return $attributes;
     }
-
-
 
     public function toJson()
     {
