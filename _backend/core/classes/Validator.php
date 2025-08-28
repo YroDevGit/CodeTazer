@@ -21,20 +21,25 @@ class Validator
         $this->field = $field;
     }
 
-    // Start a new input validation
     public static function input(string $field): self
     {
         return new self($field);
     }
 
-    // Set label
+    public static function body(string $field):self{
+        return new self($field);
+    }
+
+    public static function post(string $field):self{
+        return new self($field);
+    }
+
     public function label(string $label): self
     {
         $this->label = $label;
         return $this;
     }
 
-    // Add rules dynamically
     public function required(): self
     {
         $this->rules[] = 'required';
@@ -107,16 +112,15 @@ class Validator
         return $this;
     }
 
-    // Run validation for this field
     public function validate(): mixed
     {
         $rulesString = implode('|', $this->rules);
-        return self::check($this->field, $this->label, $rulesString);
+        $label = $this->label ?: $this->field;
+        return self::check($this->field, $label, $rulesString);
     }
 
-    /**
-     * Your original check() function kept as-is
-     */
+
+
     public static function check($postname, $label, $rules)
     {
         $postdata = postdata();
