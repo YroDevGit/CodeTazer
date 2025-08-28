@@ -79,7 +79,7 @@ class Response
         self::json($response, $status);
     }
 
-    static function bad_request(string $message = "Bad Request", array|null $details = [], int $status = 205)
+    static function bad_request(string $message = "Bad Request", array|null $details = [], int $status = 210)
     {
         $details = is_null($details) ? [] : $details;
         $response = [
