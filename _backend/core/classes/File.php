@@ -5,8 +5,13 @@ namespace Classes;
 class File
 {
 
-    public static function encode_blob(array|null $data, string|array $columns): array
+    public static function encode_blob(array|null|bool $data, string|array $columns): array
     {
+        if(is_bool($data)){
+            if(! $data){
+                return [];
+            }
+        }
         $data = is_null($data) ? [] : $data;
         $columns = is_array($columns) ? $columns : [$columns];
 

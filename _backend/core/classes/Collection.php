@@ -6,14 +6,18 @@ class Collection
 {
     protected array $items = [];
     protected bool $singleRow = false;
+    protected bool $wasMultiDim = false;
 
     private function __construct(array $items)
     {
         if (self::isAssoc($items)) {
-            $this->singleRow = true;
             $this->items = [$items];
+            $this->singleRow = true;
+            $this->wasMultiDim = false;
         } else {
             $this->items = $items;
+            $this->singleRow = false;
+            $this->wasMultiDim = self::isMultiDim($items);
         }
     }
 
@@ -26,6 +30,14 @@ class Collection
     private static function isAssoc(array $arr): bool
     {
         return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
+    private static function isMultiDim(array $arr): bool
+    {
+        foreach ($arr as $v) {
+            if (is_array($v)) return true;
+        }
+        return false;
     }
 
     public function get(string|array $keys)
@@ -53,7 +65,6 @@ class Collection
             return $filtered;
         }, $this->items);
 
-        $this->singleRow = count($this->items) === 1;
         return $this;
     }
 
@@ -71,7 +82,6 @@ class Collection
             return array_diff_key($item, array_flip($keys));
         }, $this->items);
 
-        $this->singleRow = count($this->items) === 1;
         return $this;
     }
 
@@ -81,21 +91,15 @@ class Collection
             return $this;
         }
 
-        $this->items = array_filter($this->items, function ($item) use ($conditions, $option) {
+        $this->items = array_values(array_filter($this->items, function ($item) use ($conditions, $option) {
             foreach ($conditions as $col => $val) {
                 $itemVal = $item[$col] ?? '';
-                if ($option === "equal" && (string)$itemVal !== (string)$val) {
-                    return false;
-                }
-                if ($option === "like" && stripos((string)$itemVal, (string)$val) === false) {
-                    return false;
-                }
+                if ($option === "equal" && (string)$itemVal !== (string)$val) return false;
+                if ($option === "like" && stripos((string)$itemVal, (string)$val) === false) return false;
             }
             return true;
-        });
+        }));
 
-        $this->items = array_values($this->items);
-        $this->singleRow = count($this->items) === 1;
         return $this;
     }
 
@@ -105,21 +109,15 @@ class Collection
             return $this;
         }
 
-        $this->items = array_filter($this->items, function ($item) use ($conditions, $option) {
+        $this->items = array_values(array_filter($this->items, function ($item) use ($conditions, $option) {
             foreach ($conditions as $col => $val) {
                 $itemVal = $item[$col] ?? '';
-                if ($option === "equal" && (string)$itemVal === (string)$val) {
-                    return false;
-                }
-                if ($option === "like" && stripos((string)$itemVal, (string)$val) !== false) {
-                    return false;
-                }
+                if ($option === "equal" && (string)$itemVal === (string)$val) return false;
+                if ($option === "like" && stripos((string)$itemVal, (string)$val) !== false) return false;
             }
             return true;
-        });
+        }));
 
-        $this->items = array_values($this->items);
-        $this->singleRow = count($this->items) === 1;
         return $this;
     }
 
@@ -146,7 +144,6 @@ class Collection
             return $newItem;
         }, $this->items);
 
-        $this->singleRow = count($this->items) === 1;
         return $this;
     }
 
@@ -157,7 +154,7 @@ class Collection
             return $this;
         }
 
-        $this->items = array_filter($this->items, function ($item) use ($conditions) {
+        $this->items = array_values(array_filter($this->items, function ($item) use ($conditions) {
             foreach ($conditions as $cond) {
                 if (is_string($cond)) continue;
                 if (self::isAssoc($cond)) {
@@ -181,10 +178,8 @@ class Collection
                 }
             }
             return true;
-        });
+        }));
 
-        $this->items = array_values($this->items);
-        $this->singleRow = count($this->items) === 1;
         return $this;
     }
 
@@ -195,7 +190,7 @@ class Collection
             return $this;
         }
 
-        $this->items = array_filter($this->items, function ($item) use ($conditions) {
+        $this->items = array_values(array_filter($this->items, function ($item) use ($conditions) {
             foreach ($conditions as $cond) {
                 if (is_string($cond)) continue;
                 if (self::isAssoc($cond)) {
@@ -219,10 +214,8 @@ class Collection
                 }
             }
             return true;
-        });
+        }));
 
-        $this->items = array_values($this->items);
-        $this->singleRow = count($this->items) === 1;
         return $this;
     }
 
@@ -235,7 +228,6 @@ class Collection
         }
 
         $this->items = $reverse ? array_slice($this->items, -$size, $size) : array_slice($this->items, 0, $size);
-        $this->singleRow = count($this->items) === 1;
         return $this;
     }
 
@@ -271,7 +263,7 @@ class Collection
     public function all(): array|null
     {
         if ($this->trulyEmpty($this->items)) return [];
-        return $this->singleRow ? $this->items[0] : $this->items;
+        return $this->singleRow && !$this->wasMultiDim ? $this->items[0] : $this->items;
     }
 
     public function pack(): array|null
