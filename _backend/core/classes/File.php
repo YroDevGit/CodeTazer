@@ -18,7 +18,7 @@ class File
                 if (!isset($row[$column]) || !$row[$column]) {
                     continue;
                 }
-                if (is_null($row[$column])) {
+                if(is_null($row[$column]) || $row[$column] == ""){
                     continue;
                 }
 
