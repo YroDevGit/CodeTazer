@@ -100,13 +100,13 @@ class BaseTable
     }
 
 
-    public static function findOne(array $conditions)
+    public static function findOne(array $where)
     {
         $self = static::instance();
-
+        $conditions = $where;
         $data = $self->find($conditions);
         if ($data) {
-            if(! $data[0]){
+            if (! $data[0]) {
                 return false;
             }
             return $data[0];
@@ -123,6 +123,15 @@ class BaseTable
             return [];
         }
         return $data;
+    }
+
+    public static function getAll(array|null $where = null)
+    {
+        if (is_null($where) || empty($where)) {
+            $all =  self::select();
+            return is_null($all) ? [] : $all;
+        }
+        return self::get($where);
     }
 
 
@@ -203,6 +212,38 @@ class BaseTable
         return $this->totalRecords ?? 0;
     }
 
+
+    public static function select(string|array|null $columns = null)
+    {
+        $self = static::instance();
+
+        if ($columns === null || $columns === [] || $columns === '') {
+            $cols = '*';
+        } elseif (is_array($columns)) {
+            $cols = implode(',', array_map(fn($c) => "`" . trim($c, '`') . "`", $columns));
+        } else {
+            $cols = "`" . trim($columns, '`') . "`";
+        }
+
+        $sql = "SELECT $cols FROM {$self->table}";
+
+        $self->lastQuery    = $sql;
+        $self->lastBindings = [];
+
+        $stmt = $self->pdo->prepare($sql);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $self->rowcount = $stmt->rowCount();
+
+        if ($self->rowcount === 0) {
+            return null;
+        }
+
+        return array_map([$self, 'hydrate'], $rows);
+    }
+
+
     public function totalPages(): int
     {
         return $this->totalPages ?? 1;
@@ -277,6 +318,11 @@ class BaseTable
         $self->rowcount = $stmt->rowCount();
 
         return $row ? $self->hydrate($row) : null;
+    }
+
+    public static function insert(array $data)
+    {
+        return self::create($data);
     }
 
 
