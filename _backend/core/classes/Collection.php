@@ -69,19 +69,30 @@ class Collection
     public function concat(array $definitions, string $separator = " ", bool $preserveColumns = false): array
     {
         $result = array_map(function ($item) use ($definitions, $separator, $preserveColumns) {
-            $newItem = $preserveColumns ? $item : [];
+            $newItem = $preserveColumns ? $item : $item;
+
             foreach ($definitions as $alias => $cols) {
                 $values = [];
                 foreach ($cols as $col) {
                     $values[] = $item[$col] ?? '';
                 }
-                $newItem[$alias] = trim(implode($separator, array_filter($values, fn($v) => $v !== '')));
+                $newItem[$alias] = trim(
+                    implode($separator, array_filter($values, fn($v) => $v !== ''))
+                );
+
+                if (!$preserveColumns) {
+                    foreach ($cols as $col) {
+                        unset($newItem[$col]);
+                    }
+                }
             }
+
             return $newItem;
         }, $this->items);
 
         return $this->singleRow ? $result[0] : $result;
     }
+
 
     public function like(...$conditions): array
     {
