@@ -4,6 +4,13 @@ namespace Classes;
 
 class Response
 {
+    protected static $code = 200;
+    protected static $data = null;
+    protected static $details = null;
+    protected static $errors = null;
+    protected static $message = null;
+    protected static $status = 200;
+    protected static $text = null;
 
     static function json(array $data, int $status = 200)
     {
@@ -132,5 +139,87 @@ class Response
             "details" => $details
         ];
         self::json($response, $status);
+    }
+
+    private static function array_data()
+    {
+        return ["code" => self::$code, "message" => self::$message, "details" => self::$details, "data" => self::$data, "errors" => self::$errors, "status" => self::$status];
+    }
+
+    public static function code(int $code)
+    {
+        self::$code = $code;
+        return new self;
+    }
+
+    public static function message(string $message)
+    {
+        self::$message = $message;
+        return new self;
+    }
+
+    public static function text(string $text)
+    {
+        self::$text = $text;
+        return new self;
+    }
+
+    public static function details(mixed $details)
+    {
+        self::$details = $details;
+        return new self;
+    }
+
+    public static function errors(mixed $errors)
+    {
+        self::$errors = $errors;
+        return new self;
+    }
+
+    public static function data(mixed $data)
+    {
+        self::$data = $data;
+        return new self;
+    }
+
+    public static function push(int $status = 200): void
+    {
+        $response = [];
+        $details = self::$details;
+        $data = self::$data;
+        $errors = self::$errors;
+        $message =  self::$message;
+        $code = self::$code;
+        $text = self::$text;
+
+        if (! is_null($details)) {
+            $response['details'] = $details;
+        }
+        if (! is_null($data)) {
+            $response['data'] = $data;
+        }
+        if (! is_null($errors)) {
+            $response['errors'] = $errors;
+        }
+        if (! is_null($message)) {
+            $response['message'] = $message;
+        }
+        if (! is_null($text)) {
+            $response['text'] = $text;
+        }
+
+        $response['code'] = $code;
+
+        self::json($response, $status);
+    }
+
+    public static function pack(int $status = 200): void
+    {
+        self::push($status);
+    }
+
+    public static function x(int $status = 200): void
+    {
+        self::push($status);
     }
 }

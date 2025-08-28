@@ -14,6 +14,17 @@ define('assets', '_frontend/assets');
 
 define('SUCCESS', getenv('success_code'));
 
+define("success_code", getenv("success_code"));
+define("error_code", getenv("error_code"));
+define("db_error_code", getenv("db_error_code"));
+define("notfound_code", getenv("notfound_code"));
+define("forbidden_code", getenv("forbidden_code"));
+define("unauthorized_code", getenv("unauthorized_code"));
+define("badrequest_code", getenv("badrequest_code"));
+define("warning_code", getenv("warning_code"));
+define("no_internet_code", getenv("no_internet_code"));
+define("backend_error_code", getenv("backend_error_code"));
+define("failed_code", getenv("failed_code"));
 
 define("now", date("Y-m-d H:i:s"));
 
