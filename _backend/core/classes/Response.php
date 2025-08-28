@@ -152,13 +152,14 @@ class Response
         return new self;
     }
 
-    public static function message(string $message)
+    public static function message(string|null $message)
     {
+        $message = is_null($message) ? "" : $message;
         self::$message = $message;
         return new self;
     }
 
-    public static function text(string $text)
+    public static function text(mixed $text)
     {
         self::$text = $text;
         return new self;
