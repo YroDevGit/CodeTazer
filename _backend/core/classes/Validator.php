@@ -121,7 +121,7 @@ class Validator
         return self::check($this->field, $label, $rulesString);
     }
 
-    public function x()
+    public function X()
     {
         return $this->validate();
     }

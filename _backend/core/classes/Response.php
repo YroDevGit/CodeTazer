@@ -222,7 +222,7 @@ class Response
         self::push($status);
     }
 
-    public static function x(int $status = 200): void
+    public static function X(int $status = 200): void
     {
         self::push($status);
     }
