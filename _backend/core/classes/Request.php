@@ -2,6 +2,10 @@
 
 namespace Classes;
 
+use Exception;
+use TypeError;
+use ValueError;
+
 class Request
 {
 
@@ -44,62 +48,72 @@ class Request
 
     static function file($name, $type = null)
     {
-        if (!isset($_FILES[$name]) || ! $_FILES[$name]) {
+        try {
+
+
+            if (!isset($_FILES[$name]) || ! $_FILES[$name]) {
+                return null;
+            }
+
+            $file = $_FILES[$name];
+
+            switch ($type) {
+                case 'name':
+                    return $file['name'];
+                    break;
+
+                case 'size':
+                    return $file['size'];
+                    break;
+
+                case 'size_mb':
+                    $fileSizeBytes = $file['size'];
+                    $fileSizeMB = $fileSizeBytes / 1024 / 1024;
+                    return round($fileSizeMB, 2);
+                    break;
+
+                case 'size_kb':
+                    $fileSizeBytes = $file['size'];
+                    $fileSizeMB = $fileSizeBytes / 1024;
+                    return round($fileSizeMB, 2);
+                    break;
+
+                case 'size_gb':
+                    $fileSizeBytes = $file['size'];
+                    $fileSizeMB = $fileSizeBytes / 1024 / 1024 / 1024;
+                    return round($fileSizeMB, 2);
+                    break;
+
+                case 'tmp_name':
+                    return $file['tmp_name'];
+                    break;
+
+                case 'type':
+                    return $file['type'];
+                    break;
+
+                case 'blob':
+                    $data = file_get_contents($file['tmp_name']);
+                    return $data;
+                    break;
+
+                case 'filetype':
+                case 'extension':
+                    $filename = $file['name'];
+                    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                    return $extension;
+                    break;
+
+                default:
+                    return $file;
+                    break;
+            }
+        } catch (TypeError $e) {
             return null;
-        }
-
-        $file = $_FILES[$name];
-
-        switch ($type) {
-            case 'name':
-                return $file['name'];
-                break;
-
-            case 'size':
-                return $file['size'];
-                break;
-
-            case 'size_mb':
-                $fileSizeBytes = $file['size'];
-                $fileSizeMB = $fileSizeBytes / 1024 / 1024;
-                return round($fileSizeMB, 2);
-                break;
-
-            case 'size_kb':
-                $fileSizeBytes = $file['size'];
-                $fileSizeMB = $fileSizeBytes / 1024;
-                return round($fileSizeMB, 2);
-                break;
-
-            case 'size_gb':
-                $fileSizeBytes = $file['size'];
-                $fileSizeMB = $fileSizeBytes / 1024 / 1024 / 1024;
-                return round($fileSizeMB, 2);
-                break;
-
-            case 'tmp_name':
-                return $file['tmp_name'];
-                break;
-
-            case 'type':
-                return $file['type'];
-                break;
-
-            case 'blob':
-                $data = file_get_contents($file['tmp_name']);
-                return $data;
-                break;
-
-            case 'filetype':
-            case 'extension':
-                $filename = $file['name'];
-                $extension = pathinfo($filename, PATHINFO_EXTENSION);
-                return $extension;
-                break;
-
-            default:
-                return $file;
-                break;
+        } catch (ValueError $e) {
+            return null;
+        } catch (Exception $e) {
+            return null;
         }
     }
 }

@@ -18,6 +18,9 @@ class File
                 if (!isset($row[$column]) || !$row[$column]) {
                     continue;
                 }
+                if (is_null($row[$column])) {
+                    continue;
+                }
 
                 $finfo = finfo_open(FILEINFO_MIME_TYPE);
                 $mime  = finfo_buffer($finfo, $row[$column]);
