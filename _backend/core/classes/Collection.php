@@ -24,7 +24,7 @@ class Collection
     public static function data(array|null|bool $items): self
     {
         if (is_bool($items)) {
-            return [];
+            $items = [];
         }
         $items = is_null($items) ? [] : $items;
         return new self($items);
