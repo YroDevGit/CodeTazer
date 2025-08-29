@@ -230,4 +230,19 @@ class Validator
         self::$ers[$post] = $message;
         self::$failed = true;
     }
+
+    public static function field_error(string|null|bool $field){
+        if(is_null($field) || is_bool($field)){
+            return null;
+        }
+
+        $errors = self::$errors;
+
+        if(! $errors){
+            return null;
+        }
+
+        $err = isset($errors[$field]) ? $errors[$field] : null;
+        return $err;
+    }
 }
