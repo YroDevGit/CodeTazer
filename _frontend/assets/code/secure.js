@@ -14,13 +14,24 @@ class Secure {
   }
 
   decrypt(encoded, secret = this.global_secret) {
-    let text = atob(encoded);
+    let text;
+    try {
+      text = atob(encoded);
+    } catch (e) {
+      return null;
+    }
+
     let result = "";
     for (let i = 0; i < text.length; i++) {
       result += String.fromCharCode(
         text.charCodeAt(i) ^ secret.charCodeAt(i % secret.length)
       );
     }
+    const printable = /^[\x20-\x7E\t\n\r]+$/;
+    if (!printable.test(result)) {
+      return null;
+    }
+
     return result;
   }
 

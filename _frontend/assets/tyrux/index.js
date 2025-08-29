@@ -19,6 +19,14 @@ const api = new Tyrux();
 const tyreq = new Tyrux(config);
 
 function tyrux(request) {// Use for default setup..:: CodeYRO
+    const head = request.headers ?? null;
+    if (head != null) {
+        const ctype = head['Content-Type'];
+        if (ctype == "pict" || ctype == "image" || ctype == "file" || ctype == "multipart/form-data") {
+            tyreq.request(request);
+        }
+    }
+    request.headers = { "Content-Type": "application/json" };
     tyreq.request(request);
 }
 
@@ -38,7 +46,7 @@ window.backend = backend;
  * above setup doesn't apply here, but you can use them and attach to tyruxRequest
  */
 
-const tyrequest= {// For raw/universal request:: CodeYRO
+const tyrequest = {// For raw/universal request:: CodeYRO
     api: function (option) {
         api.request(option);
     },
