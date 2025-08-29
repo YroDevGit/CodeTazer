@@ -51,7 +51,7 @@ export class DOMclass {
     }
 
     loaded(callable) {
-        window.addEventListener("DOMContentLoaded", callable());
+        window.addEventListener("DOMContentLoaded", callable);
     }
 
     click(selector, callable) {
@@ -74,6 +74,26 @@ export class DOMclass {
 
     submit(selector, callable) {
         const sel = document.querySelector(selector);
-        sel.addEventListener('submit', callable());
+        sel.addEventListener('submit', callable);
+    }
+
+    form_data(selector) {
+        let form = null;
+        if (selector.charAt(0) === "#" || selector.charAt(0) === ".") {
+            form = document.querySelector(selector);
+        } else {
+            form = document.querySelector(`#${selector}`);
+        }
+
+        if (!form) return null;
+
+        const formData = new FormData(form);
+
+        const dataObject = {};
+        formData.forEach((value, key) => {
+            dataObject[key] = value;
+        });
+
+        return dataObject;
     }
 }

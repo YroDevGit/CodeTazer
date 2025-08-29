@@ -6,7 +6,7 @@ export class Tyrux {
      * @Email : tyronemalocon@gmail.com
      */
     #defaultHeaders = {
-        "Content-Type": "application/x-www-form-urlencoded"
+
     };
     #baseURL = "";
     #config = {};
@@ -28,22 +28,27 @@ export class Tyrux {
         let url = this.#baseURL + options.url;
         let data = null;
 
-        const headers = options.headers ? { ...this.#defaultHeaders, ...options.headers } : this.#defaultHeaders;
+        const headers = options.headers
+            ? { ...this.#defaultHeaders, ...options.headers }
+            : this.#defaultHeaders;
         const contentType = headers["Content-Type"] || "";
 
-        if (options.data && typeof options.data === 'object') {
+        if (options.data instanceof FormData) {
+            data = options.data;
+            delete headers["Content-Type"];
+        } else if (options.data && typeof options.data === "object") {
             if (method === "GET") {
                 const params = Object.keys(options.data)
                     .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(options.data[key])}`)
-                    .join('&');
-                url += (url.includes('?') ? '&' : '?') + params;
+                    .join("&");
+                url += (url.includes("?") ? "&" : "?") + params;
             } else {
                 if (contentType.includes("application/json")) {
                     data = JSON.stringify(options.data);
                 } else if (contentType.includes("application/x-www-form-urlencoded")) {
                     data = Object.keys(options.data)
                         .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(options.data[key])}`)
-                        .join('&');
+                        .join("&");
                 } else {
                     data = options.data;
                 }
@@ -92,6 +97,7 @@ export class Tyrux {
         xhr.send(data);
     }
 
+
     post(option) {
         option.method = "POST";
         this.request(option);
@@ -107,7 +113,7 @@ export class Tyrux {
         this.request(option);
     }
 
-    patch(option){
+    patch(option) {
         option.method = "PATCH";
         this.request(option);
     }
@@ -117,12 +123,12 @@ export class Tyrux {
         this.request(option);
     }
 
-    head(option){
+    head(option) {
         option.method = "HEAD";
         this.request(option);
     }
 
-    option(option){
+    option(option) {
         option.method = "OPTIONS";
         this.request(option);
     }

@@ -7,8 +7,8 @@ class File
 
     public static function encode_blob(array|null|bool $data, string|array $columns): array
     {
-        if(is_bool($data)){
-            if(! $data){
+        if (is_bool($data)) {
+            if (! $data) {
                 return [];
             }
         }
@@ -23,7 +23,7 @@ class File
                 if (!isset($row[$column]) || !$row[$column]) {
                     continue;
                 }
-                if(is_null($row[$column]) || $row[$column] == ""){
+                if (is_null($row[$column]) || $row[$column] == "") {
                     continue;
                 }
 
@@ -36,5 +36,18 @@ class File
         }
 
         return $isSingle ? $rows[0] : $rows;
+    }
+
+    public static function blob_to_text(string|null $blob): string
+    {
+        if (is_null($blob) || $blob === "") {
+            return "";
+        }
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime  = finfo_buffer($finfo, $blob);
+        finfo_close($finfo);
+
+        return "data:$mime;base64," . base64_encode($blob);
     }
 }
