@@ -1,14 +1,31 @@
-class loading {
+class Loading {
     constructor() {
         this.loaderId = "custom-loader-overlay";
+        this.styleId = "custom-loader-style";
+        this.ensureStyle();
+    }
+
+    ensureStyle() {
+        if (!document.getElementById(this.styleId)) {
+            const style = document.createElement("style");
+            style.id = this.styleId;
+            style.innerHTML = `
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                #${this.loaderId} {
+                    transition: opacity 0.3s ease;
+                }
+            `;
+            document.head.appendChild(style);
+        }
     }
 
     load(show = true) {
         if (show) {
-            // Prevent multiple loaders
             if (document.getElementById(this.loaderId)) return;
 
-            // Create overlay
             const overlay = document.createElement("div");
             overlay.id = this.loaderId;
             overlay.style.position = "fixed";
@@ -21,8 +38,8 @@ class loading {
             overlay.style.alignItems = "center";
             overlay.style.justifyContent = "center";
             overlay.style.zIndex = "9999";
+            overlay.style.opacity = "0";
 
-            // Spinner
             const spinner = document.createElement("div");
             spinner.style.width = "60px";
             spinner.style.height = "60px";
@@ -31,22 +48,21 @@ class loading {
             spinner.style.borderRadius = "50%";
             spinner.style.animation = "spin 1s linear infinite";
 
-            // Spinner animation
-            const style = document.createElement("style");
-            style.innerHTML = `
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `;
-            document.head.appendChild(style);
-
             overlay.appendChild(spinner);
             document.body.appendChild(overlay);
 
+            requestAnimationFrame(() => {
+                overlay.style.opacity = "1";
+            });
+
         } else {
             const overlay = document.getElementById(this.loaderId);
-            if (overlay) overlay.remove();
+            if (overlay) {
+                overlay.style.opacity = "0";
+                setTimeout(() => overlay.remove(), 300);
+            }
         }
     }
 }
+
+window.LOADING = new Loading();
