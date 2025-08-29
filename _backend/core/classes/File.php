@@ -8,9 +8,7 @@ class File
     public static function encode_blob(array|null|bool $data, string|array $columns): array
     {
         if (is_bool($data)) {
-            if (! $data) {
-                return [];
-            }
+            return [];
         }
         $data = is_null($data) ? [] : $data;
         $columns = is_array($columns) ? $columns : [$columns];
@@ -38,8 +36,11 @@ class File
         return $isSingle ? $rows[0] : $rows;
     }
 
-    public static function blob_to_text(string|null $blob): string
+    public static function blob_to_text(string|null|bool $blob): string|null
     {
+        if (is_bool($blob)) {
+            return null;
+        }
         if (is_null($blob) || $blob === "") {
             return "";
         }
