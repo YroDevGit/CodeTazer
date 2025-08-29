@@ -956,7 +956,8 @@ if (! function_exists("server_headers")) {
         foreach ($_SERVER as $serverKey => $value) {
             if (strpos($serverKey, 'HTTP_') === 0) {
                 $exp = str_replace("HTTP_", "", $serverKey);
-                $headers[$exp] = $value;
+                $headers[strtolower($exp)] = $value;
+                $headers[strtoupper($exp)] = $value;
             }
         }
         if ($searchKey === null) {
