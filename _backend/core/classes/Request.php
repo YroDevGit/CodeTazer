@@ -29,7 +29,7 @@ class Request
         return self::post($key);
     }
 
-    static function headers(string|null $key = null, $ucwords = true)
+    static function headers(string|null $key = null, $ucwords = false)
     {
         if ($key == null) {
             return server_headers($key);
