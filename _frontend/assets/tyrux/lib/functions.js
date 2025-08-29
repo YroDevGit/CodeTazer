@@ -96,4 +96,10 @@ export class DOMclass {
 
         return dataObject;
     }
+
+    form_object(selector){
+        const element = document.querySelector(selector);
+        const formdata = new FormData(element);
+        return formdata;
+    }
 }

@@ -7,28 +7,39 @@ const backend = "?be=";  // This app default backend path
 
 const headers = {
     Authorization: "Bearer sometoken",
+    "Content-Type": "application/json",
 };
 
 const config = {
     error: "alert",
-    headers: headers,
     baseURL: backend
 };
 
 const api = new Tyrux();
 const tyreq = new Tyrux(config);
 
-function tyrux(request) {// Use for default setup..:: CodeYRO
+function tyrux(request) { 
+    // Use for default setup..:: CodeYRO
     const head = request.headers ?? null;
-    if (head != null) {
-        const ctype = head['Content-Type'];
-        if (ctype == "pict" || ctype == "image" || ctype == "file" || ctype == "multipart/form-data") {
-            tyreq.request(request);
+
+    if (head) {
+        request.headers = { ...head, ...headers };
+
+        const ctype = head["Content-Type"]?.toLowerCase();
+
+        if (ctype === "pict" || 
+            ctype === "image" || 
+            ctype === "file"  || 
+            ctype === "multipart/form-data") {
+            delete request.headers["Content-Type"];
         }
+    } else {
+        request.headers = { ...headers };
     }
-    request.headers = { "Content-Type": "application/json" };
+
     tyreq.request(request);
 }
+
 
 
 
