@@ -49,4 +49,31 @@ export class DOMclass {
             console.warn(`No elements found for selector: "${selector}"`);
         }
     }
+
+    loaded(callable) {
+        window.addEventListener("DOMContentLoaded", callable());
+    }
+
+    click(selector, callable) {
+        let form = null;
+        if (selector.charAt(0) === "#" || selector.charAt(0) === ".") {
+            form = document.querySelector(selector);
+        } else {
+            form = document.getElementById(selector);
+        }
+        if (!form) {
+            console.error(`Tag with id '${selector}' not found.`);
+            return;
+        }
+        if (typeof callable !== "function") {
+            console.error("Callable is not a function.");
+            return;
+        }
+        form.addEventListener("click", callable());
+    }
+
+    submit(selector, callable) {
+        const sel = document.querySelector(selector);
+        sel.addEventListener('submit', callable());
+    }
 }
