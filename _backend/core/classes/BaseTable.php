@@ -138,11 +138,11 @@ class BaseTable
         $data = $self->find($conditions);
         if ($data) {
             if (! $data[0]) {
-                return false;
+                return [];
             }
             return $data[0];
         }
-        return false;
+        return [];
     }
 
     public static function get(array $where, int|array $extra = null): array
@@ -250,7 +250,7 @@ class BaseTable
         $self->currentPage = $page;
 
         if ($rc == 0) {
-            return null;
+            return [];
         }
 
         return array_map([$self, 'hydrate'], $rows);
@@ -307,7 +307,7 @@ class BaseTable
         $self->rowcount = $stmt->rowCount();
 
         if ($self->rowcount === 0) {
-            return null;
+            return [];
         }
 
         return array_map([$self, 'hydrate'], $rows);
@@ -356,7 +356,7 @@ class BaseTable
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
         $self->rowcount = $stmt->rowCount();
 
-        return $row ? $self->hydrate($row) : null;
+        return $row ? $self->hydrate($row) : [];
     }
 
 
@@ -388,7 +388,7 @@ class BaseTable
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
         $self->rowcount = $stmt->rowCount();
 
-        return $row ? $self->hydrate($row) : null;
+        return $row ? $self->hydrate($row) : [];
     }
 
     public static function insert(array $data)
@@ -423,7 +423,7 @@ class BaseTable
         $data['_id'] = $self->pdo->lastInsertId();
         $insertedRow = $data;
 
-        return $insertedRow ? static::instance($insertedRow) : null;
+        return $insertedRow ? static::instance($insertedRow) : [];
     }
 
     public static function update(array $where, array $data)
@@ -549,7 +549,7 @@ class BaseTable
             return array_intersect_key($attributes, array_flip($key));
         }
 
-        return null;
+        return [];
     }
 
     public function excepts(string|array $key = null)

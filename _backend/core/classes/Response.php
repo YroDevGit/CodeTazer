@@ -20,9 +20,9 @@ class Response
         exit;
     }
 
-    static function success(string $message = "Success", array|null $details = [])
+    static function success(string $message = "Success", array|null|bool $details = [])
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("success_code"),
             "message" => $message,
@@ -31,9 +31,9 @@ class Response
         self::json($response);
     }
 
-    static function error(string $message = "Error", array|null $details = [], int $status = 500)
+    static function error(string $message = "Error", array|null|bool $details = [], int $status = 500)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("error_code"),
             "message" => $message,
@@ -42,9 +42,9 @@ class Response
         self::json($response, $status);
     }
 
-    static function failed(string $message = "Failed", array|null $details = [], int $status = 200)
+    static function failed(string $message = "Failed", array|null|bool $details = [], int $status = 200)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("failed_code"),
             "message" => $message,
@@ -53,9 +53,9 @@ class Response
         self::json($response, $status);
     }
 
-    static function not_found(string $message = "Not found", array|null $details = [], int $status = 500)
+    static function not_found(string $message = "Not found", array|null|bool $details = [], int $status = 500)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("notfound_code"),
             "message" => $message,
@@ -64,9 +64,9 @@ class Response
         self::json($response, $status);
     }
 
-    static function forbidden(string $message = "Forbidden", array|null $details = [], int $status = 500)
+    static function forbidden(string $message = "Forbidden", array|null|bool $details = [], int $status = 500)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("forbidden_code"),
             "message" => $message,
@@ -75,9 +75,9 @@ class Response
         self::json($response, $status);
     }
 
-    static function unauthorized(string $message = "Unauthorized", array|null $details = [], int $status = 500)
+    static function unauthorized(string $message = "Unauthorized", array|null|bool $details = [], int $status = 500)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("unauthorized_code"),
             "message" => $message,
@@ -86,9 +86,9 @@ class Response
         self::json($response, $status);
     }
 
-    static function bad_request(string $message = "Bad Request", array|null $details = [], int $status = 210)
+    static function bad_request(string $message = "Bad Request", array|null|bool $details = [], int $status = 210)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("badrequest_code"),
             "message" => $message,
@@ -97,9 +97,9 @@ class Response
         self::json($response, $status);
     }
 
-    static function warning(string|null $message = "Warning", array|null $details = [], int $status = 200)
+    static function warning(string|null $message = "Warning", array|null|bool $details = [], int $status = 200)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("warning_code"),
             "message" => $message,
@@ -108,9 +108,9 @@ class Response
         self::json($response, $status);
     }
 
-    static function network_error(string|null $message = "Network error", array|null $details = [], int $status = 500)
+    static function network_error(string|null $message = "Network error", array|null|bool $details = [], int $status = 500)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("no_internet_code"),
             "message" => $message,
@@ -119,9 +119,9 @@ class Response
         self::json($response, $status);
     }
 
-    static function server_error(string|null $message = "Server error", array|null $details = [], int $status = 500)
+    static function server_error(string|null $message = "Server error", array|null|bool $details = [], int $status = 500)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("backend_error_code"),
             "message" => $message,
@@ -130,9 +130,9 @@ class Response
         self::json($response, $status);
     }
 
-    static function db_error(string|null $message = "Database error", array|null $details = [], int $status = 500)
+    static function db_error(string|null $message = "Database error", array|null|bool $details = [], int $status = 500)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         $response = [
             "code" => getenv("db_error_code"),
             "message" => $message,
@@ -161,27 +161,28 @@ class Response
 
     public static function text(mixed $text)
     {
+        $text = is_null($text) ? "" : $text;
         self::$text = $text;
         return new self;
     }
 
     public static function details(mixed $details)
     {
-        $details = is_null($details) ? [] : $details;
+        $details = is_array($details) ? $details : [];
         self::$details = $details;
         return new self;
     }
 
     public static function errors(mixed $errors)
     {
-        $errors = is_null($errors) ? [] : $errors;
+        $errors = is_array($errors) ? $errors : [];
         self::$errors = $errors;
         return new self;
     }
 
     public static function data(mixed $data)
     {
-        $data = is_null($data) ? [] : $data;
+        $data = is_array($data) ? $data : [];
         self::$data = $data;
         return new self;
     }
