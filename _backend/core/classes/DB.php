@@ -25,6 +25,121 @@ class DB
         return new static;
     }
 
+    public static function findOne(string $table, array $where)
+    {
+        $conditions = $where;
+        $data = self::find($table, $where);
+        if ($data) {
+            if (! $data[0]) {
+                return [];
+            }
+            return $data[0];
+        }
+        return [];
+    }
+
+    public static function get(string $table, array $where, int|array $extra = null): array
+    {
+        $data = self::find($table, $where, $extra);
+        if (empty($data)) {
+            return [];
+        }
+        return $data;
+    }
+
+    public static function getAll(string $table, array|null $where = null, int|array $extra = null)
+    {
+        $extra = is_null($extra) ? [] : $extra;
+        if (is_null($where) || empty($where)) {
+            $all =  self::select($table, null, $extra);
+            return is_null($all) ? [] : $all;
+        }
+        return self::get($table, $where, $extra);
+    }
+
+
+    public static function find(string $table, array $where, int|array $extra = null): array
+    {
+        if (!is_array($where)) {
+            throw new \InvalidArgumentException("Where conditions must be an associative array.");
+        }
+
+        $select = "*";
+        if (is_array($extra) && isset($extra['select'])) {
+            $select = $extra['select'];
+        }
+
+        $whereClause = implode(' AND ', array_map(fn($col) => "`$col` = :$col", array_keys($where)));
+        $sql = "SELECT {$select} FROM {$table} WHERE $whereClause";
+
+        $limit = null;
+        $offset = null;
+        $page = 1;
+
+        if (is_numeric($extra)) {
+            $limit = (int)$extra;
+        } elseif (is_array($extra)) {
+            if (isset($extra['limit'])) {
+                $limit = (int)$extra['limit'];
+                if (isset($extra['page'])) {
+                    $page = max(1, (int)$extra['page']);
+                    $offset = ($page - 1) * $limit;
+                }
+            }
+
+            if (isset($extra['group by'])) {
+                $sql .= " GROUP BY " . $extra['group by'];
+            }
+
+            if (isset($extra['having'])) {
+                $sql .= " HAVING " . $extra['having'];
+            }
+
+            if (isset($extra['order by'])) {
+                $sql .= " ORDER BY " . $extra['order by'];
+            }
+        }
+
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit";
+            if ($offset !== null) {
+                $sql .= " OFFSET :offset";
+            }
+        }
+
+        self::$lastQuery = $sql;
+        self::$lastBindings = $where;
+
+        $stmt = self::$pdo->prepare($sql);
+
+        foreach ($where as $col => $val) {
+            $stmt->bindValue(":$col", $val);
+        }
+
+        if ($limit !== null) {
+            $stmt->bindValue(":limit", $limit, \PDO::PARAM_INT);
+            if ($offset !== null) {
+                $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
+            }
+        }
+
+        $stmt->execute();
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $rc = $stmt->rowCount();
+        self::$rowcount = $rc;
+
+        $countSql = "SELECT COUNT(*) as cnt FROM {$table} WHERE $whereClause";
+        $countStmt = self::$pdo->prepare($countSql);
+        $countStmt->execute($where);
+        $total = (int)$countStmt->fetch(\PDO::FETCH_ASSOC)['cnt'];
+
+        self::$totalRecords = $total;
+        self::$totalPages = ($limit !== null && $limit > 0) ? (int)ceil($total / $limit) : 1;
+        self::$currentPage = $page;
+
+        return $rc > 0 ? $rows : [];
+    }
+
     private static function resetColumnFilters()
     {
         self::$allowedColumns = null;
@@ -189,52 +304,48 @@ class DB
         return $rett;
     }
 
-    static function select(string $table, array $where = [], array $columns = ["*"]): array
+    public static function select(string $table, string|array|null $columns = null, array $extra = []): array
     {
-        $pdo = pdo();
-
-        self::$lastQuery = null;
-        self::$lastBindings = null;
-        self::$lastData = $where;
-        self::$lastTable =  $table;
-
-        if (self::$allowedColumns !== null) {
-            $columns = self::$allowedColumns;
+        if ($columns === null || $columns === [] || $columns === '') {
+            $cols = '*';
+        } elseif (is_array($columns)) {
+            $cols = implode(',', array_map(fn($c) => "`" . trim($c, '`') . "`", $columns));
+        } else {
+            $cols = "`" . trim($columns, '`') . "`";
         }
 
-        $columnList = is_array($columns) ? implode(', ', array_map(fn($col) => $col !== '*' ? "`$col`" : $col, $columns)) : $columns;
-        $query = "SELECT {$columnList} FROM `$table`";
+        $sql = "SELECT $cols FROM {$table}";
 
-        $params = [];
-        if (!empty($where)) {
-            $whereClause = [];
-            foreach ($where as $key => $value) {
-                $paramKey = ":" . $key;
-                $whereClause[] = "`{$key}` = {$paramKey}";
-                $params[$paramKey] = $value;
-            }
-            $query .= " WHERE " . implode(" AND ", $whereClause);
+        if (isset($extra['group by'])) {
+            $sql .= " GROUP BY " . $extra['group by'];
         }
 
-        $stmt = $pdo->prepare($query);
-
-        foreach ($params as $key => $value) {
-            if (is_array($value)) {
-                $msg = "Parameter cannot be an array: " . json_encode($value, JSON_UNESCAPED_UNICODE);
-                throw new \InvalidArgumentException($msg);
-            }
-            $stmt->bindValue($key, $value);
+        if (isset($extra['having'])) {
+            $sql .= " HAVING " . $extra['having'];
         }
 
+        if (isset($extra['order by'])) {
+            $sql .= " ORDER BY " . $extra['order by'];
+        }
+
+        if (isset($extra['limit'])) {
+            $sql .= " LIMIT " . (int)$extra['limit'];
+        }
+
+        if (isset($extra['offset'])) {
+            $sql .= " OFFSET " . (int)$extra['offset'];
+        }
+
+        self::$lastQuery    = $sql;
+        self::$lastBindings = [];
+
+        $stmt = self::$pdo->prepare($sql);
         $stmt->execute();
-        $results = $stmt->fetchAll(2) ?? [];
-        $results = self::filterResultArray($results);
 
-        self::$lastRowCount = $stmt->rowCount();
-        $stmt->closeCursor();
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        self::$rowcount = $stmt->rowCount();
 
-        self::resetColumnFilters();
-        return $results;
+        return self::$rowcount > 0 ? $rows : [];
     }
 
     public static function getLastQuery($withBindings = true)

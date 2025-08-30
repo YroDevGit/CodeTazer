@@ -225,20 +225,27 @@ class Validator
         self::$failed = true;
     }
 
+    public static function add_error(string $post, string $message)
+    {
+        self::$errors[$post] = $message;
+        self::$failed = true;
+    }
+
     protected static function addErrs(string $post, string $message)
     {
         self::$ers[$post] = $message;
         self::$failed = true;
     }
 
-    public static function field_error(string|null|bool $field){
-        if(is_null($field) || is_bool($field)){
+    public static function field_error(string|null|bool $field)
+    {
+        if (is_null($field) || is_bool($field)) {
             return null;
         }
 
         $errors = self::$errors;
 
-        if(! $errors){
+        if (! $errors) {
             return null;
         }
 
