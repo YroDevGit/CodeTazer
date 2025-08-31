@@ -2,7 +2,7 @@ class Loading {
     constructor() {
         this.bodyColor = "#f3f3f3";
         this.spinnerColor = "#3498db";
-        this.zindex = "999999";
+        this.zindex = "9999";
         this.loaderId = "custom-loader-overlay";
         this.styleId = "custom-loader-style";
         this.ensureStyle();
