@@ -1,5 +1,7 @@
 class Loading {
     constructor() {
+        this.bodyColor = "#f3f3f3";
+        this.spinnerColor = "#3498db";
         this.loaderId = "custom-loader-overlay";
         this.styleId = "custom-loader-style";
         this.ensureStyle();
@@ -37,14 +39,14 @@ class Loading {
             overlay.style.display = "flex";
             overlay.style.alignItems = "center";
             overlay.style.justifyContent = "center";
-            overlay.style.zIndex = "9999";
+            overlay.style.zIndex = "999999";
             overlay.style.opacity = "0";
 
             const spinner = document.createElement("div");
             spinner.style.width = "60px";
             spinner.style.height = "60px";
-            spinner.style.border = "6px solid #f3f3f3";
-            spinner.style.borderTop = "6px solid #3498db";
+            spinner.style.border = "6px solid "+this.bodyColor;
+            spinner.style.borderTop = "6px solid "+this.spinnerColor;
             spinner.style.borderRadius = "50%";
             spinner.style.animation = "spin 1s linear infinite";
 
