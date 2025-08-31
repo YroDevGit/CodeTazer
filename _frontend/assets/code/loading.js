@@ -2,6 +2,7 @@ class Loading {
     constructor() {
         this.bodyColor = "#f3f3f3";
         this.spinnerColor = "#3498db";
+        this.zindex = "999999";
         this.loaderId = "custom-loader-overlay";
         this.styleId = "custom-loader-style";
         this.ensureStyle();
@@ -39,7 +40,7 @@ class Loading {
             overlay.style.display = "flex";
             overlay.style.alignItems = "center";
             overlay.style.justifyContent = "center";
-            overlay.style.zIndex = "999999";
+            overlay.style.zIndex = this.zindex;
             overlay.style.opacity = "0";
 
             const spinner = document.createElement("div");
