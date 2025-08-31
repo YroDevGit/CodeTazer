@@ -5,6 +5,7 @@ class Loading {
         this.zindex = "9999";
         this.loaderId = "custom-loader-overlay";
         this.styleId = "custom-loader-style";
+        this.percentId = "custom-loader-percent";
         this.ensureStyle();
     }
 
@@ -20,14 +21,25 @@ class Loading {
                 #${this.loaderId} {
                     transition: opacity 0.3s ease;
                 }
+                #${this.percentId} {
+                    position: absolute;
+                    top: 70px; /* below spinner */
+                    font-size: 18px;
+                    color: white;
+                    font-weight: bold;
+                    text-align: center;
+                    width: 100%;
+                }
             `;
             document.head.appendChild(style);
         }
     }
 
     load(show = true) {
+        const existingOverlay = document.getElementById(this.loaderId);
+
         if (show) {
-            if (document.getElementById(this.loaderId)) return;
+            if (existingOverlay) return;
 
             const overlay = document.createElement("div");
             overlay.id = this.loaderId;
@@ -43,15 +55,25 @@ class Loading {
             overlay.style.zIndex = this.zindex;
             overlay.style.opacity = "0";
 
+            const spinnerWrapper = document.createElement("div");
+            spinnerWrapper.style.position = "relative";
+
             const spinner = document.createElement("div");
             spinner.style.width = "60px";
             spinner.style.height = "60px";
-            spinner.style.border = "6px solid "+this.bodyColor;
-            spinner.style.borderTop = "6px solid "+this.spinnerColor;
+            spinner.style.border = "6px solid " + this.bodyColor;
+            spinner.style.borderTop = "6px solid " + this.spinnerColor;
             spinner.style.borderRadius = "50%";
             spinner.style.animation = "spin 1s linear infinite";
 
-            overlay.appendChild(spinner);
+            const percentText = document.createElement("div");
+            percentText.id = this.percentId;
+            percentText.innerText = "";
+
+            spinnerWrapper.appendChild(spinner);
+            spinnerWrapper.appendChild(percentText);
+
+            overlay.appendChild(spinnerWrapper);
             document.body.appendChild(overlay);
 
             requestAnimationFrame(() => {
@@ -59,10 +81,24 @@ class Loading {
             });
 
         } else {
-            const overlay = document.getElementById(this.loaderId);
-            if (overlay) {
-                overlay.style.opacity = "0";
-                setTimeout(() => overlay.remove(), 300);
+            if (existingOverlay) {
+                const percentText = document.getElementById(this.percentId);
+                percentText.innerText = "";
+                existingOverlay.style.opacity = "0";
+                setTimeout(() => existingOverlay.remove(), 300);
+            }
+        }
+    }
+
+    percent(value) {
+        const overlay = document.getElementById(this.loaderId);
+        const percentText = document.getElementById(this.percentId);
+
+        if (overlay && percentText && overlay.style.opacity !== "0") {
+            if (typeof value === "number" && value >= 0 && value <= 100) {
+                percentText.innerText = value + "%";
+            } else {
+                percentText.innerText = "";
             }
         }
     }

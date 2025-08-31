@@ -33,6 +33,42 @@ export class Tyrux {
             : this.#defaultHeaders;
         const contentType = headers["Content-Type"] || "";
 
+        options.before?.(xhr);
+
+        if (options.progress) {
+            xhr.upload.onprogress = (event) => {
+                if (event.lengthComputable) {
+                    const percent = Math.round((event.loaded / event.total) * 100);
+                    options.progress(percent, "upload", event, xhr);
+                }
+            };
+
+            xhr.onprogress = (event) => {
+                if (event.lengthComputable) {
+                    const percent = Math.round((event.loaded / event.total) * 100);
+                    options.progress(percent, "download", event, xhr);
+                }
+            };
+        } else {
+            if (options.uploading) {
+                xhr.upload.onprogress = (event) => {
+                    if (event.lengthComputable) {
+                        const percent = Math.round((event.loaded / event.total) * 100);
+                        options.uploading(percent, "upload", event, xhr);
+                    }
+                };
+            }
+            if (options.downloading) {
+                xhr.onprogress = (event) => {
+                    if (event.lengthComputable) {
+                        const percent = Math.round((event.loaded / event.total) * 100);
+                        options.downloading(percent, "download", event, xhr);
+                    }
+                };
+            }
+        }
+
+
         if (options.data instanceof FormData) {
             data = options.data;
             delete headers["Content-Type"];
@@ -62,7 +98,8 @@ export class Tyrux {
         }
 
         xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
+            let status = xhr.readyState;
+            if (status === 4) {
                 let responseData = xhr.responseText;
                 const respContentType = xhr.getResponseHeader("Content-Type") || "";
 
