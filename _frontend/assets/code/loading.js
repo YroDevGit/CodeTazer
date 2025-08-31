@@ -90,16 +90,11 @@ class Loading {
         }
     }
 
-    percent(value) {
+    text(value) {
         const overlay = document.getElementById(this.loaderId);
         const percentText = document.getElementById(this.percentId);
-
         if (overlay && percentText && overlay.style.opacity !== "0") {
-            if (typeof value === "number" && value >= 0 && value <= 100) {
-                percentText.innerText = value + "%";
-            } else {
-                percentText.innerText = "";
-            }
+            percentText.innerText = value;
         }
     }
 }
