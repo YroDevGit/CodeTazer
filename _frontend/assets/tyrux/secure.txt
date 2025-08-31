@@ -1,0 +1,5 @@
+Protect via mangle minify
+
+cd path to file
+npm install -g terser
+npx terser index.js -o index.js --compress --mangle
