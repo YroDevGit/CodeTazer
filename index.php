@@ -53,6 +53,16 @@ function basixs_param_getter($param)
     }
 }
 
+
+function basixs_php_rem($path){
+    $bee = $path;
+    if (substr($bee, -4) === '.php') {
+        $bax = substr($bee, 0, -4);
+        return $bax;
+    }
+    return $bee;
+}
+
 include_once("_backend/core/partials/basixs.php");
 include_once("_frontend/core/fe.php");
 
@@ -161,6 +171,7 @@ try {
             if($is_function){
                 die("Function page $get not found");
             }
+            $page = basixs_php_rem($get);
             include("_frontend/extra/errors/$page404");
             exit;
         }
@@ -168,6 +179,7 @@ try {
             if($is_function){
                 die("Function page $get not found");
             }
+            $page = basixs_php_rem($get);
             include("_frontend/extra/errors/$page404");
             exit;
         }
@@ -183,10 +195,12 @@ try {
         if ($get == "" || $get == null || $get == false) {
             $mainpage = php_file($mainpage);
             if (!file_exists("_frontend/pages/$mainpage")) {
+                $page = basixs_php_rem($mainpage);
                 include("_frontend/extra/errors/$page404");
                 exit;
             }
             if (!is_file("_frontend/pages/$mainpage")) {
+                $page = basixs_php_rem($mainpage);
                 include("_frontend/extra/errors/$page404");
                 exit;
             }
