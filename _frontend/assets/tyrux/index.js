@@ -91,6 +91,41 @@ const tyrequest = {// For raw/universal request:: CodeYRO
     },
 }
 
+
+const tyrax = {// For tyrux default config
+    api: function (option) {
+        tyrux(option);
+    },
+    post: function (option) {
+        option.method = "POST";
+        tyrux(option);
+    },
+    put: function (option) {
+        option.method = "PUT";
+        tyrux(option);
+    },
+    get: function (option) {
+        option.method = "GET";
+        tyrux(option);
+    },
+    patch: function (option) {
+        option.method = "PATCH";
+        tyrux(option);
+    },
+    delete: function (option) {
+        option.method = "DELETE";
+        tyrux(option);
+    },
+    head: function (option) {
+        option.method = "HEAD";
+        tyrux(option);
+    },
+    options: function (option) {
+        option.method = "OPTIONS";
+        tyrux(option);
+    },
+}
+
 function get_form_data(selector) {
     let form = null;
     if (selector.charAt(0) === "#" || selector.charAt(0) === ".") {
@@ -111,4 +146,5 @@ const DOM = new DOMclass();
 
 window.get_form_data = get_form_data;
 window.tyrequest = tyrequest;
+window.tyrax = tyrax;
 window.DOM = DOM;
