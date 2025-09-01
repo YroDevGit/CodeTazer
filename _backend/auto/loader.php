@@ -3,7 +3,7 @@
 
 //Auto load file inside php folder
 autoload_php([
-    "sample"
+    "test"
 ]);
 
 
