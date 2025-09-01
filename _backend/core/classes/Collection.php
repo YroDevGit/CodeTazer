@@ -279,6 +279,11 @@ class Collection
         return $this->all();
     }
 
+    public function exec()
+    {
+        return $this->all();
+    }
+
     private static function trulyEmpty(array $arr): bool
     {
         if (empty($arr)) return true;

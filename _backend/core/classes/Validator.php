@@ -126,6 +126,11 @@ class Validator
         return $this->validate();
     }
 
+    public function exec()
+    {
+        return $this->validate();
+    }
+
     public static function check($postname, $label, $rules)
     {
         $postdata = postdata();

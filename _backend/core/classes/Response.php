@@ -223,6 +223,11 @@ class Response
         self::push($status);
     }
 
+    public static function exec(int $status = 200)
+    {
+        self::push($status);
+    }
+
     public static function X(int $status = 200): void
     {
         self::push($status);
