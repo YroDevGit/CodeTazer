@@ -10,20 +10,32 @@ class DB
     private static $lastData;
     private static $lastTable;
 
-    protected $pdo;
-    protected $rowcount;
-    protected $totalRecords;
-    protected $totalPages;
-    protected $currentPage;
+    private static $pdo;
+    private static $rowcount;
+    private static $totalRecords;
+    private static $totalPages;
+    private static $currentPage;
 
     private static $allowedColumns = null;
     private static $hiddenColumns = null;
 
+    private static $newdb = false;
+
     public function __construct($database = null)
     {
-        $this->pdo = pdo($database);
+        if ($database) {
+            self::$pdo = pdo($database); // custom connection
+            self::$newdb = true;
+        }
     }
 
+    private static function conn(): \PDO
+    {
+        if (self::$newdb && self::$pdo instanceof \PDO) {
+            return self::$pdo;
+        }
+        return pdo(); // fallback to default global PDO
+    }
 
     public static function interface(array $columns)
     {
@@ -39,36 +51,25 @@ class DB
 
     public static function findOne(string $table, array $where)
     {
-        $conditions = $where;
         $data = self::find($table, $where);
-        if ($data) {
-            if (! $data[0]) {
-                return [];
-            }
-            return $data[0];
-        }
-        return [];
+        return $data[0] ?? [];
     }
 
     public static function get(string $table, array $where, int|array $extra = null): array
     {
         $data = self::find($table, $where, $extra);
-        if (empty($data)) {
-            return [];
-        }
-        return $data;
+        return $data ?: [];
     }
 
     public static function getAll(string $table, array|null $where = null, int|array $extra = null)
     {
-        $extra = is_null($extra) ? [] : $extra;
-        if (is_null($where) || empty($where)) {
-            $all =  self::select($table, null, $extra);
-            return is_null($all) ? [] : $all;
+        $extra = $extra ?? [];
+        if (empty($where)) {
+            $all = self::select($table, null, $extra);
+            return $all ?: [];
         }
         return self::get($table, $where, $extra);
     }
-
 
     public static function find(string $table, array $where, int|array $extra = null): array
     {
@@ -98,52 +99,39 @@ class DB
                     $offset = ($page - 1) * $limit;
                 }
             }
-
-            if (isset($extra['group by'])) {
-                $sql .= " GROUP BY " . $extra['group by'];
-            }
-
-            if (isset($extra['having'])) {
-                $sql .= " HAVING " . $extra['having'];
-            }
-
-            if (isset($extra['order by'])) {
-                $sql .= " ORDER BY " . $extra['order by'];
-            }
+            if (isset($extra['group by'])) $sql .= " GROUP BY " . $extra['group by'];
+            if (isset($extra['having'])) $sql .= " HAVING " . $extra['having'];
+            if (isset($extra['order by'])) $sql .= " ORDER BY " . $extra['order by'];
         }
 
         if ($limit !== null) {
             $sql .= " LIMIT :limit";
-            if ($offset !== null) {
-                $sql .= " OFFSET :offset";
-            }
+            if ($offset !== null) $sql .= " OFFSET :offset";
         }
 
         self::$lastQuery = $sql;
         self::$lastBindings = $where;
 
-        $stmt = self::$pdo->prepare($sql);
+        $stmt = self::conn()->prepare($sql);
 
         foreach ($where as $col => $val) {
             $stmt->bindValue(":$col", $val);
         }
-
         if ($limit !== null) {
             $stmt->bindValue(":limit", $limit, \PDO::PARAM_INT);
-            if ($offset !== null) {
-                $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
-            }
+            if ($offset !== null) $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
         }
 
         $stmt->execute();
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $rc = $stmt->rowCount();
         self::$rowcount = $rc;
+        $stmt->closeCursor();
 
-        $countSql = "SELECT COUNT(*) as cnt FROM {$table} WHERE $whereClause";
-        $countStmt = self::$pdo->prepare($countSql);
+        $countStmt = self::conn()->prepare("SELECT COUNT(*) as cnt FROM {$table} WHERE $whereClause");
         $countStmt->execute($where);
         $total = (int)$countStmt->fetch(\PDO::FETCH_ASSOC)['cnt'];
+        $countStmt->closeCursor();
 
         self::$totalRecords = $total;
         self::$totalPages = ($limit !== null && $limit > 0) ? (int)ceil($total / $limit) : 1;
@@ -171,9 +159,7 @@ class DB
         if (self::$hiddenColumns !== null) {
             foreach ($results as &$row) {
                 foreach (self::$hiddenColumns as $col) {
-                    if (array_key_exists($col, $row)) {
-                        unset($row[$col]);
-                    }
+                    unset($row[$col]);
                 }
             }
         }
@@ -183,12 +169,11 @@ class DB
     public static function insert(string $table, array $data)
     {
         $data = self::filterInsertData($data);
-
         $columns = implode(", ", array_map(fn($col) => "`$col`", array_keys($data)));
         $placeholders = implode(", ", array_fill(0, count($data), "?"));
         $sql = "INSERT INTO `$table` ($columns) VALUES ($placeholders)";
 
-        $pdo = pdo();
+        $pdo = self::conn();
         $stmt = $pdo->prepare($sql);
 
         self::$lastQuery = $sql;
@@ -205,25 +190,23 @@ class DB
         return $id ?: null;
     }
 
-
     public static function delete(string $table, array $where)
     {
         $whereClause = implode(" AND ", array_map(fn($col) => "`$col` = ?", array_keys($where)));
         $sql = "DELETE FROM `$table` WHERE $whereClause";
 
-        $pdo = pdo();
+        $pdo = self::conn();
         $stmt = $pdo->prepare($sql);
 
         self::$lastQuery = $sql;
         self::$lastBindings = array_values($where);
         self::$lastData = $where;
-        self::$lastTable =  $table;
+        self::$lastTable = $table;
 
         $stmt->execute(self::$lastBindings);
         $rowCount = $stmt->rowCount() ?? null;
         self::$lastRowCount = $rowCount;
         $stmt->closeCursor();
-        $stmt = null;
 
         self::resetColumnFilters();
         return $rowCount;
@@ -232,130 +215,93 @@ class DB
     public static function update(string $table, array $data, array $where)
     {
         $data = self::filterInsertData($data);
-
         $setClause = implode(", ", array_map(fn($col) => "`$col` = ?", array_keys($data)));
         $whereClause = implode(" AND ", array_map(fn($col) => "`$col` = ?", array_keys($where)));
         $sql = "UPDATE `$table` SET $setClause WHERE $whereClause";
         $params = array_merge(array_values($data), array_values($where));
 
-        $pdo = pdo();
+        $pdo = self::conn();
         $stmt = $pdo->prepare($sql);
 
         self::$lastQuery = $sql;
         self::$lastBindings = $params;
         self::$lastData = ["data" => $data, "where" => $where];
-        self::$lastTable =  $table;
+        self::$lastTable = $table;
 
         $stmt->execute($params);
         $rowCount = $stmt->rowCount();
         self::$lastRowCount = $rowCount;
         $stmt->closeCursor();
-        $stmt = null;
 
         self::resetColumnFilters();
         return $rowCount;
     }
 
-    static function query(string $sql, array $params = [])
+    public static function query(string $sql, array $params = [])
     {
-        $stmt = null;
-        $pdo  = pdo();
+        $pdo  = self::conn();
         $stmt = $pdo->prepare($sql);
         self::$lastQuery = $sql;
         self::$lastBindings = $params;
         self::$lastData = null;
-        self::$lastTable =  null;
+        self::$lastTable = null;
 
         foreach ($params as $key => $value) {
-            if (is_array($value)) {
-                throw new \InvalidArgumentException("Parameter cannot be an array: " . json_encode($value, JSON_UNESCAPED_UNICODE));
-            }
+            if (is_array($value)) throw new \InvalidArgumentException("Parameter cannot be an array");
             $placeholder = is_int($key) ? $key + 1 : $key;
             $stmt->bindValue($placeholder, $value);
         }
 
         $stmt->execute();
-
         $verb = strtoupper(strtok(ltrim($sql), " \n\t("));
         $rett = null;
+
         switch ($verb) {
             case 'SELECT':
-                self::$lastRowCount = $stmt->rowCount();
-                $results = $stmt->fetchAll(2);
-                $results = self::filterResultArray($results);
-                $rett = $results;
-                break;
-
             case 'SHOW':
             case 'DESCRIBE':
             case 'PRAGMA':
                 self::$lastRowCount = $stmt->rowCount();
-                $rett = $stmt->fetchAll(2);
+                $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+                $rett = self::filterResultArray($results);
                 break;
-
             case 'INSERT':
                 self::$lastRowCount = 1;
                 $rett = $pdo->lastInsertId();
                 break;
-
             case 'UPDATE':
             case 'DELETE':
-                $rett = $stmt->rowCount();
-                self::$lastRowCount = $rett;
-                break;
-
             default:
                 $rett = $stmt->rowCount();
                 self::$lastRowCount = $rett;
         }
 
         $stmt->closeCursor();
-        $stmt = null;
-
         self::resetColumnFilters();
         return $rett;
     }
 
     public static function select(string $table, string|array|null $columns = null, array $extra = []): array
     {
-        if ($columns === null || $columns === [] || $columns === '') {
-            $cols = '*';
-        } elseif (is_array($columns)) {
-            $cols = implode(',', array_map(fn($c) => "`" . trim($c, '`') . "`", $columns));
-        } else {
-            $cols = "`" . trim($columns, '`') . "`";
-        }
+        if ($columns === null || $columns === [] || $columns === '') $cols = '*';
+        elseif (is_array($columns)) $cols = implode(',', array_map(fn($c) => "`" . trim($c, '`') . "`", $columns));
+        else $cols = "`" . trim($columns, '`') . "`";
 
         $sql = "SELECT $cols FROM {$table}";
+        if (isset($extra['group by'])) $sql .= " GROUP BY " . $extra['group by'];
+        if (isset($extra['having'])) $sql .= " HAVING " . $extra['having'];
+        if (isset($extra['order by'])) $sql .= " ORDER BY " . $extra['order by'];
+        if (isset($extra['limit'])) $sql .= " LIMIT " . (int)$extra['limit'];
+        if (isset($extra['offset'])) $sql .= " OFFSET " . (int)$extra['offset'];
 
-        if (isset($extra['group by'])) {
-            $sql .= " GROUP BY " . $extra['group by'];
-        }
-
-        if (isset($extra['having'])) {
-            $sql .= " HAVING " . $extra['having'];
-        }
-
-        if (isset($extra['order by'])) {
-            $sql .= " ORDER BY " . $extra['order by'];
-        }
-
-        if (isset($extra['limit'])) {
-            $sql .= " LIMIT " . (int)$extra['limit'];
-        }
-
-        if (isset($extra['offset'])) {
-            $sql .= " OFFSET " . (int)$extra['offset'];
-        }
-
-        self::$lastQuery    = $sql;
+        self::$lastQuery = $sql;
         self::$lastBindings = [];
 
-        $stmt = self::$pdo->prepare($sql);
+        $stmt = self::conn()->prepare($sql);
         $stmt->execute();
-
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         self::$rowcount = $stmt->rowCount();
+        $stmt->closeCursor();
 
         return self::$rowcount > 0 ? $rows : [];
     }
@@ -369,14 +315,10 @@ class DB
         $bindings = self::$lastBindings;
 
         foreach ($bindings as $key => $value) {
-            $quoted = is_numeric($value) ? $value : pdo()->quote($value);
-            if (is_int($key)) {
-                $query = preg_replace('/\?/', $quoted, $query, 1);
-            } else {
-                $query = str_replace(":$key", $quoted, $query);
-            }
+            $quoted = is_numeric($value) ? $value : self::conn()->quote($value);
+            if (is_int($key)) $query = preg_replace('/\?/', $quoted, $query, 1);
+            else $query = str_replace(":$key", $quoted, $query);
         }
-
         return $query;
     }
 
