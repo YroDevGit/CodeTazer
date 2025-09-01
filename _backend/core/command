@@ -268,9 +268,15 @@ if ($route == "+model") {
     $phpFile = "_backend/_routes/" . $filename . ".php";
 
     $phpContent = <<<EOT
-    <?php 
+    <?php //route: $filename
+
     //Add codes here...
 
+
+
+
+
+    
 
 
     

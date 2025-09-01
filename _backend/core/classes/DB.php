@@ -10,8 +10,20 @@ class DB
     private static $lastData;
     private static $lastTable;
 
+    protected $pdo;
+    protected $rowcount;
+    protected $totalRecords;
+    protected $totalPages;
+    protected $currentPage;
+
     private static $allowedColumns = null;
     private static $hiddenColumns = null;
+
+    public function __construct($database = null)
+    {
+        $this->pdo = pdo($database);
+    }
+
 
     public static function interface(array $columns)
     {

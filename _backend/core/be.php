@@ -239,16 +239,38 @@ if (! function_exists("has_internet_connection")) {
 
 if (! function_exists("pdo")) {
     /** (Any) returns the value of the get */
-    function pdo($db = null, $no_database = false)
+    function pdo(string|null|array $db = null, $no_database = false)
     {
         static $pdo = null;
         try {
+
+            if (is_array($db)) {
+                $host = $db['host'] ?? "localhost";
+                $user =  $db['user'] ?? "root";
+                $pass = $db['password'] ?? "";
+                $driver = $db['driver'] ?? "mysql";
+                $dbname = $db['database'];
+                if (! $dbname) {
+                    add_sql_log("No database found. please check DB()", "be_errors");
+                    error_response(["code" => "404", "status" => "notfound", "message" => "No database found. please check DB() "]);
+                }
+
+                if ($pdo == null) {
+                    $pdo = new PDO("$driver:host=$host;dbname=$dbname", "$user", "$pass", [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                        PDO::ATTR_EMULATE_PREPARES => false,
+                    ]);
+                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                }
+                return $pdo;
+            }
             $host = getenv('dbhost');
             $user =  getenv('dbuser');
             $pass = getenv('dbpass');
             $dbname = $db == null ? getenv('database') : $db;
             if ($dbname == "" || $dbname == null) {
-                add_sql_log("No database found. please check .env file", "error");
+                add_sql_log("No database found. please check .env file", "be_errors");
                 error_response(["code" => "404", "status" => "notfound", "message" => "No database found. please check .env file"]);
             }
             if ($pdo == null) {
