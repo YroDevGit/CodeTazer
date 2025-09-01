@@ -42,6 +42,14 @@ if(! function_exists("import_swal")){
     }
 }
 
+if(! function_exists("import_twal")){
+    function import_twal(){
+        ?>
+        <script src="<?=assets('code/twal.js')?>"></script>
+        <?php
+    }
+}
+
 if(! function_exists("import_jquery")){
     function import_jquery(){
         ?>
