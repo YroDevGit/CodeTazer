@@ -114,11 +114,21 @@ class Validator
         return $this;
     }
 
+    public function trim()
+    {
+        $this->rules[] = "trim";
+        return $this;
+    }
+
     public function validate(): mixed
     {
         $rulesString = implode('|', $this->rules);
         $label = $this->label ?: $this->field;
-        return self::check($this->field, $label, $rulesString);
+        $ret = self::check($this->field, $label, $rulesString);
+        $this->label = null;
+        $this->field = null;
+        $this->rules = [];
+        return $ret;
     }
 
     public function X()
@@ -138,10 +148,14 @@ class Validator
             $postdata[$postname] = null;
         }
 
-        $value = trim($postdata[$postname] ?? '');
+
         $rulesArray = explode('|', $rules);
         $hasRequired = in_array('required', $rulesArray);
         $rulesArray = array_reverse($rulesArray);
+        $value = $postdata[$postname] ?? "";
+        if (in_array("trim", $rulesArray)) {
+            $value = trim($value);
+        }
 
         foreach ($rulesArray as $rule) {
             $ruleParts = explode(':', $rule, 2);

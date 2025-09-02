@@ -9,14 +9,22 @@ use ValueError;
 class Request
 {
 
-    static function post(string $key)
+    static function post(string $key, bool $trim = true)
     {
-        return post($key);
+        $post = post($key);
+        if($trim){
+            return trim($post);
+        }
+        return $post; 
     }
 
-    static function get(string $key)
+    static function get(string $key, bool $trim = true)
     {
-        return get($key);
+        $get = get($key);
+        if($trim){
+            return trim($get);
+        }
+        return $get;
     }
 
     static function all()
@@ -24,9 +32,9 @@ class Request
         return postdata();
     }
 
-    static function input($key)
+    static function input(string $key, bool $trim = true)
     {
-        return self::post($key);
+        return self::post($key, $trim);
     }
 
     static function headers(string|null $key = null, $ucwords = false)

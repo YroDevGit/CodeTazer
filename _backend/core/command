@@ -334,13 +334,39 @@ if ($route == "+model") {
         echo getenv("database") == null ? "❌ No database yet" : "🗃️  Your Database:  " . getenv("database");
         exit;
     }
-}else if($route == "author"){
+} else if ($route == "author") {
     echo "\n";
     echo "⚡CodeTazer⚡\n\n";
     echo "💻 by: \033[32mTyrone Limen Malocon\033[0m\n\n";
     echo "FB@: Tyrone Lee Emz\n";
     echo "Negros Occidental, Philippines";
     echo "\n\n";
+} else if ($route == "routes" || $route == "get_routes") {
+    echo "\n";
+    $projectRoot = realpath(__DIR__ . "/../..");
+    $path = $projectRoot . "/_backend/_routes";
+    if (!is_dir($path)) {
+        die("❌ Directory not found: " . $path);
+    }
+
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($path)
+    );
+
+    foreach ($iterator as $file) {
+        if ($file->isFile()) {
+            $bee = str_replace($path . DIRECTORY_SEPARATOR, '', $file->getPathname());
+            $bee = str_replace('\\', "/", $bee);
+            if (substr($bee, -4) == '.php') {
+                $bax = substr($bee, 0, -4);
+                echo $bax."\n";
+                continue;
+            }
+            echo $bee."\n";
+        }
+    }
+    echo "\n";
+    exit;
 } else {
     echo "Invalid command.\n";
     exit(1);
