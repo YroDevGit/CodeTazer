@@ -51,11 +51,11 @@ function decrypt($encrypted_data, string $key = null)
 
     $decoded_data = base64_decode($encrypted_data, true);
     if ($decoded_data === false) {
-        die("Error: Base64 decoding failed.");
+        return null;
     }
 
     if (strlen($decoded_data) < $iv_length) {
-        die("Error: Invalid encrypted data length.");
+        return null;
     }
     $iv = substr($decoded_data, 0, $iv_length);
     $encrypted_data = substr($decoded_data, $iv_length);
@@ -64,7 +64,7 @@ function decrypt($encrypted_data, string $key = null)
     $decrypted_data = openssl_decrypt($encrypted_data, $cipher, $decryption_key, 0, $iv);
 
     if ($decrypted_data === false || !mb_check_encoding($decrypted_data, 'UTF-8')) {
-        die("Error decrypting data.");
+        return null;
     }
 
     return $decrypted_data;
