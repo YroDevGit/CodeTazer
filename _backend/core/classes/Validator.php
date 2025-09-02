@@ -12,8 +12,8 @@ class Validator
     private static $failed = false;
     private static $ers = [];
 
-    private string $field;
-    private string $label = '';
+    private string|null $field;
+    private string|null $label = '';
     private array $rules = [];
 
     public function __construct(string $field)
