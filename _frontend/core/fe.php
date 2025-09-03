@@ -46,6 +46,15 @@ if (! function_exists("change_date")) {
     }
 }
 
+if (! function_exists("get_date")) {
+    function get_date(string $date, string $format = "Y-m-d H:i:s")
+    {
+        $given = $date;
+        $date  = new DateTime($given);
+        return $date->format($format);
+    }
+}
+
 if (! function_exists('page')) {
     function page(string $path = "=")
     {
