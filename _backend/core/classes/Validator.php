@@ -6,7 +6,7 @@ class Validator
 {
     /**
      * Tyrone Validator
-     * inspired to Express validator
+     * inspired by Express validator
      */
     private static $errors = [];
     private static $failed = false;
@@ -81,6 +81,18 @@ class Validator
     public function min(int|float $val): self
     {
         $this->rules[] = "min:$val";
+        return $this;
+    }
+
+    public function minChars(int $val): self
+    {
+        $this->rules[] = "min_chars:$val";
+        return $this;
+    }
+
+    public function maxChars(int $val): self
+    {
+        $this->rules[] = "max_chars:$val";
         return $this;
     }
 
@@ -239,6 +251,20 @@ class Validator
                         self::addError($postname, "$label must not exceed $ruleParam characters.");
                         self::addErrs($postname, "must not exceed $ruleParam characters.");
                     }
+                }
+            }
+
+            if ($ruleName === 'min_chars') {
+                if (strlen((string)$value) < (int)$ruleParam) {
+                    self::addError($postname, "$label must be at least $ruleParam characters.");
+                    self::addErrs($postname, "must be at least $ruleParam characters.");
+                }
+            }
+
+            if ($ruleName === 'max_chars') {
+                if (strlen((string)$value) > (int)$ruleParam) {
+                    self::addError($postname, "$label must not exceed $ruleParam characters.");
+                    self::addErrs($postname, "must not exceed $ruleParam characters.");
                 }
             }
 
