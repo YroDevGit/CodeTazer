@@ -35,6 +35,16 @@ if (! function_exists("now")) {
     }
 }
 
+if (! function_exists("change_date")) {
+    function change_date(string $date, string|null $interval)
+    {
+        $given = $date;
+        $date = new DateTime($given);
+        $date->modify($interval);
+        //or: $new   = date('Y-m-d H:i:s', strtotime($given . ' +20 minutes'));
+        return $date->format('Y-m-d H:i:s');
+    }
+}
 
 if (! function_exists('page')) {
     function page(string $path = "=")
