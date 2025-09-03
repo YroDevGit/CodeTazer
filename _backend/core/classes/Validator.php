@@ -126,7 +126,6 @@ class Validator
         return $this;
     }
 
-    // --- missing helpers added ---
     public function alpha(): self
     {
         $this->rules[] = "alpha";
