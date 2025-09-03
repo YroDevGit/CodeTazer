@@ -153,8 +153,9 @@ class Validator
         $hasRequired = in_array('required', $rulesArray);
         $rulesArray = array_reverse($rulesArray);
         $value = $postdata[$postname] ?? "";
+        $org = $postdata[$postname] ?? null;
         if (in_array("trim", $rulesArray)) {
-            $value = trim($value);
+            $value = trim($org ?? "");
         }
 
         foreach ($rulesArray as $rule) {
@@ -218,7 +219,7 @@ class Validator
             // ... keep all your other checks (alpha, alphanumeric, regex, in, not_in, date, url, ip, boolean, length, starts_with, ends_with, etc.)
         }
 
-        return $value;
+        return $org;
     }
 
     // Reset state

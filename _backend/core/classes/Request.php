@@ -12,17 +12,23 @@ class Request
     static function post(string $key, bool $trim = true)
     {
         $post = post($key);
-        if($trim){
-            return trim($post);
+        if (is_null($post)) {
+            return null;
         }
-        return $post; 
+        if ($trim) {
+            return trim($post ?? "");
+        }
+        return $post;
     }
 
     static function get(string $key, bool $trim = true)
     {
         $get = get($key);
-        if($trim){
-            return trim($get);
+        if (is_null($get)) {
+            return null;
+        }
+        if ($trim) {
+            return trim($get ?? "");
         }
         return $get;
     }
