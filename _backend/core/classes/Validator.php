@@ -66,6 +66,12 @@ class Validator
         return $this;
     }
 
+    public function equal(string $val): self
+    {
+        $this->rules[] = "equal:$val";
+        return $this;
+    }
+
     public function max(int|float $val): self
     {
         $this->rules[] = "max:$val";
@@ -114,9 +120,46 @@ class Validator
         return $this;
     }
 
-    public function trim()
+    public function trim(): self
     {
         $this->rules[] = "trim";
+        return $this;
+    }
+
+    // --- missing helpers added ---
+    public function alpha(): self
+    {
+        $this->rules[] = "alpha";
+        return $this;
+    }
+
+    public function alphanumeric(): self
+    {
+        $this->rules[] = "alphanumeric";
+        return $this;
+    }
+
+    public function date(): self
+    {
+        $this->rules[] = "date";
+        return $this;
+    }
+
+    public function url(): self
+    {
+        $this->rules[] = "url";
+        return $this;
+    }
+
+    public function ip(): self
+    {
+        $this->rules[] = "ip";
+        return $this;
+    }
+
+    public function boolean(): self
+    {
+        $this->rules[] = "boolean";
         return $this;
     }
 
@@ -148,12 +191,12 @@ class Validator
             $postdata[$postname] = null;
         }
 
-
         $rulesArray = explode('|', $rules);
         $hasRequired = in_array('required', $rulesArray);
         $rulesArray = array_reverse($rulesArray);
         $value = $postdata[$postname] ?? "";
         $org = $postdata[$postname] ?? null;
+
         if (in_array("trim", $rulesArray)) {
             $value = trim($org ?? "");
         }
@@ -167,7 +210,6 @@ class Validator
                 continue;
             }
 
-            // --- Your existing checks (exactly from your code) ---
             if ($ruleName === 'required' && $value === '') {
                 self::addError($postname, "$label is required.");
                 self::addErrs($postname, "Required");
@@ -216,13 +258,85 @@ class Validator
                 self::addErrs($postname, "must be a number.");
             }
 
-            // ... keep all your other checks (alpha, alphanumeric, regex, in, not_in, date, url, ip, boolean, length, starts_with, ends_with, etc.)
+            if ($ruleName === 'alpha' && !ctype_alpha($value)) {
+                self::addError($postname, "$label must contain only letters.");
+                self::addErrs($postname, "must contain only letters.");
+            }
+
+            if ($ruleName === 'alphanumeric' && !ctype_alnum($value)) {
+                self::addError($postname, "$label must contain only letters and numbers.");
+                self::addErrs($postname, "must contain only letters and numbers.");
+            }
+
+            if ($ruleName === 'regex' && $ruleParam) {
+                if (!preg_match($ruleParam, $value)) {
+                    self::addError($postname, "$label format is invalid.");
+                    self::addErrs($postname, "format is invalid.");
+                }
+            }
+
+            if ($ruleName === 'in' && $ruleParam) {
+                $options = explode(',', $ruleParam);
+                if (!in_array($value, $options)) {
+                    self::addError($postname, "$label has invalid value");
+                    self::addErrs($postname, "Invalid value");
+                }
+            }
+
+            if ($ruleName === 'not_in' && $ruleParam) {
+                $options = explode(',', $ruleParam);
+                if (in_array($value, $options)) {
+                    self::addError($postname, "$label value is not allowed.");
+                    self::addErrs($postname, "Value is not allowed.");
+                }
+            }
+
+            if ($ruleName === 'date' && strtotime($value) === false) {
+                self::addError($postname, "$label must be a valid date.");
+                self::addErrs($postname, "must be a valid date.");
+            }
+
+            if ($ruleName === 'url' && !filter_var($value, FILTER_VALIDATE_URL)) {
+                self::addError($postname, "$label must be a valid URL.");
+                self::addErrs($postname, "must be a valid URL.");
+            }
+
+            if ($ruleName === 'ip' && !filter_var($value, FILTER_VALIDATE_IP)) {
+                self::addError($postname, "$label must be a valid IP address.");
+                self::addErrs($postname, "must be a valid IP address.");
+            }
+
+            if ($ruleName === 'boolean' && !in_array($value, [true, false, 0, 1, '0', '1'], true)) {
+                self::addError($postname, "$label must be true or false.");
+                self::addErrs($postname, "must be true or false.");
+            }
+
+            if ($ruleName === 'length' && strlen($value) !== (int)$ruleParam) {
+                self::addError($postname, "$label must be exactly $ruleParam characters.");
+                self::addErrs($postname, "must be exactly $ruleParam characters.");
+            }
+
+            if ($ruleName === 'starts_with' && !str_starts_with($value, $ruleParam)) {
+                self::addError($postname, "$label must start with $ruleParam.");
+                self::addErrs($postname, "must start with $ruleParam.");
+            }
+
+            if ($ruleName === 'ends_with' && !str_ends_with($value, $ruleParam)) {
+                self::addError($postname, "$label must end with $ruleParam.");
+                self::addErrs($postname, "must end with $ruleParam.");
+            }
+
+            if ($ruleName === 'equal' && $ruleParam !== null) {
+                if ($value !== $ruleParam) {
+                    self::addError($postname, "$label has invalid value");
+                    self::addErrs($postname, "Invalid value");
+                }
+            }
         }
 
         return $org;
     }
 
-    // Reset state
     public static function reset()
     {
         self::$errors = [];
@@ -265,7 +379,7 @@ class Validator
 
         $errors = self::$errors;
 
-        if (! $errors) {
+        if (!$errors) {
             return null;
         }
 
