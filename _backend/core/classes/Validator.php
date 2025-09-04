@@ -270,7 +270,7 @@ class Validator
 
             if ($ruleName === 'email' && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
                 self::addError($postname, "$label must be a valid email address.");
-                self::addErrs($postname, "must be a valid email address.");
+                self::addErrs($postname, "Invalid email address.");
             }
 
             if (($ruleName === 'string' || $ruleName === 'text') && !is_string($value)) {
@@ -318,12 +318,12 @@ class Validator
 
             if ($ruleName === 'date' && strtotime($value) === false) {
                 self::addError($postname, "$label must be a valid date.");
-                self::addErrs($postname, "must be a valid date.");
+                self::addErrs($postname, "Invalid date.");
             }
 
             if ($ruleName === 'url' && !filter_var($value, FILTER_VALIDATE_URL)) {
                 self::addError($postname, "$label must be a valid URL.");
-                self::addErrs($postname, "must be a valid URL.");
+                self::addErrs($postname, "Invalid URL.");
             }
 
             if ($ruleName === 'ip' && !filter_var($value, FILTER_VALIDATE_IP)) {
