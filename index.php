@@ -54,7 +54,8 @@ function basixs_param_getter($param)
 }
 
 
-function basixs_php_rem($path){
+function basixs_php_rem($path)
+{
     $bee = $path;
     if (substr($bee, -4) === '.php') {
         $bax = substr($bee, 0, -4);
@@ -101,6 +102,11 @@ if ($bee) {
     $_SESSION['basixs_current_be'] = $bee;
     basixs_param_getter($param);
     include("_backend/core/be.php");
+    if (getenv("allow_all_origin") == "yes") {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Headers: " . getenv("allowed_headers"));
+    }
     $folder_to_bee = '_backend/auto';
     include_once $folder_to_bee . "/loader.php";
     try {
@@ -147,8 +153,8 @@ $is_function = false;
 
 
 try {
-    if(! $get){
-        if($_GET['funcpage'] ?? false){
+    if (! $get) {
+        if ($_GET['funcpage'] ?? false) {
             $get =  $_GET['funcpage'];
             $is_function = true;
         }
@@ -164,11 +170,11 @@ try {
         $param = isset($bb[1]) ? $bb[1] : "";
         $get = substr($bee, -4) == ".php" ? $bee : $bee . ".php";
         $target = "_frontend/pages/$get";
-        if($is_function){
+        if ($is_function) {
             $target = "_frontend/functions/$get";
         }
         if (!file_exists($target)) {
-            if($is_function){
+            if ($is_function) {
                 die("Function page $get not found");
             }
             $page = basixs_php_rem($get);
@@ -176,7 +182,7 @@ try {
             exit;
         }
         if (!is_file($target)) {
-            if($is_function){
+            if ($is_function) {
                 die("Function page $get not found");
             }
             $page = basixs_php_rem($get);

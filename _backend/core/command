@@ -34,6 +34,16 @@ if ($route == "+functionpage") {
 
 if ($route == "run" || $route == "serve" || $route == "start") {
     include "_frontend/core/loadenv.php";
+    if ($filename == "mobile" || $filename == "public") {
+        $host = getenv("rootpath");
+        $root = realpath(__DIR__ . '/../../');
+        $cmd = "php -S 0.0.0.0:9999 -t $root";
+        echo "\n⚡⚡ CodeTazer Framework by CodeYRO⚡⚡\n\n";
+        echo "🌐 public ip @ " . "\033[41m$host\033[0m\n" . "\n";
+        echo "--You can stop server by CTRL+C on your console\n\n";
+        passthru($cmd);
+        exit;
+    }
     $host = getenv("rootpath");
     if ($host == null) {
         echo "❌ ERROR: 'rootpath' has no value (.env file)\n";
@@ -44,7 +54,7 @@ if ($route == "run" || $route == "serve" || $route == "start") {
     $dir_msg = "";
     $dir_comm = "";
     if ($dir != null) {
-        $dir = realpath(__DIR__ . '/../../../' . $dir);
+        $dir = realpath(__DIR__ . '/../../');
 
         if (!is_dir($dir)) {
             echo "❌ Directory $dir does not exist.\n";
@@ -359,10 +369,10 @@ if ($route == "+model") {
             $bee = str_replace('\\', "/", $bee);
             if (substr($bee, -4) == '.php') {
                 $bax = substr($bee, 0, -4);
-                echo $bax."\n";
+                echo $bax . "\n";
                 continue;
             }
-            echo $bee."\n";
+            echo $bee . "\n";
         }
     }
     echo "\n";

@@ -12,8 +12,7 @@ class Cors
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
         if ($origin === '' || in_array($origin, $allowed)) {
-            header("Access-Control-Allow-Origin: $origin");
-            header("Access-Control-Allow-Credentials: true");
+            
         } else {
             $error($origin);
             return;
