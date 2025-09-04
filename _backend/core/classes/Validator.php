@@ -96,6 +96,18 @@ class Validator
         return $this;
     }
 
+    public function contain(mixed $val): self
+    {
+        $this->rules[] = "contain:$val";
+        return $this;
+    }
+
+    public function exclude(mixed $val): self
+    {
+        $this->rules[] = "exclude:$val";
+        return $this;
+    }
+
     public function regex(string $pattern): self
     {
         $this->rules[] = "regex:$pattern";
@@ -286,6 +298,20 @@ class Validator
             if ($ruleName === 'alpha' && !ctype_alpha($value)) {
                 self::addError($postname, "$label must contain only letters.");
                 self::addErrs($postname, "must contain only letters.");
+            }
+
+            if ($ruleName == "contain" || $ruleName == "having") {
+                if (! str_contains((string)$value, (string)$ruleParam)) {
+                    self::addError($postname, "$label has invalid value.");
+                    self::addErrs($postname, "Invalid value.");
+                }
+            }
+
+            if ($ruleName == "exclude") {
+                if (str_contains((string)$value, (string)$ruleParam)) {
+                    self::addError($postname, "$label value is not allowed.");
+                    self::addErrs($postname, "Value is not allowed.");
+                }
             }
 
             if ($ruleName === 'alphanumeric' && !ctype_alnum($value)) {
