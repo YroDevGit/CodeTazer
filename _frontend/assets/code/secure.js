@@ -4,6 +4,7 @@ class Secure {
   }
 
   encrypt(text, secret = this.global_secret) {
+    text = String(text);
     let result = "";
     for (let i = 0; i < text.length; i++) {
       result += String.fromCharCode(
