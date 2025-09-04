@@ -17,11 +17,13 @@ class Migration
     private static $intDefaultLenght = 11;
 
 
-    public static function setVarcharLength(int $length){
+    public static function setVarcharLength(int $length)
+    {
         self::$varcharDefaultLenght = $length;
     }
 
-    public static function setIntLength(int $length){
+    public static function setIntLength(int $length)
+    {
         self::$intDefaultLenght = $length;
     }
 
@@ -55,6 +57,9 @@ class Migration
             $primaryKeys = [];
 
             foreach ($columns as $colName => $definition) {
+                if ($definition == "@primary" || $definition == "@primarykey" || $definition == "@main" || $definition == "@pk") {
+                    $definition = ["int" => 20, "primary key", "auto_increment"];
+                }
                 if (is_array($definition)) {
                     $newDefinition = [];
                     foreach ($definition as $key => $value) {
