@@ -13,7 +13,17 @@ class Migration
      * @codeyro
      */
     private static $lastQuery = "";
+    private static $varcharDefaultLenght = 50;
+    private static $intDefaultLenght = 11;
 
+
+    public static function setVarcharLength(int $length){
+        self::$varcharDefaultLenght = $length;
+    }
+
+    public static function setIntLength(int $length){
+        self::$intDefaultLenght = $length;
+    }
 
     public static function setLastQuery(string $query): void
     {
@@ -131,6 +141,14 @@ class Migration
     private static function buildColumnDefinition(string $colName, $definition, bool $includeNullDefault = true): string
     {
         if (is_string($definition)) {
+            if (strtolower($definition) == "varchar") {
+                $length = self::$varcharDefaultLenght;
+                return "`$colName` $definition($length)";
+            }
+            if (strtolower($definition) == "int") {
+                $length = self::$intDefaultLenght;
+                return "`$colName` $definition($length)";
+            }
             return "`$colName` $definition";
         }
 
@@ -162,8 +180,18 @@ class Migration
         }
 
         if (empty($typeParts) && isset($definition[0])) {
-            $typeParts[] = strtoupper($definition[0]);
+            $baseType = strtolower($definition[0]);
+            if ($baseType === "varchar") {
+                $length = self::$varcharDefaultLenght;
+                $typeParts[] = "VARCHAR($length)";
+            } elseif ($baseType === "int") {
+                $length = self::$intDefaultLenght;
+                $typeParts[] = "INT($length)";
+            } else {
+                $typeParts[] = strtoupper($definition[0]);
+            }
         }
+
 
         return "`$colName` " . implode(" ", array_merge($typeParts, $extras));
     }
