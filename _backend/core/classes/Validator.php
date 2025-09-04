@@ -388,6 +388,7 @@ class Validator
     {
         self::$errors[$post] = $message;
         self::$failed = true;
+        self::addErrs($post, $message);
     }
 
     protected static function addErrs(string $post, string $message)
