@@ -102,7 +102,7 @@ if ($bee) {
     $_SESSION['basixs_current_be'] = $bee;
     basixs_param_getter($param);
     include("_backend/core/be.php");
-    if (getenv("public_access") == "yes") {
+    if (getenv("share_api")=="yes") {
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         header("Access-Control-Allow-Headers: " . getenv("allowed_headers"));
