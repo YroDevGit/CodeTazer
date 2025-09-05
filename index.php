@@ -101,7 +101,7 @@ if ($bee) {
     }
     $_SESSION['basixs_current_be'] = $bee;
     basixs_param_getter($param);
-    include("_backend/core/be.php");
+    include("_backend/core/partials/be.php");
     if (getenv("cross_origin_sharing") == "yes") {
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");

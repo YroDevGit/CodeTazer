@@ -32,7 +32,7 @@ class ComposerStaticInit6cd3654e9b9b8e8f1b737669c42895d1
         ),
         'Classes\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/_backend/core/classes',
+            0 => __DIR__ . '/../..' . '/_backend/core/partials/classes',
         ),
     );
 

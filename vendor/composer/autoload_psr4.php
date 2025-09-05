@@ -8,5 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'Tables\\' => array($baseDir . '/_backend/base'),
     'Models\\' => array($baseDir . '/_backend/model'),
-    'Classes\\' => array($baseDir . '/_backend/core/classes'),
+    'Classes\\' => array($baseDir . '/_backend/core/partials/classes'),
 );

@@ -310,10 +310,10 @@ if (! function_exists("add_sql_log")) {
         }
 
         $logConfig = [
-            "info"     => ["env" => "sql_logs",   "dir" => "_backend/logs/sql_logs",   "prefix" => "INFO"],
-            "error"    => ["env" => "sql_errors", "dir" => "_backend/logs/sql_errors", "prefix" => "ERROR"],
-            "query"    => ["env" => "query_logs", "dir" => "_backend/logs/query_logs", "prefix" => $intro],
-            "be_errors" => ["env" => "be_errors",  "dir" => "_backend/logs/be_errors",  "prefix" => $intro],
+            "info"     => ["env" => "sql_logs",   "dir" => "_backend/core/logs/sql_logs",   "prefix" => "INFO"],
+            "error"    => ["env" => "sql_errors", "dir" => "_backend/core/logs/sql_errors", "prefix" => "ERROR"],
+            "query"    => ["env" => "query_logs", "dir" => "_backend/core/logs/query_logs", "prefix" => $intro],
+            "be_errors" => ["env" => "be_errors",  "dir" => "_backend/core/logs/be_errors",  "prefix" => $intro],
         ];
 
         if (!isset($logConfig[$type])) {
@@ -344,7 +344,7 @@ if (! function_exists("add_sql_log")) {
 if (! function_exists("my_log")) {
     function my_log($text, string $intro = "")
     {
-        $dir = "_backend/logs/my_logs";
+        $dir = "_backend/core/logs/my_logs";
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }

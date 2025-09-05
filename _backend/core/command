@@ -88,8 +88,8 @@ if ($route == "dbmigrate") {
         exit(1);
     }
 
-    include "_backend/core/be.php";
-    include "_backend/core/classes/Migration.php";
+    include "_backend/core/partials/be.php";
+    include "_backend/core/partials/classes/Migration.php";
 
     $migFile = $filename;
     if (! file_exists("_backend/core/database/$migFile.php")) {
@@ -107,7 +107,7 @@ if ($route == "dbload") {
         echo "❌ database not found @ .env file\n";
         exit;
     }
-    include "_backend/core/be.php";
+    include "_backend/core/partials/be.php";
     try {
         $pdo = pdo($dbname, true);
         $stmnt = $pdo->prepare("Create database `$dbname`;");
@@ -132,7 +132,7 @@ if ($route == "+dbtable") {
         echo "❌ database not found @ .env file\n";
         exit;
     }
-    include "_backend/core/be.php";
+    include "_backend/core/partials/be.php";
     try {
         $pdo = pdo($dbname);
         $stmnt = $pdo->prepare("Create table `$filename` (id int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ");
@@ -195,7 +195,7 @@ if ($route == "+class") {
         exit(1);
     }
     $newname = ucfirst($filename);
-    $phpFile = "_backend/core/classes/" . ucfirst($newname) . ".php";
+    $phpFile = "_backend/core/partials/classes/" . ucfirst($newname) . ".php";
 
     $phpContent = <<<EOT
     <?php

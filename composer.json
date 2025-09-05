@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Classes\\": "_backend/core/classes/",
+      "Classes\\": "_backend/core/partials/classes/",
       "Tables\\": "_backend/base/",
       "Models\\": "_backend/model/"
     }
