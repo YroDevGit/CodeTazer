@@ -102,10 +102,21 @@ if ($bee) {
     $_SESSION['basixs_current_be'] = $bee;
     basixs_param_getter($param);
     include("_backend/core/be.php");
-    if (getenv("share_api")=="yes") {
+    if (getenv("cross_origin_sharing") == "yes") {
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         header("Access-Control-Allow-Headers: " . getenv("allowed_headers"));
+    } else {
+        $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+        if ($origin !== '') {
+            header('Content-Type: application/json');
+            http_response_code(403);
+            echo json_encode([
+                "code" => 403,
+                "message" => "Sorry, we are unable to share resources to '$origin'"
+            ]);
+            exit;
+        }
     }
     $folder_to_bee = '_backend/auto';
     include_once $folder_to_bee . "/loader.php";

@@ -5,9 +5,9 @@ class Cors
 {
 
 
-    public static function allow_origin(array $allowed, callable $error)
+    public static function allow_origin(array|null $allowed, callable $error)
     {
-        $allowed_origins = $allowed;
+        $allowed = is_null($allowed) ? [] : $allowed;
 
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
