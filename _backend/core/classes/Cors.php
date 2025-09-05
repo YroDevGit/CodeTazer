@@ -13,6 +13,7 @@ class Cors
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
         if ($origin === '' || in_array($origin, $allowed) || $origin == rootpath) {
+            
         } else {
             $error($origin);
             return;
