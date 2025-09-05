@@ -235,7 +235,7 @@ class Validator
 
             if ($ruleName === 'required' && $value === '') {
                 self::addError($postname, "$label is required.");
-                self::addErrs($postname, "required");
+                self::addErrs($postname, "required.");
             }
 
             if ($ruleName === 'min') {
@@ -329,8 +329,8 @@ class Validator
             if ($ruleName === 'in' && $ruleParam) {
                 $options = explode(',', $ruleParam);
                 if (!in_array($value, $options)) {
-                    self::addError($postname, "$label has invalid value");
-                    self::addErrs($postname, "invalid value");
+                    self::addError($postname, "$label has invalid value.");
+                    self::addErrs($postname, "invalid value.");
                 }
             }
 
@@ -379,8 +379,8 @@ class Validator
 
             if ($ruleName === 'equal' && $ruleParam !== null) {
                 if ($value !== $ruleParam) {
-                    self::addError($postname, "$label has invalid value");
-                    self::addErrs($postname, "invalid value");
+                    self::addError($postname, "$label has invalid value.");
+                    self::addErrs($postname, "invalid value.");
                 }
             }
         }
