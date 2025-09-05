@@ -235,7 +235,7 @@ class Validator
 
             if ($ruleName === 'required' && $value === '') {
                 self::addError($postname, "$label is required.");
-                self::addErrs($postname, "Required");
+                self::addErrs($postname, "required");
             }
 
             if ($ruleName === 'min') {
@@ -282,7 +282,7 @@ class Validator
 
             if ($ruleName === 'email' && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
                 self::addError($postname, "$label must be a valid email address.");
-                self::addErrs($postname, "Invalid email address.");
+                self::addErrs($postname, "invalid email address.");
             }
 
             if (($ruleName === 'string' || $ruleName === 'text') && !is_string($value)) {
@@ -303,14 +303,14 @@ class Validator
             if ($ruleName == "contain" || $ruleName == "having") {
                 if (! str_contains((string)$value, (string)$ruleParam)) {
                     self::addError($postname, "$label has invalid value.");
-                    self::addErrs($postname, "Invalid value.");
+                    self::addErrs($postname, "invalid value.");
                 }
             }
 
             if ($ruleName == "exclude") {
                 if (str_contains((string)$value, (string)$ruleParam)) {
                     self::addError($postname, "$label value is not allowed.");
-                    self::addErrs($postname, "Value is not allowed.");
+                    self::addErrs($postname, "value is not allowed.");
                 }
             }
 
@@ -330,7 +330,7 @@ class Validator
                 $options = explode(',', $ruleParam);
                 if (!in_array($value, $options)) {
                     self::addError($postname, "$label has invalid value");
-                    self::addErrs($postname, "Invalid value");
+                    self::addErrs($postname, "invalid value");
                 }
             }
 
@@ -338,18 +338,18 @@ class Validator
                 $options = explode(',', $ruleParam);
                 if (in_array($value, $options)) {
                     self::addError($postname, "$label value is not allowed.");
-                    self::addErrs($postname, "Value is not allowed.");
+                    self::addErrs($postname, "value is not allowed.");
                 }
             }
 
             if ($ruleName === 'date' && strtotime($value) === false) {
                 self::addError($postname, "$label must be a valid date.");
-                self::addErrs($postname, "Invalid date.");
+                self::addErrs($postname, "invalid date.");
             }
 
             if ($ruleName === 'url' && !filter_var($value, FILTER_VALIDATE_URL)) {
                 self::addError($postname, "$label must be a valid URL.");
-                self::addErrs($postname, "Invalid URL.");
+                self::addErrs($postname, "invalid URL.");
             }
 
             if ($ruleName === 'ip' && !filter_var($value, FILTER_VALIDATE_IP)) {
@@ -380,7 +380,7 @@ class Validator
             if ($ruleName === 'equal' && $ruleParam !== null) {
                 if ($value !== $ruleParam) {
                     self::addError($postname, "$label has invalid value");
-                    self::addErrs($postname, "Invalid value");
+                    self::addErrs($postname, "invalid value");
                 }
             }
         }
