@@ -80,7 +80,7 @@ if ($route == "run" || $route == "serve" || $route == "start") {
     exit;
 }
 
-if ($route == "dbmigrate") {
+if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import") {
     include "_frontend/core/loadenv.php";
 
     if ($filename == "") {
