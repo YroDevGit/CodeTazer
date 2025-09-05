@@ -104,6 +104,9 @@ class Migration
             }
 
             foreach ($columns as $colName => $definition) {
+                if ($definition == "@primary" || $definition == "@primarykey" || $definition == "@main" || $definition == "@pk") {
+                    $definition = ["int" => 20, "primary key", "auto_increment"];
+                }
                 if (is_array($definition)) {
                     $newDefinition = [];
                     foreach ($definition as $key => $value) {
