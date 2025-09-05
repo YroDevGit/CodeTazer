@@ -423,13 +423,18 @@ class Validator
         self::$failed = true;
     }
 
-    public static function field_error(string|null|bool $field)
+    public static function field_error(string|null|bool $field, bool $complete = true)
     {
         if (is_null($field) || is_bool($field)) {
             return null;
         }
 
-        $errors = self::$errors;
+        $errors = null;
+        if ($complete) {
+            $errors = self::$errors;
+        } else {
+            $errors = self::$ers;
+        }
 
         if (!$errors) {
             return null;
