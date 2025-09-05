@@ -207,6 +207,14 @@ class Validator
         return $this->validate();
     }
 
+    public function run(){
+        return $this->validate();
+    }
+
+    public function go(){
+        return $this->validate();
+    }
+
     public static function check($postname, $label, $rules)
     {
         $postdata = postdata();
