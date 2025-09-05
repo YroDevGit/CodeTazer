@@ -1,4 +1,5 @@
 <?php
+
 namespace Classes;
 
 class Cors
@@ -11,8 +12,7 @@ class Cors
 
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-        if ($origin === '' || in_array($origin, $allowed)) {
-            
+        if ($origin === '' || in_array($origin, $allowed) || $origin == rootpath) {
         } else {
             $error($origin);
             return;
@@ -27,7 +27,8 @@ class Cors
         }
     }
 
-    public static function set_request_method($method){
+    public static function set_request_method($method)
+    {
         set_request_method($method);
     }
 }

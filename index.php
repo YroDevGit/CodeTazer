@@ -108,12 +108,13 @@ if ($bee) {
         header("Access-Control-Allow-Headers: " . getenv("allowed_headers"));
     } else {
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-        if ($origin !== '') {
+        $rpath = rootpath;
+        if ($origin !== '' && $origin !== $rpath) {
             header('Content-Type: application/json');
             http_response_code(403);
             echo json_encode([
                 "code" => 403,
-                "message" => "Sorry, we are unable to share resources to '$origin'"
+                "message" => "Sorry, we are unable to share resources to '$org'"
             ]);
             exit;
         }
