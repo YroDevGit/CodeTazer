@@ -245,6 +245,21 @@ class Response
         self::push($status);
     }
 
+    public static function exit(int $status = 200)
+    {
+        self::push($status);
+    }
+
+    public static function end(int $status = 200)
+    {
+        self::push($status);
+    }
+
+    public static function break(int $status = 200)
+    {
+        self::push($status);
+    }
+
     public static function X(int $status = 200): void
     {
         self::push($status);
