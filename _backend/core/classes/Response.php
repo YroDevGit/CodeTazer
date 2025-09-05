@@ -11,6 +11,7 @@ class Response
     protected static $message = null;
     protected static $status = 200;
     protected static $text = null;
+    protected static $param = [];
 
     static function json(array $data, int $status = 200)
     {
@@ -152,6 +153,18 @@ class Response
         return new self;
     }
 
+    public static function parameter(array|null $param)
+    {
+        $data = is_null($param) ? [] : $param;
+        self::$param = $data;
+        return new self;
+    }
+
+    public static function variable(array|null $param)
+    {
+        return self::parameter($param);
+    }
+
     public static function message(string|null $message)
     {
         $message = is_null($message) ? "" : $message;
@@ -196,24 +209,28 @@ class Response
         $message =  self::$message;
         $code = self::$code;
         $text = self::$text;
+        $parameters = self::$param;
 
+        if ($parameters && ! empty($parameters) && ! is_null($parameters)) {
+            $response = $parameters;
+        }
+        if (! is_null($errors)) {
+            $response['errors'] = $errors;
+        }
         if (! is_null($details)) {
             $response['details'] = $details;
         }
         if (! is_null($data)) {
             $response['data'] = $data;
         }
-        if (! is_null($errors)) {
-            $response['errors'] = $errors;
+        if (! is_null($text)) {
+            $response['text'] = $text;
         }
         if (! is_null($message)) {
             $response['message'] = $message;
         }
-        if (! is_null($text)) {
-            $response['text'] = $text;
-        }
-
         $response['code'] = $code;
+        $response = array_reverse($response);
 
         self::json($response, $status);
     }
