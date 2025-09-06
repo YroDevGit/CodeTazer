@@ -121,14 +121,14 @@ class BaseTable
         return $data[0] ?? [];
     }
 
-    public static function get(array $where, int|array $extra = null): array
+    public static function get(array $where, int|array|null $extra = null): array
     {
         $self = static::instance();
         $data = $self->find($where, $extra);
         return empty($data) ? [] : $data;
     }
 
-    public static function getAll(array|null $where = null, int|array $extra = null)
+    public static function getAll(array|null $where = null, array|int|null $extra = null)
     {
         $extra = $extra ?? [];
         if (is_null($where) || empty($where)) {
@@ -138,7 +138,7 @@ class BaseTable
         return self::get($where, $extra);
     }
 
-    public static function find(array $where, int|array $extra = null)
+    public static function find(array $where, array|int|null $extra = null)
     {
         $self = static::instance();
         if (!is_array($where)) {
@@ -429,7 +429,7 @@ class BaseTable
         return [];
     }
 
-    public function excepts(string|array $key = null)
+    public function excepts(string|array|null $key = null)
     {
         $attributes = $this->toArray();
         if ($key === null) return $attributes;

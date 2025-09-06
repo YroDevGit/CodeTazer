@@ -43,7 +43,7 @@ if (! function_exists("json_reponse_data")) {
 }
 
 if (! function_exists('json_error')) {
-    function json_error(array $details = [], string $message = null, int $status = 200)
+    function json_error(array $details = [], string|null $message = null, int $status = 200)
     {
         json_response([
             "code" => getenv("error_code"),
@@ -56,7 +56,7 @@ if (! function_exists('json_error')) {
 }
 
 if (! function_exists('json_success')) {
-    function json_success(array $details = [], string $message = null, int $status = 200)
+    function json_success(array $details = [], string|null $message = null, int $status = 200)
     {
         json_response([
             "code" => getenv("success_code"),
@@ -69,7 +69,7 @@ if (! function_exists('json_success')) {
 }
 
 if (! function_exists('json_notfound')) {
-    function json_notfound(array $details = [], string $message = null, int $status = 200)
+    function json_notfound(array $details = [], string|null $message = null, int $status = 200)
     {
         json_response([
             "code" => getenv("notfound_code"),
@@ -82,7 +82,7 @@ if (! function_exists('json_notfound')) {
 }
 
 if (! function_exists('json_failed')) {
-    function json_failed(array $details = [], string $message = null, int $status = 200)
+    function json_failed(array $details = [], string|null $message = null, int $status = 200)
     {
         json_response([
             "code" => getenv("failed_code"),
@@ -95,7 +95,7 @@ if (! function_exists('json_failed')) {
 }
 
 if (! function_exists('json_badrequest')) {
-    function json_badrequest(array $details = [], string $message = null, int $status = 200)
+    function json_badrequest(array $details = [], string|null $message = null, int $status = 200)
     {
         json_response([
             "code" => getenv("badrequest_code"),
@@ -108,7 +108,7 @@ if (! function_exists('json_badrequest')) {
 }
 
 if (! function_exists('json_forbidden')) {
-    function json_forbidden(array $details = [], string $message = null, int $status = 200)
+    function json_forbidden(array $details = [], string|null $message = null, int $status = 200)
     {
         json_response([
             "code" => getenv("forbidden_code"),
@@ -121,7 +121,7 @@ if (! function_exists('json_forbidden')) {
 }
 
 if (! function_exists('json_unauthorized')) {
-    function json_unauthorized(array $details = [], string $message = null, int $status = 200)
+    function json_unauthorized(array $details = [], string|null $message = null, int $status = 200)
     {
         json_response([
             "code" => getenv("unauthorized_code"),
@@ -923,7 +923,7 @@ if (! function_exists("set_sql_batch")) {
 }
 
 if (! function_exists("autoload_php")) {
-    function autoload_php(string|array $filename = null)
+    function autoload_php(string|array|null $filename = null)
     {
         if (!$filename) {
             return false;
@@ -972,7 +972,7 @@ if (! function_exists("current_be")) {
 }
 
 if (! function_exists("server_headers")) {
-    function server_headers(String $searchKey = null)
+    function server_headers(string|null $searchKey = null)
     {
         $headers = [];
         foreach ($_SERVER as $serverKey => $value) {

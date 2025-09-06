@@ -55,13 +55,13 @@ class DB
         return $data[0] ?? [];
     }
 
-    public static function get(string $table, array $where, int|array $extra = null): array
+    public static function get(string $table, array $where, array|int|null $extra = null): array
     {
         $data = self::find($table, $where, $extra);
         return $data ?: [];
     }
 
-    public static function getAll(string $table, array|null $where = null, int|array $extra = null)
+    public static function getAll(string $table, array|null $where = null, array|int|null $extra = null)
     {
         $extra = $extra ?? [];
         if (empty($where)) {
@@ -71,7 +71,7 @@ class DB
         return self::get($table, $where, $extra);
     }
 
-    public static function find(string $table, array $where, int|array $extra = null): array
+    public static function find(string $table, array $where, array|int|null $extra = null): array
     {
         if (!is_array($where)) {
             throw new \InvalidArgumentException("Where conditions must be an associative array.");

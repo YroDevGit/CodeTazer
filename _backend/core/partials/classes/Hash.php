@@ -22,12 +22,12 @@ class Hash
         return substr(md5($text), 0, $length);
     }
 
-    public static function encrypt($string, string $key = null)
+    public static function encrypt($string, string|null $key = null)
     {
         return encrypt($string, $key);
     }
 
-    public static function decrypt($string, string $key = null)
+    public static function decrypt($string, string|null $key = null)
     {
         return decrypt($string, $key);
     }
