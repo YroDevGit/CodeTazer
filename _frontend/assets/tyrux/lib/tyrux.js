@@ -34,6 +34,7 @@ export class Tyrux {
         const contentType = headers["Content-Type"] || "";
 
         options.before?.(xhr);
+        options.wait?.(xhr);
         options.pending?.(xhr);
 
         if (options.progress) {
@@ -132,6 +133,7 @@ export class Tyrux {
                 }
                 options.finally?.(responseData, xhr);
                 options.ready?.(responseData, xhr);
+                options.done?.(responseData, xhr);
             }
         };
 
