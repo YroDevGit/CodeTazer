@@ -68,7 +68,7 @@ export class Tyrux {
             }
         }
 
-
+        options.data = options.data ?? options.request ?? null;
         if (options.data instanceof FormData) {
             data = options.data;
             delete headers["Content-Type"];
