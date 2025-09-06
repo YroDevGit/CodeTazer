@@ -34,6 +34,7 @@ export class Tyrux {
         const contentType = headers["Content-Type"] || "";
 
         options.before?.(xhr);
+        options.pending?.(xhr);
 
         if (options.progress) {
             xhr.upload.onprogress = (event) => {
@@ -130,7 +131,6 @@ export class Tyrux {
                     options.error?.(responseData, xhr);
                 }
                 options.finally?.(responseData, xhr);
-                options.done?.(responseData, xhr);
                 options.ready?.(responseData, xhr);
             }
         };
