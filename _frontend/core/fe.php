@@ -41,7 +41,7 @@ if (! function_exists("change_date")) {
         $given = $date;
         $date = new DateTime($given);
         $date->modify($interval);
-        //or: $new   = date('Y-m-d H:i:s', strtotime($given . ' +20 minutes'));
+        ///or: $new   = date('Y-m-d H:i:s', strtotime($given . ' +20 minutes'));
         return $date->format('Y-m-d H:i:s');
     }
 }
