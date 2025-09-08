@@ -24,7 +24,7 @@
   </div>
   <div class="mb-4"><span>The upgraded version of Basixs</span></div>
   <p class="text-xl md:text-2xl text-green-300 mb-8">
-    The most basic PHP framework — clean, light, fast and beginner friendly.
+    The most basic PHP framework — light, secure, fast and beginner friendly.
   </p>
   <div class="flex gap-4">
     <a href="https://github.com/YroDevGit/basixs" class="bg-transparent border border-green-400 text-green-300 px-6 py-2 hover:bg-green-700 transition">
