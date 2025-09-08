@@ -37,13 +37,18 @@ class Migration
         return self::$lastQuery;
     }
 
-    public static function table(string $tablename, array $columns): bool
+    public static function table(string $tablename, array $columns, bool $timestamp = false): bool
     {
         $db = getenv("database");
         if (empty($db)) {
             self::setLastQuery("No database found in (.env)");
             echo "❌ No Database found in .env\n";
             return false;
+        }
+
+        if ($timestamp) {
+            $columns['created_at'] = "datetime";
+            $columns['updated_at'] = "datetime";
         }
 
         $pdo = pdo($db);
@@ -144,6 +149,11 @@ class Migration
             $pdo = null;
             return true;
         }
+    }
+
+    public static function table_ts(string $tablename, array $columns)
+    {
+        return self::table($tablename, $columns, true);
     }
 
     private static function buildColumnDefinition(string $colName, $definition, bool $includeNullDefault = true): string
