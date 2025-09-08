@@ -7,6 +7,52 @@ if (PHP_SAPI !== 'cli') {
 $arguments = $argv;
 $route = isset($arguments[1]) ? strtolower($arguments[1]) : '';
 $filename = isset($arguments[2]) ? $arguments[2] : '';
+$extra = isset($arguments[3]) ? $arguments[3] : '';
+
+
+function AddAllBaseTable($dbname)
+{
+    include "_backend/core/partials/be.php";
+    $pdo = pdo($dbname);
+    $stmnt = $pdo->prepare("SHOW TABLES");
+    $stmnt->execute();
+    $tables = $stmnt->fetchAll(PDO::FETCH_COLUMN);
+
+    foreach ($tables as $filename) {
+        $newname  = ucfirst($filename);
+        $phpFile = "_backend/base/" . ucfirst($newname) . ".php";
+
+        $phpContent = <<<EOT
+    <?php 
+    namespace Tables;
+    use Classes\BaseTable;
+
+    class $newname extends BaseTable {
+        
+        protected \$table = "$filename";
+
+        protected \$fillable = [];
+
+        protected \$guarded = [];
+
+        protected \$hidden = [];
+
+        protected \$timestamps = false;
+    }
+    ?>
+    EOT;
+
+        if (file_exists($phpFile)) {
+            continue;
+        } else {
+            if (file_put_contents($phpFile, $phpContent) !== false) {
+                echo "✔️ Base file created successfully: $phpFile\n";
+            } else {
+                continue;
+            }
+        }
+    }
+}
 
 if ($route == "+functionpage") {
     $phpFile = "_frontend/functions/.gitkeep";
@@ -85,6 +131,11 @@ if ($route == "run" || $route == "serve" || $route == "start") {
 
 if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import") {
     include "_frontend/core/loadenv.php";
+    $dbname = getenv("database");
+    if (! $dbname) {
+        echo "❌ No Database found @ .env";
+        exit;
+    }
 
     if ($filename == "") {
         echo "❌ Please filename for migration.\n";
@@ -100,6 +151,16 @@ if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import") {
         exit;
     }
     include "_backend/core/database/$migFile.php";
+    if ($extra) {
+        if ($extra == "--auto") {
+            echo "\n\n";
+            echo "Auto import base table, please wait....";
+            echo "\n\n";
+            AddAllBaseTable($dbname);
+            echo "\n-------\n\n";
+            echo "✔️Done\n";
+        }
+    }
     exit;
 }
 
@@ -161,45 +222,7 @@ if ($route == "+base" || $route == "+base_table" || $route == "+basetable") {
         exit;
     }
     if ($filename == "*") {
-        $pdo = pdo($dbname);
-        $stmnt = $pdo->prepare("SHOW TABLES");
-        $stmnt->execute();
-        $tables = $stmnt->fetchAll(PDO::FETCH_COLUMN);
-
-        foreach ($tables as $filename) {
-            $newname  = ucfirst($filename);
-            $phpFile = "_backend/base/" . ucfirst($newname) . ".php";
-
-            $phpContent = <<<EOT
-    <?php 
-    namespace Tables;
-    use Classes\BaseTable;
-
-    class $newname extends BaseTable {
-        
-        protected \$table = "$filename";
-
-        protected \$fillable = [];
-
-        protected \$guarded = [];
-
-        protected \$hidden = [];
-
-        protected \$timestamps = false;
-    }
-    ?>
-    EOT;
-
-            if (file_exists($phpFile)) {
-                continue;
-            } else {
-                if (file_put_contents($phpFile, $phpContent) !== false) {
-                    echo "✔️ Base file created successfully: $phpFile\n";
-                } else {
-                    continue;
-                }
-            }
-        }
+        AddAllBaseTable($dbname);
         exit;
     }
     $newname = ucfirst($filename);
