@@ -41,7 +41,7 @@
       <ul>
         <li>-Composer</li>
         <li>-Collection</li>
-        <li>-Twal & Tyrux</li>
+        <li>-Built-in tools</li>
         <li>-PostgreSQL</li>
       </ul>
     </div>
