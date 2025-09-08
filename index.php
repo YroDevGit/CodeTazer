@@ -148,7 +148,7 @@ if ($bee) {
     } catch (PDOException $e) {
         $err = BasixsErrorException($e, $bee, "db_error_code");
         header('Content-Type: application/json');
-        http_response_code(getenv("success_code"));
+        http_response_code(getenv("error_code"));
         echo json_encode($err);
         exit;
     } catch (InvalidArgumentException $e) {
