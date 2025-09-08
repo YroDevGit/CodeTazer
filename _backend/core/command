@@ -150,14 +150,17 @@ if ($route == "+dbtable") {
 }
 
 if ($route == "+base" || $route == "+base_table" || $route == "+basetable") {
+    $dbname = getenv("database");
+    if (!$dbname) {
+        echo "❌ No database found @ .env\n";
+        exit;
+    }
     if ($filename == "") {
         echo "❌ Please provide a filename for the base.\n";
         exit(1);
     }
     if ($filename == "*") {
-        $dbname = getenv("database");
         $pdo = pdo($dbname);
-
         $stmnt = $pdo->prepare("SHOW TABLES");
         $stmnt->execute();
         $tables = $stmnt->fetchAll(PDO::FETCH_COLUMN);
