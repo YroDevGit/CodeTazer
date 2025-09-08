@@ -154,6 +154,50 @@ if ($route == "+base" || $route == "+base_table" || $route == "+basetable") {
         echo "❌ Please provide a filename for the base.\n";
         exit(1);
     }
+    if ($filename == "*") {
+        $dbname = getenv("database");
+        $pdo = pdo($dbname);
+
+        $stmnt = $pdo->prepare("SHOW TABLES");
+        $stmnt->execute();
+        $tables = $stmnt->fetchAll(PDO::FETCH_COLUMN);
+
+        foreach ($tables as $filename) {
+            $newname  = ucfirst($filename);
+            $phpFile = "_backend/base/" . ucfirst($newname) . ".php";
+
+            $phpContent = <<<EOT
+    <?php 
+    namespace Tables;
+    use Classes\BaseTable;
+
+    class $newname extends BaseTable {
+        
+        protected \$table = "$filename";
+
+        protected \$fillable = [];
+
+        protected \$guarded = [];
+
+        protected \$hidden = [];
+
+        protected \$timestamps = false;
+    }
+    ?>
+    EOT;
+
+            if (file_exists($phpFile)) {
+                continue;
+            } else {
+                if (file_put_contents($phpFile, $phpContent) !== false) {
+                    echo "✔️ Base file created successfully: $phpFile\n";
+                } else {
+                    continue;
+                }
+            }
+        }
+        exit;
+    }
     $newname = ucfirst($filename);
     $phpFile = "_backend/base/" . ucfirst($newname) . ".php";
 
