@@ -91,7 +91,7 @@ function BasixsErrorException($e, $bee, string $errorcode = "backend_error_code"
     $err = [];
     $env = getenv("environment") == null ? "dev" : getenv("environment");
     if (strtolower($env) == "uat" || strtolower($env) == "staging") {
-        include "_backend/core/library/PHPErrorClass.php";
+        include "_backend/core/partials/library/PHPErrorClass.php";
         $clearMSG = PHPErrorClass::error_message($e);
         $err = [
             "code" => getenv($errorcode),
@@ -101,7 +101,7 @@ function BasixsErrorException($e, $bee, string $errorcode = "backend_error_code"
             "data" => []
         ];
     }else if(strtolower($env) == "prod" || strtolower($env) == "production"){
-        include "_backend/core/library/PHPErrorClass.php";
+        include "_backend/core/partials/library/PHPErrorClass.php";
         $clearMSG = PHPErrorClass::error_message($e);
         $err = [
             "code" => getenv($errorcode),

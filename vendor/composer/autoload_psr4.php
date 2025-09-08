@@ -8,5 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'Tables\\' => array($baseDir . '/_backend/base'),
     'Models\\' => array($baseDir . '/_backend/model'),
+    'Library\\' => array($baseDir . '/_backend/core/library'),
     'Classes\\' => array($baseDir . '/_backend/core/partials/classes'),
 );

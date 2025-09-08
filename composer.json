@@ -16,7 +16,8 @@
     "psr-4": {
       "Classes\\": "_backend/core/partials/classes/",
       "Tables\\": "_backend/base/",
-      "Models\\": "_backend/model/"
+      "Models\\": "_backend/model/",
+      "Library\\": "_backend/core/library/"
     }
   }
 }

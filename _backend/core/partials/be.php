@@ -868,7 +868,7 @@ if (! function_exists("use_library")) {
     function use_library(string $library)
     {
         $modelFile = substr($library, -4) == ".php" ? $library : $library . ".php";
-        include "_backend/core/library/" . $modelFile;
+        include "_backend/core/partials/library/" . $modelFile;
 
         $className = basename($library, ".php");
         return new $className();

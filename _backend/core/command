@@ -226,6 +226,78 @@ if ($route == "+class") {
     }
 }
 
+if ($route == "+library") {
+    if ($filename == "") {
+        echo "❌ Please provide a filename for the library.\n";
+        exit(1);
+    }
+    $newname = ucfirst($filename);
+    $phpFile = "_backend/core/library/" . ucfirst($newname) . ".php";
+
+    $phpContent = <<<EOT
+    <?php
+    namespace Library;
+
+    class $newname{
+
+        //create a function here...
+
+    }
+    ?>
+    EOT;
+
+    if (file_exists($phpFile)) {
+        echo "❌ File already exists. Please choose a different name.\n";
+        exit(1);
+    } else {
+        if (file_put_contents($phpFile, $phpContent) !== false) {
+            echo "✔️ Library file created successfully: $phpFile\n";
+            exit(0);
+        } else {
+            echo "❌ Failed to create Library file.\n";
+            exit(1);
+        }
+    }
+}
+
+
+if ($route == "+middleware") {
+    if ($filename == "") {
+        echo "❌ Please provide a filename for the library.\n";
+        exit(1);
+    }
+    $newname = $filename;
+    $phpFile = "_backend/middleware/" . $newname . ".php";
+
+    $phpContent = <<<EOT
+    <?php
+    
+    //Use this as:  use_middleware('$newname');
+
+
+
+
+
+
+
+
+    ?>
+    EOT;
+
+    if (file_exists($phpFile)) {
+        echo "❌ File already exists. Please choose a different name.\n";
+        exit(1);
+    } else {
+        if (file_put_contents($phpFile, $phpContent) !== false) {
+            echo "✔️ Middleware file created successfully: $phpFile\n";
+            exit(0);
+        } else {
+            echo "❌ Failed to create Middleware file.\n";
+            exit(1);
+        }
+    }
+}
+
 if ($route == "+model") {
     if ($filename == "") {
         echo "❌ Please provide a filename for the model.\n";

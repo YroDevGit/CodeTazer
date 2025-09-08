@@ -1,9 +1,22 @@
 <?php $basixserver = $_SERVER['HTTP_HOST'] . "/" . trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') ?>
 <?php
+/**
+ * CodeTazer made by CodeYRO
+ * Inspired to: ExpressJS, Laravel, NodeJS, Codeigniter
+ * Please do not modify anything here, might broke some functionalities
+ * @Author Tyrone Malocon
+ */
 session_start();
+/**
+ * initialize session
+ */
 $_SESSION['basixserver'] = $basixserver;
 setcookie("rootpath", $basixserver, time() + ((86400) * 30), "/");
 require_once 'vendor/autoload.php';
+
+/**
+ * Definitions of important constants
+ */
 
 if (! defined("fe")) {
     define("fe", "_frontend");
@@ -14,7 +27,9 @@ if (! defined("fe_page")) {
 if (! defined("be")) {
     define("be", "_backend");
 }
-
+/**
+ * Some basic and global functions here...
+ */
 function get_basixs_root_path()
 {
     $protocol = 'http';
@@ -63,7 +78,9 @@ function basixs_php_rem($path)
     }
     return $bee;
 }
-
+/**
+ * Please do not modify anything here
+ */
 include_once("_backend/core/partials/basixs.php");
 include_once("_frontend/core/fe.php");
 
