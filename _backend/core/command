@@ -152,13 +152,17 @@ if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import") {
     }
     include "_backend/core/database/$migFile.php";
     if ($extra) {
-        if ($extra == "--auto") {
+        if ($extra == "--auto" || $extra == "--reflect" || $extra == "--sync") {
             echo "\n\n";
-            echo "Auto import base table, please wait....";
+            echo "Auto sync base table, please wait....";
             echo "\n\n";
             AddAllBaseTable($dbname);
             echo "\n-------\n\n";
             echo "✔️ Done\n";
+        }else{
+            echo "\n\n";
+            echo "❌ Invalid -- command\n";
+            echo "Auto sync table failed\n\n";
         }
     }
     exit;
