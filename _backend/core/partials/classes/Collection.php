@@ -150,6 +150,40 @@ class Collection
         return $this;
     }
 
+    public function format(string $format, string|array $columns): self
+    {
+        if ($this->trulyEmpty($this->items)) {
+            return $this;
+        }
+
+        if (is_string($columns)) {
+            $columns = [$columns];
+        }
+
+        $this->items = array_map(function ($item) use ($format, $columns) {
+            foreach ($columns as $col) {
+                $val = $item[$col] ?? '';
+                $item[$col . "1"] = str_replace("?", (string)$val, $format);
+            }
+            return $item;
+        }, $this->items);
+
+        return $this;
+    }
+
+
+    static function string_format(string $string, string $separator, string $format, bool $asArray = false): string|array
+    {
+        $parts = explode($separator, $string);
+
+        $formatted = array_map(function ($part) use ($format) {
+            return str_replace("?", trim($part), $format);
+        }, $parts);
+
+        return $asArray ? $formatted : implode("", $formatted);
+    }
+
+
     public function like(...$conditions): self
     {
         if ($this->trulyEmpty($this->items)) {

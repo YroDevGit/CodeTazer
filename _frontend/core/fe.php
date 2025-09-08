@@ -56,7 +56,7 @@ if (! function_exists("get_date")) {
 }
 
 if (! function_exists('page')) {
-    function page(string $path = "=")
+    function page(string $path = "=", mixed $param = [])
     {
         if ($path === "=") {
             return rootpath . "/?page=";
@@ -66,30 +66,52 @@ if (! function_exists('page')) {
         }
         $bb = explode("?", $path);
         $path = $bb[0];
-        $param = isset($bb[1]) ? "?" . $bb[1] : "";
+        $params = isset($bb[1]) ? "?" . $bb[1] : "";
+        if ($param) {
+            if (is_array($param)) {
+                $getter = "";
+                foreach ($param as $k => $v) {
+                    $getter .= $k . "=" . $v . "&";
+                }
+                $params = "?" . rtrim($getter, "&");
+            } else {
+                $params = "?param=" . $param;
+            }
+        }
         if ($path == "" || $path == null) {
-            return rootpath . $param;
+            return rootpath . $params;
         } else {
             $path = substr($path, -4) == ".php" ? $path : $path . ".php";
-            return rootpath . "/?page=" . $path . $param;
+            return rootpath . "/?page=" . $path . $params;
         }
     }
 }
 
 if (! function_exists('function_page')) {
-    function function_page(string $path = "?")
+    function function_page(string $path = "?", mixed $param = [])
     {
         if ($path === "?") {
             return rootpath . "/?funcpage=";
         }
         $bb = explode("?", $path);
         $path = $bb[0];
-        $param = isset($bb[1]) ? "?" . $bb[1] : "";
+        $params = isset($bb[1]) ? "?" . $bb[1] : "";
+        if ($param) {
+            if (is_array($param)) {
+                $getter = "";
+                foreach ($param as $k => $v) {
+                    $getter .= $k . "=" . $v . "&";
+                }
+                $params = "?" . rtrim($getter, "&");
+            } else {
+                $params = "?param=" . $param;
+            }
+        }
         if ($path == "" || $path == null) {
-            return rootpath . $param;
+            return rootpath . $params;
         } else {
             $path = substr($path, -4) == ".php" ? $path : $path . ".php";
-            return rootpath . "/?funcpage=" . $path . $param;
+            return rootpath . "/?funcpage=" . $path . $params;
         }
     }
 }

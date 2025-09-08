@@ -375,6 +375,19 @@ function on_click(selector, callable) {
     };
 }
 
+function format_string(str, separator, format) {
+    let parts = str.split(separator);
+    let result = "";
+
+    for (let e of parts) {
+        let formatted = format.replace("?", e.trim());
+        result += formatted;
+    }
+
+    return result;
+}
+
+
 function filter_json_array(data, column, contains, wildcard = "%") {
     let filteredData;
 
@@ -1329,7 +1342,7 @@ function dom_loaded(callable) {
     document.addEventListener('DOMContentLoaded', callable);
 }
 
-function swal_success(message, title="Success") {
+function swal_success(message, title = "Success") {
     return Swal.fire({
         title: title,
         text: message,
@@ -1337,7 +1350,7 @@ function swal_success(message, title="Success") {
     });
 }
 
-function swal_error(message, title="Error") {
+function swal_error(message, title = "Error") {
     return Swal.fire({
         title: title,
         text: message,
@@ -1345,7 +1358,7 @@ function swal_error(message, title="Error") {
     });
 }
 
-function swal_warning(message, title="Warning") {
+function swal_warning(message, title = "Warning") {
     return Swal.fire({
         title: title,
         text: message,
@@ -1353,7 +1366,7 @@ function swal_warning(message, title="Warning") {
     });
 }
 
-function swal_info(message, title="Information") {
+function swal_info(message, title = "Information") {
     return Swal.fire({
         title: title,
         text: message,
