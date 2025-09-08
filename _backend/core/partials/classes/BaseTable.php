@@ -40,6 +40,14 @@ class BaseTable
         $this->attributes[$key] = $value;
     }
 
+    static function table(){
+        return self::$table;
+    }
+
+    static function tbl(){
+        return self::table();
+    }
+
     protected function filterFillable(array $data): array
     {
         if (!empty($this->fillable)) {
