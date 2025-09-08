@@ -1,5 +1,10 @@
 <?php
-use Classes\Migration;
+// Add migration query here...
+
+
+
+
+
 
 
 ?>
