@@ -162,7 +162,8 @@ if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import") {
         }else{
             echo "\n\n";
             echo "❌ Invalid -- command\n";
-            echo "Auto sync table failed\n\n";
+            echo "Auto sync table failed\n";
+            echo "Try: php ctr +basetable *\n\n";
         }
     }
     exit;
