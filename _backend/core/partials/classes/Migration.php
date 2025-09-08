@@ -37,6 +37,21 @@ class Migration
         return self::$lastQuery;
     }
 
+    public static function query($query){
+        $pdo = pdo($db);
+        echo "\nRunning Migration query....";
+        echo "\n\n";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $result = $stmt->rowCount() > 0;
+        if($result){
+            echo "✔️ Query has been executed.\n";
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public static function table(string $tablename, array $columns, bool $timestamp = false): bool
     {
         $db = getenv("database");
