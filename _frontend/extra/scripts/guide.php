@@ -22,7 +22,7 @@ echo "\n\n";
 
 echo $yellow . "⚡ CODETAZER by CodeYRO ⚡" . $reset . "\n\n";
 
-echo $green . "✅ Codetazer installed successfully! 🎉" . $reset . "\n\n";
+echo $green . "✅ CodeTazer installed successfully! 🎉" . $reset . "\n\n";
 
 echo $blue . "👉 Next steps:" . $reset . "\n";
 echo "   1. {$yellow}cd {$dir}{$reset}\n";
