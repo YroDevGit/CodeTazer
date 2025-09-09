@@ -9,7 +9,7 @@ $reset = "\033[0m";
 $dir = basename(getcwd());
 
 echo "\n";
-echo $green . <<<'BANNER'
+echo $red . <<<'BANNER'
 #   #  ####   ### 
  # #  #   #  #   #
   #   #   #  #   #
@@ -18,6 +18,7 @@ echo $green . <<<'BANNER'
   #   #   #   ### 
 BANNER
 . $reset;
+echo "\n\n";
 
 echo $yellow . "⚡ CODETAZER by CodeYRO ⚡" . $reset . "\n\n";
 
