@@ -25,5 +25,6 @@ echo $green . "✅ Codetazer installed successfully! 🎉" . $reset . "\n\n";
 
 echo $blue . "👉 Next steps:" . $reset . "\n";
 echo "   1. {$yellow}cd {$dir}{$reset}\n";
-echo "   2. {$yellow}php ctr run{$reset}\n";
-echo "   3. Open {$yellow}http://localhost:9999{$reset} in your browser\n\n";
+echo "   2. {$yellow}code .\n";
+echo "   3. {$yellow}php ctr run{$reset}\n";
+echo "   4. Open {$yellow}http://localhost:9999{$reset} in your browser\n\n";
