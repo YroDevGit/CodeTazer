@@ -40,8 +40,9 @@ class BaseTable
         $this->attributes[$key] = $value;
     }
 
-    static function table(){
-        return self::$table;
+    public static function table(){
+        $self = static::instance();
+        return $self->table;
     }
 
     static function tbl(){
