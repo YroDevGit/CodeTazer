@@ -25,9 +25,6 @@
       "echo '⚡CodeTazer by CodeYRO⚡'",
       "echo 'Preparing to install Codetazer... Please wait.'"
     ],
-    "post-root-package-install": [
-      "echo '✅ Codetazer project scaffold created!'"
-    ],
      "post-create-project-cmd": [
       "php _frontend/extra/scripts/guide.php"
     ]
