@@ -503,9 +503,22 @@ if ($route == "+model") {
         exit(1);
     }
     $newname = ucfirst($filename);
-    $phpFile = "_backend/_routes/" . $filename . ".php";
+    $exp = explode("/", $filename);
+    $fdr = $exp[0];
+    $fls = $exp[1];
+    if (!$fdr || !$fls) {
+        echo "❌ Invalid file format";
+        exit;
+    }
+    $exp1 = explode(",", $fls);
+    $filename = "";
+    $counter = 0;
+    echo "\n";
+    foreach ($exp1 as $ee) {
+        $filename = $fdr . "/" . $ee;
+        $phpFile = "_backend/_routes/" . $filename . ".php";
 
-    $phpContent = <<<EOT
+        $phpContent = <<<EOT
     <?php //route: $filename
 
     //Add codes here...
@@ -523,26 +536,28 @@ if ($route == "+model") {
     ?>
     EOT;
 
-    if (file_exists($phpFile)) {
-        echo "❌ File already exists. Please choose a different name.\n";
-        exit(1);
-    } else {
-        $directory = dirname($phpFile);
+        if (file_exists($phpFile)) {
+            echo "✔️ Route file [$filename] already created @ $phpFile.\n";
+        } else {
+            $directory = dirname($phpFile);
 
-        if (!is_dir($directory)) {
-            if (!mkdir($directory, 0777, true)) {
-                die("Failed to create directories: $directory");
+            if (!is_dir($directory)) {
+                if (!mkdir($directory, 0777, true)) {
+                    echo "Failed to create directories: $directory";
+                    exit;
+                }
+            }
+
+            if (file_put_contents($phpFile, $phpContent) !== false) {
+                echo "✔️ Route file [$filename] created successfully @ $phpFile.\n";
+            } else {
+                echo "❌ Failed to create Route file.\n";
             }
         }
-
-        if (file_put_contents($phpFile, $phpContent) !== false) {
-            echo "✔️ Route file created successfully: $phpFile\n";
-            exit(0);
-        } else {
-            echo "❌ Failed to create controller file.\n";
-            exit(1);
-        }
+        $counter += 1;
     }
+    echo "\n";
+    exit;
 } else if ($route == "what") {
     if ($filename == "") {
         echo "❌ parameter not found for (what) command.\n";
