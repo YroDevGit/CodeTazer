@@ -19,5 +19,17 @@
       "Models\\": "_backend/model/",
       "Library\\": "_backend/core/library/"
     }
+  },
+  "scripts": {
+    "pre-install-cmd": [
+      "echo '⚡CodeTazer by CodeYRO⚡'",
+      "echo 'Preparing to install Codetazer... Please wait.'"
+    ],
+    "post-root-package-install": [
+      "echo '✅ Codetazer project scaffold created!'"
+    ],
+     "post-create-project-cmd": [
+      "php _frontend/extra/scripts/guide.php"
+    ]
   }
 }
