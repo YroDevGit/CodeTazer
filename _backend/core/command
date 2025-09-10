@@ -465,7 +465,7 @@ if ($route == "+model") {
     namespace Models;
 
 
-    class $filename{
+    class $newname{
         
         public function __construct() {
             // Constructor code here
