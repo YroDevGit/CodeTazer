@@ -73,10 +73,24 @@ function decrypt($encrypted_data, string $key = null)
 
 
 function BasixsErrorException($e, $bee, string $errorcode = "backend_error_code")
-{   
+{
     $arr = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
     shuffle($arr);
     $trace = $e->getTrace();
+    $myerror = [];
+    foreach ($trace as $t) {
+        if (isset($t['file'])) {
+            if (str_contains($t['file'], "_routes")) {
+                $exp = explode("_routes", $t['file']);
+                $myerror['backend'] = basixs_php_rem($exp[1] ?? "");
+                $myerror['file'] = $t['file'] ?? "";
+                $myerror['class'] = $t['class'] ?? "";
+                $myerror['function'] = $t['function'] ?? "";
+                $myerror['line'] = $t['line'] ?? "";
+                break;
+            }
+        }
+    }
     $traceString = $e->getTraceAsString();
     $line = $e->getLine();
     $file = $e->getFile();
@@ -85,8 +99,8 @@ function BasixsErrorException($e, $bee, string $errorcode = "backend_error_code"
     $thisdate = date("mdHis");
     $hascode = $randint . $thisdate;
     $code = $e->getCode();
-    $getMessage =  $message . " at line $line in $file";
-    $msg = $message . " at line $line in BE: $bee";
+    $getMessage = json_encode($trace);
+    $cmsg = $message . " at line " . ($myerror['line'] ?? "") . (" @ BE: " . $myerror['backend'] ?? "");
     $type = get_class($e);
     $err = [];
     $env = getenv("environment") == null ? "dev" : getenv("environment");
@@ -97,17 +111,20 @@ function BasixsErrorException($e, $bee, string $errorcode = "backend_error_code"
             "code" => getenv($errorcode),
             "status" => "error",
             "message" => $clearMSG,
-            "msg" => $message,
+            "errorcode" => $hascode,
+            "msg" => $message . " #" . $hascode,
+            "trace" => $trace,
             "data" => []
         ];
-    }else if(strtolower($env) == "prod" || strtolower($env) == "production"){
+    } else if (strtolower($env) == "prod" || strtolower($env) == "production") {
         include "_backend/core/partials/library/PHPErrorClass.php";
         $clearMSG = PHPErrorClass::error_message($e);
         $err = [
             "code" => getenv($errorcode),
             "status" => "error",
-            "message" => "Server Error #". $hascode,
-            "msg" => $clearMSG,
+            "message" => $clearMSG,
+            "msg" => $message . " #" . $hascode,
+            "errorcode" => $hascode,
             "data" => []
         ];
     } else {
@@ -117,10 +134,12 @@ function BasixsErrorException($e, $bee, string $errorcode = "backend_error_code"
             "line" => $line,
             "file" => $file,
             "type" => $type,
-            "error_code" => $hascode,
+            "trace" => $trace,
+            "myerror" => $myerror,
+            "errorcode" => $hascode,
             "error_message" => $getMessage,
             "msg" => $message,
-            "message" => $msg,
+            "message" => $cmsg,
             "data" => []
         ];
     }

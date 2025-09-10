@@ -12,7 +12,7 @@ class PHPErrorClass
             if (preg_match("/Duplicate entry '([^']+)' for key '([^']+)'/", $msg, $matches)) {
                 $value = $matches[1];
                 $field = str_replace('_UNIQUE', '', $matches[2]); // remove suffix if present
-                return ucfirst($field) . " '{$value}' already exists";
+                return $field . " '{$value}' already exists";
             } else {
                 return "Duplicate entry.";
             }
@@ -22,7 +22,7 @@ class PHPErrorClass
             if (preg_match("/Key \(([^)]+)\)=\(([^)]+)\)/", $msg, $matches)) {
                 $field = $matches[1];
                 $value = $matches[2];
-                return ucfirst($field) . " '{$value}' already exists";
+                return $field . " '{$value}' already exists";
             } else {
                 return "Duplicate entry.";
             }
