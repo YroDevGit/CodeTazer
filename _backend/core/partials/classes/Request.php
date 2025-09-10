@@ -15,8 +15,23 @@ class Request
         if (is_null($post)) {
             return null;
         }
-        if ($trim) {
-            return trim($post ?? "");
+        if (is_array($post)) {
+            return $post;
+        }
+        if (is_string($post)) {
+            return $trim ? trim($post) : $post;
+        }
+        return $post;
+    }
+
+    static function array(string $key, string|null|int $subkey = null){
+        $post = post($key);
+        if(! is_array($post)){
+            $type = gettype($post);
+            throw new Exception("Request::array should be an array, given value is $type");
+        }
+        if($subkey){
+            return $post[$subkey] ?? null;
         }
         return $post;
     }

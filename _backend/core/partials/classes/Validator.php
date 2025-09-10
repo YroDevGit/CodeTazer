@@ -2,6 +2,8 @@
 
 namespace Classes;
 
+use Exception;
+
 class Validator
 {
     /**
@@ -220,6 +222,10 @@ class Validator
         $postdata = postdata();
         if (!isset($postdata[$postname])) {
             $postdata[$postname] = null;
+        }
+
+        if(is_array($postdata[$postname])){
+            throw new Exception("Validator is not allowed for arrays");
         }
 
         $rulesArray = explode('|', $rules);

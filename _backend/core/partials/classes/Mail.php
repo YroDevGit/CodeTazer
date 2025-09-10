@@ -33,11 +33,11 @@ class Mail
     public static function send_email(string $to, string $subject, $message, string $sender = "", string $sender_email = "")
     {
         if (!function_exists('has_internet_connection') || !has_internet_connection()) {
-            throw "No Internet Connection";
+            throw new Exception("No Internet Connection");
         }
 
         if (!$message) {
-            throw "Message not found";
+            throw new Exception("Message not found");
         }
         $mail = new PHPMailer(true);
         $mail->isSMTP();
