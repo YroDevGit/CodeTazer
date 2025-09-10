@@ -391,6 +391,7 @@ if ($route == "+library") {
     <?php
     namespace Library;
 
+    
     class $newname{
 
         //create a function here...
@@ -463,7 +464,7 @@ if ($route == "+model") {
     <?php 
     namespace Models;
 
-    
+
     class $filename{
         
         public function __construct() {
