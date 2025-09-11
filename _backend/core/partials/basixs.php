@@ -100,7 +100,7 @@ function BasixsErrorException($e, $bee, string $errorcode = "backend_error_code"
     $hascode = $randint . $thisdate;
     $code = $e->getCode();
     $getMessage = json_encode($trace);
-    $cmsg = $message . " at line " . ($myerror['line'] ?? "") . (" @ BE: " . $myerror['backend'] ?? "");
+    $cmsg = $message . " at line " . ($myerror['line'] ?? $line ?? "") . " @ BE: " . ($myerror['backend'] ?? $bee ?? "");
     $type = get_class($e);
     $err = [];
     $env = getenv("environment") == null ? "dev" : getenv("environment");
