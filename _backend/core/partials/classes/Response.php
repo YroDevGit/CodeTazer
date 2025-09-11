@@ -164,6 +164,11 @@ class Response
     {
         return self::parameter($param);
     }
+    
+    public static function var(array|null $param)
+    {
+        return self::parameter($param);
+    }
 
     public static function message(string|null $message)
     {
