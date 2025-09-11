@@ -40,12 +40,14 @@ class BaseTable
         $this->attributes[$key] = $value;
     }
 
-    public static function table(){
+    public static function table()
+    {
         $self = static::instance();
         return $self->table;
     }
 
-    static function tbl(){
+    static function tbl()
+    {
         return self::table();
     }
 
@@ -92,13 +94,13 @@ class BaseTable
     {
         $self = static::instance();
 
-        $sql = "SELECT * FROM {$self->table}";
+        $sql = "SELECT * FROM `{$self->table}`";
         $bindings = [];
 
         if (isset($options['where']) && is_array($options['where'])) {
             $whereParts = [];
             foreach ($options['where'] as $col => $val) {
-                $whereParts[] = "$col = ?";
+                $whereParts[] = "`$col` = ?";
                 $bindings[] = $val;
             }
             if ($whereParts) {
@@ -157,8 +159,10 @@ class BaseTable
         $select = "*";
         if (is_array($extra) && isset($extra['select'])) $select = $extra['select'];
 
+
+        $tbl = $self->table;
         $whereClause = implode(' AND ', array_map(fn($col) => "`$col` = :$col", array_keys($where)));
-        $sql = "SELECT {$select} FROM {$self->table} WHERE $whereClause";
+        $sql = "SELECT {$select} FROM `{$tbl}` WHERE $whereClause";
 
         $limit = null;
         $offset = null;
@@ -199,7 +203,7 @@ class BaseTable
         $self->rowcount = $rc;
         $stmt->closeCursor();
 
-        $countSql = "SELECT COUNT(*) as cnt FROM {$self->table} WHERE $whereClause";
+        $countSql = "SELECT COUNT(*) as cnt FROM `{$tbl}` WHERE $whereClause";
         $countStmt = $self->pdo->prepare($countSql);
         $countStmt->execute($where);
         $total = (int)$countStmt->fetch(\PDO::FETCH_ASSOC)['cnt'];
@@ -225,7 +229,7 @@ class BaseTable
         elseif (is_array($columns)) $cols = implode(',', array_map(fn($c) => "`" . trim($c, '`') . "`", $columns));
         else $cols = "`" . trim($columns, '`') . "`";
 
-        $sql = "SELECT $cols FROM {$self->table}";
+        $sql = "SELECT $cols FROM `{$self->table}`";
         if (isset($extra['group by'])) $sql .= " GROUP BY " . $extra['group by'];
         if (isset($extra['having'])) $sql .= " HAVING " . $extra['having'];
         if (isset($extra['order by'])) $sql .= " ORDER BY " . $extra['order by'];
@@ -258,14 +262,14 @@ class BaseTable
     {
         $self = static::instance();
         if (empty($conditions)) {
-            $sql = "SELECT * FROM {$self->table} LIMIT 1";
+            $sql = "SELECT * FROM `{$self->table}` LIMIT 1";
             $self->lastQuery = $sql;
             $self->lastBindings = [];
             $stmt = $self->pdo->prepare($sql);
             $stmt->execute();
         } else {
             $whereClause = implode(' AND ', array_map(fn($col) => "`$col` = :$col", array_keys($conditions)));
-            $sql = "SELECT * FROM {$self->table} WHERE $whereClause LIMIT 1";
+            $sql = "SELECT * FROM `{$self->table}` WHERE $whereClause LIMIT 1";
             $self->lastQuery = $sql;
             $self->lastBindings = $conditions;
             $stmt = $self->pdo->prepare($sql);
@@ -283,14 +287,14 @@ class BaseTable
     {
         $self = static::instance();
         if (empty($conditions)) {
-            $sql = "SELECT * FROM {$self->table} ORDER BY id DESC LIMIT 1";
+            $sql = "SELECT * FROM `{$self->table}` ORDER BY id DESC LIMIT 1";
             $self->lastQuery = $sql;
             $self->lastBindings = [];
             $stmt = $self->pdo->prepare($sql);
             $stmt->execute();
         } else {
             $whereClause = implode(' AND ', array_map(fn($col) => "`$col` = :$col", array_keys($conditions)));
-            $sql = "SELECT * FROM {$self->table} WHERE $whereClause ORDER BY id DESC LIMIT 1";
+            $sql = "SELECT * FROM `{$self->table}` WHERE $whereClause ORDER BY id DESC LIMIT 1";
             $self->lastQuery = $sql;
             $self->lastBindings = $conditions;
             $stmt = $self->pdo->prepare($sql);
@@ -316,7 +320,7 @@ class BaseTable
 
         $columns = array_map(fn($col) => "`$col`", array_keys($data));
         $placeholders = array_map(fn($col) => ":$col", array_keys($data));
-        $sql = "INSERT INTO {$self->table} (" . implode(",", $columns) . ") VALUES (" . implode(",", $placeholders) . ")";
+        $sql = "INSERT INTO `{$self->table}` (" . implode(",", $columns) . ") VALUES (" . implode(",", $placeholders) . ")";
         $self->lastQuery = $sql;
         $self->lastBindings = $data;
 
@@ -351,7 +355,7 @@ class BaseTable
             )
         );
 
-        $sql = "UPDATE {$self->table} SET $setClause WHERE $whereClause";
+        $sql = "UPDATE `{$self->table}` SET $setClause WHERE $whereClause";
         $self->lastQuery = $sql;
         $self->lastBindings = $bindings;
 
@@ -368,7 +372,7 @@ class BaseTable
     {
         $self = static::instance();
         $whereClause = implode(' AND ', array_map(fn($col) => "`$col` = :$col", array_keys($where)));
-        $sql = "DELETE FROM {$self->table} WHERE $whereClause";
+        $sql = "DELETE FROM `{$self->table}` WHERE $whereClause";
         $self->lastQuery = $sql;
         $self->lastBindings = $where;
 

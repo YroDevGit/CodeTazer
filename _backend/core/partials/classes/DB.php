@@ -83,7 +83,7 @@ class DB
         }
 
         $whereClause = implode(' AND ', array_map(fn($col) => "`$col` = :$col", array_keys($where)));
-        $sql = "SELECT {$select} FROM {$table} WHERE $whereClause";
+        $sql = "SELECT {$select} FROM `{$table}` WHERE $whereClause";
 
         $limit = null;
         $offset = null;
@@ -128,7 +128,7 @@ class DB
         self::$rowcount = $rc;
         $stmt->closeCursor();
 
-        $countStmt = self::conn()->prepare("SELECT COUNT(*) as cnt FROM {$table} WHERE $whereClause");
+        $countStmt = self::conn()->prepare("SELECT COUNT(*) as cnt FROM `{$table}` WHERE $whereClause");
         $countStmt->execute($where);
         $total = (int)$countStmt->fetch(\PDO::FETCH_ASSOC)['cnt'];
         $countStmt->closeCursor();
@@ -171,7 +171,7 @@ class DB
         $data = self::filterInsertData($data);
         $columns = implode(", ", array_map(fn($col) => "`$col`", array_keys($data)));
         $placeholders = implode(", ", array_fill(0, count($data), "?"));
-        $sql = "INSERT INTO `$table` ($columns) VALUES ($placeholders)";
+        $sql = "INSERT INTO `{$table}` ($columns) VALUES ($placeholders)";
 
         $pdo = self::conn();
         $stmt = $pdo->prepare($sql);
@@ -193,7 +193,7 @@ class DB
     public static function delete(string $table, array $where)
     {
         $whereClause = implode(" AND ", array_map(fn($col) => "`$col` = ?", array_keys($where)));
-        $sql = "DELETE FROM `$table` WHERE $whereClause";
+        $sql = "DELETE FROM `{$table}` WHERE $whereClause";
 
         $pdo = self::conn();
         $stmt = $pdo->prepare($sql);
@@ -217,7 +217,7 @@ class DB
         $data = self::filterInsertData($data);
         $setClause = implode(", ", array_map(fn($col) => "`$col` = ?", array_keys($data)));
         $whereClause = implode(" AND ", array_map(fn($col) => "`$col` = ?", array_keys($where)));
-        $sql = "UPDATE `$table` SET $setClause WHERE $whereClause";
+        $sql = "UPDATE `{$table}` SET $setClause WHERE $whereClause";
         $params = array_merge(array_values($data), array_values($where));
 
         $pdo = self::conn();
@@ -287,7 +287,7 @@ class DB
         elseif (is_array($columns)) $cols = implode(',', array_map(fn($c) => "`" . trim($c, '`') . "`", $columns));
         else $cols = "`" . trim($columns, '`') . "`";
 
-        $sql = "SELECT $cols FROM {$table}";
+        $sql = "SELECT $cols FROM `{$table}`";
         if (isset($extra['group by'])) $sql .= " GROUP BY " . $extra['group by'];
         if (isset($extra['having'])) $sql .= " HAVING " . $extra['having'];
         if (isset($extra['order by'])) $sql .= " ORDER BY " . $extra['order by'];
