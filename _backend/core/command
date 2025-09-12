@@ -214,6 +214,10 @@ if ($route == "update") {
             $targetFile = $root . DIRECTORY_SEPARATOR . "index.php";
             $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/index.php";
         }
+        if ($extra == "command") {
+            $targetFile = $root . DIRECTORY_SEPARATOR . "_backend/core/command.php";
+            $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/_backend/core/command.php";
+        }
 
         if (!file_exists($targetFile)) {
             if ($exxr === "--mkdir") {
@@ -555,7 +559,7 @@ if ($route == "+model") {
             exit(1);
         }
     }
-} else if ($route == "+route") {
+} else if ($route == "+route" || $route == "+routes" || $route == "+r" || $route == "+backend") {
     if ($filename == "") {
         echo "❌ Please provide a filename for the controller.\n";
         exit(1);
