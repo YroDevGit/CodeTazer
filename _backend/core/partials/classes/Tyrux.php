@@ -6,6 +6,7 @@ namespace Classes;
  */
 class Tyrux {
     private static $baseUrl = '';
+    private static $lastError = null;
 
     public static function setBaseUrl($url) {
         self::$baseUrl = rtrim($url, '/');
@@ -38,10 +39,15 @@ class Tyrux {
         curl_close($ch);
 
         if ($error) {
-            return ['error' => $error];
+            self::$lastError = $error;
+            return null;
         }
 
         return json_decode($response, true);
+    }
+
+    public static function lastError(){
+        return self::$lastError;
     }
 
     public static function get($options) {
