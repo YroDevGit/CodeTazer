@@ -8,6 +8,7 @@ $arguments = $argv;
 $route = isset($arguments[1]) ? strtolower($arguments[1]) : '';
 $filename = isset($arguments[2]) ? $arguments[2] : '';
 $extra = isset($arguments[3]) ? $arguments[3] : '';
+$exxr = isset($arguments[4]) ? $arguments[4] : '';
 
 
 function AddAllBaseTable($dbname)
@@ -199,15 +200,15 @@ if ($route == "update") {
         echo "🎉 CodeTazer App Classes updated!\n\n";
         exit;
     } else if ($filename == "file") {
+        $updt = "";
         if ($extra == "") {
             echo "❌ Please enter the file relative path to update\n";
             exit;
         }
 
         $root = realpath(__DIR__ . '/../../');
-
         $targetFile = $root . DIRECTORY_SEPARATOR . $extra;
-        $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/_frontend/core/autoloading.php";
+        $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/" . str_replace('\\', '/', $extra);
 
         if ($extra == "index.php") {
             $targetFile = $root . DIRECTORY_SEPARATOR . "index.php";
@@ -215,28 +216,35 @@ if ($route == "update") {
         }
 
         if (!file_exists($targetFile)) {
-            echo "❌ File $targetFile does not exist\n";
-            exit;
-        }
-
-        if (is_file($targetFile)) {
-            unlink($targetFile);
-            echo "🔃 Updating $targetFile.....\n";
+            if ($exxr === "--mkdir") {
+                $updt = "✅ $targetFile is created!\n\n";
+                @mkdir(dirname($targetFile), 0777, true);
+                if (file_put_contents($targetFile, "...") === false) {
+                    echo "❌ Failed to create $targetFile\n";
+                    exit;
+                }
+                echo "📂 Directory created and placeholder file added: $targetFile\n";
+            } else {
+                echo "❌ File $targetFile does not exist (use --mkdir to create it)\n";
+                exit;
+            }
         } else {
-            echo "❌ $targetFile is a directory, not a file\n";
-            exit;
+            if (!is_file($targetFile)) {
+                echo "❌ $targetFile is a directory, not a file\n";
+                exit;
+            }
+            echo "🔃 Updating $targetFile.....\n";
         }
 
-        echo "🔃 Make file ready.....\n";
+        echo "🔃 Fetching new content from CodeTazer.....\n";
 
         $content = file_get_contents($rawUrl);
         if ($content === false) {
-            echo "\n❌ Failed to update $targetFile\n";
+            echo "❌ Failed to fetch content from $rawUrl\n";
             exit;
         }
-        echo "🔃 Please wait.....\n";
-        echo "🔃 Almost done.....\n\n";
 
+        echo "🔃 Almost done.....\n";
         @mkdir(dirname($targetFile), 0777, true);
 
         if (file_put_contents($targetFile, $content) === false) {
@@ -244,6 +252,10 @@ if ($route == "update") {
             exit;
         }
 
+        if ($updt) {
+            echo $updt;
+            exit;
+        }
         echo "✅ $targetFile is now updated!\n\n";
         exit;
     } else {
