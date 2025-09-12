@@ -198,6 +198,54 @@ if ($route == "update") {
         echo "\n";
         echo "🎉 CodeTazer App Classes updated!\n\n";
         exit;
+    } else if ($filename == "file") {
+        if ($extra == "") {
+            echo "❌ Please enter the file relative path to update\n";
+            exit;
+        }
+
+        $root = realpath(__DIR__ . '/../../');
+
+        $targetFile = $root . DIRECTORY_SEPARATOR . $extra;
+        $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/_frontend/core/autoloading.php";
+
+        if ($extra == "index.php") {
+            $targetFile = $root . DIRECTORY_SEPARATOR . "index.php";
+            $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/index.php";
+        }
+
+        if (!file_exists($targetFile)) {
+            echo "❌ File $targetFile does not exist\n";
+            exit;
+        }
+
+        if (is_file($targetFile)) {
+            unlink($targetFile);
+            echo "🔃 Updating $targetFile.....\n";
+        } else {
+            echo "❌ $targetFile is a directory, not a file\n";
+            exit;
+        }
+
+        echo "🔃 Make file ready.....\n";
+
+        $content = file_get_contents($rawUrl);
+        if ($content === false) {
+            echo "\n❌ Failed to update $targetFile\n";
+            exit;
+        }
+        echo "🔃 Please wait.....\n";
+        echo "🔃 Almost done.....\n\n";
+
+        @mkdir(dirname($targetFile), 0777, true);
+
+        if (file_put_contents($targetFile, $content) === false) {
+            echo "❌ Failed to write $targetFile\n";
+            exit;
+        }
+
+        echo "✅ $targetFile is now updated!\n\n";
+        exit;
     } else {
         echo "❌ Invalid update parameter.";
         exit;
