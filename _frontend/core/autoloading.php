@@ -100,6 +100,30 @@ if (! function_exists("import_jquery")) {
     }
 }
 
+if(! function_exists("import_paths")){
+    function import_paths(){
+        ?>
+        <script src="<?= assets('code/paths.js') ?>"></script>
+        <?php
+    }
+}
+
+if(! function_exists("import_loading")){
+    function import_loading(){
+        ?>
+        <script src="<?= assets('code/loading.js') ?>"></script>
+        <?php
+    }
+}
+
+if(! function_exists("import_secure")){
+    function import_secure(){
+        ?>
+        <script src="<?= assets('code/secure.js') ?>"></script>
+        <?php
+    }
+}
+
 if (! function_exists("import_tyrux")) {
     function import_tyrux()
     {
