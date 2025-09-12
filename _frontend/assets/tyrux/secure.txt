@@ -4,4 +4,5 @@ cd path to file
 npm install -g terser
 npx terser index.js -o index.js --compress --mangle
 
+cd _frontend/assets/code
 npx terser twareal.js -o twal.js --compress --mangle 
