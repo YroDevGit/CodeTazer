@@ -57,29 +57,27 @@ class Secure {
   }
 
   mask(name) {
-    let fullName = name;
-    let parts = fullName.trim().split(" ");
+    let parts = name.trim().split(" ");
 
     if (parts.length === 1) {
-      let name = parts[0];
-      if (name.length <= 3) {
-        return name[0].toUpperCase() + "**";
-      } else {
-        return name.substring(0, 2).toUpperCase()
-          + "**"
-          + name.slice(-1).toUpperCase();
+      let n = parts[0];
+      if (n.length <= 2) {
+        return n[0].toUpperCase() + "*";
       }
+      return n[0].toUpperCase()
+        + "*".repeat(n.length - 2)
+        + n.slice(-1).toUpperCase();
     }
 
     let firstName = parts[0];
     let lastName = parts[1];
 
     let maskedFirst;
-    if (firstName.length <= 3) {
-      maskedFirst = firstName[0].toUpperCase() + "**";
+    if (firstName.length <= 2) {
+      maskedFirst = firstName[0].toUpperCase() + "*";
     } else {
       maskedFirst = firstName.substring(0, 2).toUpperCase()
-        + "**"
+        + "*".repeat(firstName.length - 3)
         + firstName.slice(-1).toUpperCase();
     }
 
@@ -89,16 +87,14 @@ class Secure {
   }
 
   mask_email(email) {
-    let[user, domain] = email.split("@");
-
+    let [user, domain] = email.split("@");
     if (!user || !domain) return email;
 
-    let maskedUser;
-    if (user.length <= 3) {
-      maskedUser = user[0] + "**";
-    } else {
-      maskedUser = user.substring(0, 2) + "**" + user.slice(-1);
+    if (user.length <= 2) {
+      return user[0] + "*" + "@" + domain;
     }
+
+    let maskedUser = user[0] + "*".repeat(user.length - 2) + user.slice(-1);
 
     return maskedUser + "@" + domain;
   }
