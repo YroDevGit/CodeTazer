@@ -89,7 +89,7 @@ class Secure {
   }
 
   mask_email(email) {
-    et[user, domain] = email.split("@");
+    let[user, domain] = email.split("@");
 
     if (!user || !domain) return email;
 
