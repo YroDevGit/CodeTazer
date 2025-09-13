@@ -1,6 +1,7 @@
 class Secure {
   constructor(secret = "codetazer") {
     this.global_secret = secret;
+    this.maskChar = "●";
   }
 
   encrypt(text, secret = this.global_secret) {
@@ -56,31 +57,38 @@ class Secure {
     localStorage.removeItem(key);
   }
 
-  mask(name) {
+  mask(name, complete = true) {
+    if (complete) {
+      return this.mask_full(name);
+    }
     let parts = name.trim().split(" ");
 
-    if (parts.length === 1) {
-      let n = parts[0];
-      if (n.length <= 2) {
-        return n[0].toUpperCase() + "*";
+    function maskWord(word) {
+      if (word.length <= 2) {
+        return word[0].toUpperCase() + this.maskChar;
       }
-      return n[0].toUpperCase()
-        + "*".repeat(n.length - 2)
-        + n.slice(-1).toUpperCase();
+
+      let interval = word.length >= 8 ? 3 : 2;
+
+      return word
+        .split("")
+        .map((ch, i) => {
+          if (i === 0) return ch.toUpperCase();
+          if (i === word.length - 1) return ch.toUpperCase();
+          if (i % interval === 0) return ch.toLowerCase();
+          return this.maskChar;
+        })
+        .join("");
+    }
+
+    if (parts.length === 1) {
+      return maskWord(parts[0]);
     }
 
     let firstName = parts[0];
     let lastName = parts[1];
 
-    let maskedFirst;
-    if (firstName.length <= 2) {
-      maskedFirst = firstName[0].toUpperCase() + "*";
-    } else {
-      maskedFirst = firstName.substring(0, 2).toUpperCase()
-        + "*".repeat(firstName.length - 3)
-        + firstName.slice(-1).toUpperCase();
-    }
-
+    let maskedFirst = maskWord(firstName);
     let maskedLast = lastName ? lastName[0].toUpperCase() + "." : "";
 
     return maskedFirst + " " + maskedLast;
@@ -91,12 +99,38 @@ class Secure {
     if (!user || !domain) return email;
 
     if (user.length <= 2) {
-      return user[0] + "*" + "@" + domain;
+      return user[0] + this.maskChar + "@" + domain;
     }
 
-    let maskedUser = user[0] + "*".repeat(user.length - 2) + user.slice(-1);
+    let maskedUser = user[0] + this.maskChar+"".repeat(user.length - 2) + user.slice(-1);
 
     return maskedUser + "@" + domain;
+  }
+
+  mask_word(word) {
+    if (word.length <= 2) {
+      return word[0] +this.maskChar;
+    }
+
+    let interval = word.length >= 8 ? 3 : 2;
+
+    return word
+      .split("")
+      .map((ch, i) => {
+        if (i === 0) return ch;
+        if (i === word.length - 1) return ch;
+        if (i % interval === 0) return ch;
+        return this.maskChar;
+      })
+      .join("");
+  }
+
+  mask_full(fullName) {
+    return fullName
+      .trim()
+      .split(/\s+/)
+      .map(word => this.mask_word(word))
+      .join(" ");
   }
 }
 
