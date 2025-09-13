@@ -99,17 +99,27 @@ class Secure {
     if (!user || !domain) return email;
 
     if (user.length <= 2) {
-      return user[0] + this.maskChar + "@" + domain;
+      return user[0] + this.mask + "@" + domain;
     }
 
-    let maskedUser = user[0] + this.maskChar+"".repeat(user.length - 2) + user.slice(-1);
+    let interval = user.length >= 8 ? 3 : 2;
+
+    let maskedUser = user
+      .split("")
+      .map((ch, i) => {
+        if (i === 0) return ch;
+        if (i === user.length - 1) return ch;
+        if (i % interval === 0) return ch;
+        return this.mask;
+      })
+      .join("");
 
     return maskedUser + "@" + domain;
   }
 
   mask_word(word) {
     if (word.length <= 2) {
-      return word[0] +this.maskChar;
+      return word[0] + this.maskChar;
     }
 
     let interval = word.length >= 8 ? 3 : 2;
