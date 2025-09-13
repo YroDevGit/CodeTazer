@@ -7,7 +7,7 @@ class Random
 
     //create a function here...
 
-    static function text($characters = 15, $strick = true)
+    static function text($characters = 15, $strict = true)
     {
         $arr = range("A", "Z");
 
@@ -17,7 +17,7 @@ class Random
         shuffle($arr);
         $str = "";
         //return $arr;
-        if ($strick) {
+        if ($strict) {
             $s = date("ymdhis");
             for ($i = 1; $i <= $characters - 12; $i++) {
                 $str .= (string)$arr[$i];
@@ -34,7 +34,7 @@ class Random
     static function string($characters = 10, $capitalize = true)
     {
         $arr = range("a", "z");
-        if($capitalize){
+        if ($capitalize) {
             $arr = range("A", "Z");
         }
         shuffle($arr);
@@ -45,12 +45,21 @@ class Random
         return $str;
     }
 
-    static function integer($characters = 9){
+    static function integer($characters = 15, $strict = false)
+    {
         $arr = range(1, 10);
         shuffle($arr);
         $str = "";
-        for ($i = 1; $i <= $characters; $i++) {
-            $str .= (string)$arr[$i];
+        if ($strict) {
+            $d = date("ymdhis");
+            for ($i = 1; $i <= $characters-12; $i++) {
+                $str .= (string)$arr[$i];
+            }
+            $str .= $d;
+        } else {
+            for ($i = 1; $i <= $characters; $i++) {
+                $str .= (string)$arr[$i];
+            }
         }
         return (string) $str;
     }
