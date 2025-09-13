@@ -55,6 +55,27 @@ class Secure {
   remove_item(key) {
     localStorage.removeItem(key);
   }
+
+  mask(fullName) {
+    let parts = fullName.trim().split(" ");
+    let firstName = parts[0] || "";
+    let lastName = parts[1] || "";
+
+
+    let maskedFirst;
+    if (firstName.length <= 3) {
+
+      maskedFirst = firstName[0] + "**";
+    } else {
+      maskedFirst = firstName.substring(0, 2).toUpperCase()
+        + "**"
+        + firstName.slice(-1).toUpperCase();
+    }
+
+    let maskedLast = lastName ? lastName[0].toUpperCase() + "." : "";
+
+    return maskedFirst + " " + maskedLast;
+  }
 }
 
 window.SECURE = new Secure();
