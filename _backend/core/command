@@ -215,8 +215,8 @@ if ($route == "update") {
             $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/index.php";
         }
         if ($extra == "command") {
-            $targetFile = $root . DIRECTORY_SEPARATOR . "_backend/core/command.php";
-            $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/_backend/core/command.php";
+            $targetFile = $root . DIRECTORY_SEPARATOR . "_backend\core\command";
+            $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/_backend/core/command";
         }
 
         if (!file_exists($targetFile)) {
