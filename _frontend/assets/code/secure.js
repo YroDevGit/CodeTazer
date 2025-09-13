@@ -56,16 +56,27 @@ class Secure {
     localStorage.removeItem(key);
   }
 
-  mask(fullName) {
+  mask(name) {
+    let fullName = name;
     let parts = fullName.trim().split(" ");
-    let firstName = parts[0] || "";
-    let lastName = parts[1] || "";
 
+    if (parts.length === 1) {
+      let name = parts[0];
+      if (name.length <= 3) {
+        return name[0].toUpperCase() + "**";
+      } else {
+        return name.substring(0, 2).toUpperCase()
+          + "**"
+          + name.slice(-1).toUpperCase();
+      }
+    }
+
+    let firstName = parts[0];
+    let lastName = parts[1];
 
     let maskedFirst;
     if (firstName.length <= 3) {
-
-      maskedFirst = firstName[0] + "**";
+      maskedFirst = firstName[0].toUpperCase() + "**";
     } else {
       maskedFirst = firstName.substring(0, 2).toUpperCase()
         + "**"
@@ -75,6 +86,21 @@ class Secure {
     let maskedLast = lastName ? lastName[0].toUpperCase() + "." : "";
 
     return maskedFirst + " " + maskedLast;
+  }
+
+  mask_email(email) {
+    et[user, domain] = email.split("@");
+
+    if (!user || !domain) return email;
+
+    let maskedUser;
+    if (user.length <= 3) {
+      maskedUser = user[0] + "**";
+    } else {
+      maskedUser = user.substring(0, 2) + "**" + user.slice(-1);
+    }
+
+    return maskedUser + "@" + domain;
   }
 }
 
