@@ -99,7 +99,7 @@ class Secure {
     if (!user || !domain) return email;
 
     if (user.length <= 2) {
-      return user[0] + this.mask + "@" + domain;
+      return user[0] + this.maskChar + "@" + domain;
     }
 
     let interval = user.length >= 8 ? 3 : 2;
@@ -110,7 +110,7 @@ class Secure {
         if (i === 0) return ch;
         if (i === user.length - 1) return ch;
         if (i % interval === 0) return ch;
-        return this.mask;
+        return this.maskChar;
       })
       .join("");
 
