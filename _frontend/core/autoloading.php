@@ -82,6 +82,15 @@ if (! function_exists("import_swal")) {
     }
 }
 
+if (! function_exists("import_ctr")) {
+    function import_ctr()
+    {
+    ?>
+        <script src="<?= assets('code/ctr.js') ?>"></script>
+    <?php
+    }
+}
+
 if (! function_exists("import_twal")) {
     function import_twal()
     {
@@ -100,27 +109,30 @@ if (! function_exists("import_jquery")) {
     }
 }
 
-if(! function_exists("import_paths")){
-    function import_paths(){
-        ?>
+if (! function_exists("import_paths")) {
+    function import_paths()
+    {
+    ?>
         <script src="<?= assets('code/paths.js') ?>"></script>
-        <?php
+    <?php
     }
 }
 
-if(! function_exists("import_loading")){
-    function import_loading(){
-        ?>
+if (! function_exists("import_loading")) {
+    function import_loading()
+    {
+    ?>
         <script src="<?= assets('code/loading.js') ?>"></script>
-        <?php
+    <?php
     }
 }
 
-if(! function_exists("import_secure")){
-    function import_secure(){
-        ?>
+if (! function_exists("import_secure")) {
+    function import_secure()
+    {
+    ?>
         <script src="<?= assets('code/secure.js') ?>"></script>
-        <?php
+    <?php
     }
 }
 
