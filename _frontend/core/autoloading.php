@@ -91,6 +91,15 @@ if (! function_exists("import_ctr")) {
     }
 }
 
+if (! function_exists("import_currency")) {
+    function import_currency()
+    {
+    ?>
+        <script src="<?= assets('code/currency.js') ?>"></script>
+    <?php
+    }
+}
+
 if (! function_exists("import_twal")) {
     function import_twal()
     {
