@@ -109,6 +109,15 @@ if (! function_exists("import_twal")) {
     }
 }
 
+if (! function_exists("import_date")) {
+    function import_date()
+    {
+    ?>
+        <script src="<?= assets('code/date.js') ?>"></script>
+    <?php
+    }
+}
+
 if (! function_exists("import_jquery")) {
     function import_jquery()
     {
