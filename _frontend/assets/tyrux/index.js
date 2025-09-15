@@ -18,7 +18,7 @@ const config = {
 const api = new Tyrux();
 const tyreq = new Tyrux(config);
 
-function tyrux(request) { 
+function tyrux(request) {
     // Use for default setup..:: CodeYRO
     const head = request.headers ?? null;
 
@@ -27,9 +27,9 @@ function tyrux(request) {
 
         const ctype = head["Content-Type"]?.toLowerCase();
 
-        if (ctype === "pict" || 
-            ctype === "image" || 
-            ctype === "file"  || 
+        if (ctype === "pict" ||
+            ctype === "image" ||
+            ctype === "file" ||
             ctype === "multipart/form-data") {
             delete request.headers["Content-Type"];
         }
@@ -124,7 +124,17 @@ const tyrax = {// For tyrux default config
         option.method = "OPTIONS";
         tyrux(option);
     },
+    async: function (option) {
+        return new Promise((resolve, reject) => {
+            tyrux({
+                ...option,
+                response: (res) => resolve(res),
+                error: (err) => reject(err)
+            });
+        });
+    }
 }
+
 
 function get_form_data(selector) {
     let form = null;
