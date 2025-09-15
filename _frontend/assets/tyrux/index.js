@@ -135,6 +135,41 @@ const tyrax = {// For tyrux default config
     }
 }
 
+const tyrasync = {
+    api: function (option) {
+        return tyrax.async(option);
+    },
+    post: function (option) {
+        option.method = "POST";
+        return tyrax.async(option);
+    },
+    put: function (option) {
+        option.method = "PUT";
+        return tyrax.async(option);
+    },
+    get: function (option) {
+        option.method = "GET";
+        return tyrax.async(option);
+    },
+    patch: function (option) {
+        option.method = "PATCH";
+        return tyrax.async(option);
+    },
+    delete: function (option) {
+        option.method = "DELETE";
+        return tyrax.async(option);
+    },
+    head: function (option) {
+        option.method = "HEAD";
+        return tyrax.async(option);
+    },
+    options: function (option) {
+        option.method = "OPTIONS";
+        return tyrax.async(option);
+    },
+}
+
+
 
 function get_form_data(selector) {
     let form = null;
@@ -157,4 +192,5 @@ const DOM = new DOMclass();
 window.get_form_data = get_form_data;
 window.tyrequest = tyrequest;
 window.tyrax = tyrax;
+window.tyrasync = tyrasync;
 window.DOM = DOM;
