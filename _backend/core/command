@@ -686,6 +686,19 @@ if ($route == "+model") {
     }
     echo "\n";
     exit;
+} else if ($route == "clear") {
+    if ($filename == "browser") {
+        include "./_backend/core/storage.php";
+        if ($extra) {
+            clearBrowserStorage($extra);exit;
+        } else {
+            echo "❌ Please specify what browser storage to clear";
+            exit;
+        }
+    } else {
+        echo "❌ Invalid clear command";
+        exit;
+    }
 } else {
     echo "Invalid command.\n";
     exit(1);

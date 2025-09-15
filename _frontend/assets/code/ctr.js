@@ -107,6 +107,22 @@ class Ctr {
         const formdata = new FormData(element);
         return formdata;
     }
+
+    storage_set(name, item) {
+        localStorage.setItem(name, item);
+    }
+
+    storage_get(name) {
+        localStorage.getItem(name);
+    }
+    
+    storage_clear() {
+        localStorage.clear();
+    }
+
+    storage_remove(name) {
+        localStorage.removeItem(name);
+    }
 }
 
 window.CTR = new Ctr();

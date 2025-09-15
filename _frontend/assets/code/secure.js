@@ -37,7 +37,7 @@ class Secure {
     return result;
   }
 
-  set_item(key, value, secret = this.global_secret) {
+  storage_set(key, value, secret = this.global_secret) {
     if (typeof value === "undefined" || value === "") {
       return null;
     }
@@ -45,7 +45,7 @@ class Secure {
     localStorage.setItem(key, secureValue);
   }
 
-  get_item(key, secret = this.global_secret) {
+  storage_get(key, secret = this.global_secret) {
     const stored = localStorage.getItem(key);
     if (!stored) {
       return null;
@@ -53,8 +53,12 @@ class Secure {
     return this.decrypt(stored, secret);
   }
 
-  remove_item(key) {
+  storage_remove(key) {
     localStorage.removeItem(key);
+  }
+
+  storage_clear(){
+    localStorage.clear();
   }
 
   mask(name, complete = true) {
