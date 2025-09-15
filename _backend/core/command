@@ -81,22 +81,31 @@ if ($route == "+functionpage") {
 
 if ($route == "run" || $route == "serve" || $route == "start") {
     include "_frontend/core/loadenv.php";
+    $host = getenv("rootpath");
+    $exp = explode("//", $host);
+    $runner = $exp[1];
+
+    $portExp = explode(":", $runner);
+    $h = $portExp[0];
+    $p = $portExp[1];
+
+    if ($host == null) {
+        echo "❌ ERROR: 'rootpath' has no value (.env file)\n";
+        echo "💡 You can use: http://localhost:9999 as rootpath\n\n";
+        exit;
+    }
+
     if ($filename == "mobile" || $filename == "public") {
         $host = getenv("rootpath");
         $root = realpath(__DIR__ . '/../../');
-        $cmd = "php -S 0.0.0.0:9999 -t $root";
+        $cmd = "php -S 0.0.0.0:$p -t $root";
         echo "\n⚡⚡ CodeTazer Framework by CodeYRO⚡⚡\n\n";
         echo "🌐 public ip @ " . "\033[41m$host\033[0m\n" . "\n";
         echo "--You can stop server by CTRL+C on your console\n\n";
         passthru($cmd);
         exit;
     }
-    $host = getenv("rootpath");
-    if ($host == null) {
-        echo "❌ ERROR: 'rootpath' has no value (.env file)\n";
-        echo "💡 You can use: http://localhost:9999 as rootpath\n\n";
-        exit;
-    }
+
     $dir = getenv("main_dir");
     $dir_msg = "";
     $dir_comm = "";
@@ -111,7 +120,6 @@ if ($route == "run" || $route == "serve" || $route == "start") {
         $dir_msg = "📁 Document root: $dir\n";
     }
 
-
     $fwork = "CodeTazer Framework by CodeYRO";
     echo "\n⚡⚡ \033[1m$fwork\033[0m⚡⚡\n\n";
     echo "🔄 Serving at " . "\033[1;33m$host\033[0m\n" . "\n";
@@ -120,8 +128,6 @@ if ($route == "run" || $route == "serve" || $route == "start") {
     echo $dir_msg;
     echo "--You can stop server by CTRL+C on your console\n\n";
 
-    $exp = explode("//", $host);
-    $runner = $exp[1];
 
     $phpPath = PHP_BINARY;
 
@@ -690,7 +696,8 @@ if ($route == "+model") {
     if ($filename == "browser") {
         include "./_backend/core/storage.php";
         if ($extra) {
-            clearBrowserStorage($extra);exit;
+            clearBrowserStorage($extra);
+            exit;
         } else {
             echo "❌ Please specify what browser storage to clear";
             exit;
