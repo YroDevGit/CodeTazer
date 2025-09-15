@@ -6,9 +6,9 @@ class Date
 {
 
     //create a function here...
-    static function getName($date, $format = "F d, Y H:i:s")
+    static function get_name($date, $format = "F d, Y H:i:s")
     {
-        date($format, strtotime($date));
+        return date($format, strtotime($date));
     }
 
     static function change_date(string $date, string|null $interval)
