@@ -232,27 +232,31 @@ export class Tyrux {
         }
 
         modal.innerHTML = `
-            <div style="background: #fff; padding: 20px; width: 600px; max-height: 80vh; overflow:auto; border-radius:10px; box-shadow: 0 5px 25px rgba(0,0,0,0.3);">
-            <h2 style="margin-bottom: 10px; color:#111;">📡 Tyrux Capture Request</h2>
-            <div style="margin-bottom:10px;">
-                <strong style="color:#444;">Method:</strong>
-                <code style="background:#eee; padding:2px 6px; border-radius:4px;">${method}</code>
-            </div>
-            <div style="margin-bottom:10px;">
-                <strong style="color:#444;">URL/Route:</strong>
-                <div style="background:#f6f6f6; padding:8px; border-radius:4px; font-family:monospace;overflow-wrap:anywhere;">${url}</div>
-            </div>
-            <div style="margin-bottom:10px;">
-                <strong style="color:#444;">Headers:</strong>
-                <pre style="background:#f6f6f6; padding:8px; border-radius:4px; font-family:monospace; white-space:pre-wrap; color:#222; max-height:140px; overflow-y:scroll;">${prettyHeaders}</pre>
-            </div>
-            <div style="margin-bottom:10px;">
-                <strong style="color:blue;">Request body:</strong>
-                <pre style="background:#f6f6f6; padding:8px; border-radius:4px; font-family:monospace; white-space:pre-wrap; color:#222; max-height:210px; height:200px; overflow-y:scroll;color:blue;">${prettyBody}</pre>
-            </div>
-            <button id="closexModax2f3787473b847b8v3tyroneleeemzmodal23" style="background:#222; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Close</button>
-            </div>
-        `;
+    <div style="background: #fff; padding: 20px; width: 600px; max-height: 80vh; overflow:auto; border-radius:10px; box-shadow: 0 5px 25px rgba(0,0,0,0.3); position:relative;">
+        <!-- X button -->
+        <button id="closexModax2f3787473b847b8v3tyroneleeemzmodal23" 
+            style="position:absolute; top:10px; right:10px; background:transparent; border:none; font-size:20px; font-weight:bold; cursor:pointer; color:#666;">
+            ✖
+        </button>
+        <h2 style="margin-bottom: 10px; color:#111;">📡 Tyrux Request</h2>
+        <div style="margin-bottom:10px;">
+            <strong style="color:#444;">Method:</strong>
+            <code style="background:#eee; padding:2px 6px; border-radius:4px;">${method}</code>
+        </div>
+        <div style="margin-bottom:10px;">
+            <strong style="color:#444;">URL/Route:</strong>
+            <div style="background:#f6f6f6; padding:8px; border-radius:4px; font-family:monospace; overflow-wrap:anywhere;">${url}</div>
+        </div>
+        <div style="margin-bottom:10px;">
+            <strong style="color:#444;">Headers:</strong>
+            <pre style="background:#f6f6f6; padding:8px; border-radius:4px; font-family:monospace; white-space:pre-wrap; color:#222; max-height:140px; overflow-y:scroll;">${prettyHeaders}</pre>
+        </div>
+        <div style="margin-bottom:10px;">
+            <strong style="color:blue;">Request body:</strong>
+            <pre style="background:#f6f6f6; padding:8px; border-radius:4px; font-family:monospace; white-space:pre-wrap; color:#222; max-height:210px; height:200px; overflow-y:scroll; color:blue;">${prettyBody}</pre>
+        </div>
+    </div>
+`;
 
         document.body.appendChild(modal);
 
