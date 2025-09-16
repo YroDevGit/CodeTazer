@@ -1,4 +1,4 @@
-class Date {
+class CtrDate {
     get_name($date, $format = "F d, Y H:i:s") {
         const d = new Date($date);
 
@@ -110,6 +110,6 @@ class Date {
         return format.replace(/Y|m|d|H|h|i|s|A|a/g, m => map[m]);
     }
 
-
-
 }
+
+window.DATE = new CtrDate();
