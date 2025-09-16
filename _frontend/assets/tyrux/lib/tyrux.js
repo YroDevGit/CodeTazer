@@ -172,7 +172,7 @@ export class Tyrux {
                 try {
                     bodyContent = JSON.stringify(JSON.parse(body), null, 2);
                 } catch {
-                    bodyContent = body; 
+                    bodyContent = body;
                 }
             } else if (body instanceof FormData) {
                 const obj = {};
@@ -208,7 +208,7 @@ export class Tyrux {
                     queryParams = JSON.stringify(obj, null, 2);
                 }
                 bodyContent = JSON.parse(queryParams);
-                
+
                 bodyContent = JSON.stringify(bodyContent, null, 2);
                 url = url.replace(/\s+/g, "");
 
@@ -230,7 +230,7 @@ export class Tyrux {
         } else {
             prettyHeaders = "—";
         }
-        
+
         modal.innerHTML = `
             <div style="background: #fff; padding: 20px; width: 600px; max-height: 80vh; overflow:auto; border-radius:10px; box-shadow: 0 5px 25px rgba(0,0,0,0.3);">
             <h2 style="margin-bottom: 10px; color:#111;">📡 Tyrux Capture Request</h2>
