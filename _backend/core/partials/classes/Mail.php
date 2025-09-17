@@ -30,7 +30,20 @@ class Mail
         }
     }
 
-    public static function send_email(string $to, string $subject, $message, string $sender = "", string $sender_email = "")
+    public static function send(array $mail){
+        if(empty($mail)){
+            throw new Exception("Please add Email details");
+        }
+        return self::send_email(
+            $main['to'],
+            $mail['subject'],
+            $mail['message'] ?? $mail['msg'],
+            $mail['sender'] ?? $mail['from'] ?? null,
+            $mail['senderemail'] ?? $mail['myemail'] ?? null
+        );
+    }
+
+    public static function send_email(string $to, string $subject, $message, string|null $sender = null, string|null $sender_email = null)
     {
         if (!function_exists('has_internet_connection') || !has_internet_connection()) {
             throw new Exception("No Internet Connection");
@@ -48,8 +61,8 @@ class Mail
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = getenv("smtp_port");
 
-        $e_sender = $sender == "" ? getenv("sender_name") : $sender;
-        $e_sendemail = $sender_email == "" ? getenv("sender_email") : $sender_email;
+        $e_sender = $sender ?? getenv("sender_name") ?? "CODETAZER";
+        $e_sendemail = $sender_email ?? getenv("sender_email") ?? "codetazer@test.com";
 
         $mail->setFrom($e_sendemail, $e_sender);
         $mail->addAddress($to);

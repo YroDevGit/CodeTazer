@@ -35,6 +35,57 @@ if (! function_exists("now")) {
     }
 }
 
+if (! function_exists("env")) {
+    function env(string $key)
+    {
+        return getenv($key);
+    }
+}
+
+if (!function_exists('dd')) {
+    function dd(...$vars)
+    {
+        foreach ($vars as $v) {
+            echo '<pre>';
+            var_dump($v);
+            echo '</pre>';
+        }
+        exit(1);
+    }
+}
+
+if (! function_exists("val")) {
+    function val(&$val, $datatype = "string")
+    {
+        $datatype = strtolower($datatype);
+        if (! isset($val) || ! $val || $val == null || $val == "") {
+            switch ($datatype) {
+                case "string":
+                case "text":
+                    return "";
+                    break;
+                case "number":
+                case "int":
+                case "integer":
+                case "float":
+                case "double":
+                case "num":
+                    return "0";
+                    break;
+                case "array":
+                case "object":
+                    return [];
+                    break;
+                case "boolean":
+                case "bool":
+                    return false;
+                    break;
+                default: return ""; break;
+            }
+        }
+    }
+}
+
 if (! function_exists("change_date")) {
     function change_date(string $date, string|null $interval)
     {
