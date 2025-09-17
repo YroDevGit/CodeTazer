@@ -1,3 +1,46 @@
+
 <?php
+/**
+ * CodeTazer command
+ * 
+ */
+
+/**
+ * php ctr run
+ * php ctr serve
+ * php ctr start
+ */
+//- this command to start app server
+
+
+/**
+ * php ctr dbload
+ */
+// - to load database from your .env file database:
+// - if database is not yet created, the system will create it for you
+
+
+/**
+ * php ctr dbmigrate tables
+ * php ctr dbmigrate tables --reflect
+ */
+// - to migrate and create all tables from your _backend\core\database\tables.php to the actual database
+// - (--reflect / --auto / --sycn) auto create table class from your actual database.
+
+
+/**
+ * php ctr dbmigrate query
+ */
+// - migrate and execute queries from your _backend\core\database\query.php to actual database
+
+/**
+ * php ctr +route <routename>
+ * php ctr +r <routename>
+ */
+// - create backend route in your _backend\_routes\
+// - <routename> patern is eg: user/add
+
+
+
     include_once "_backend/core/command";
 ?>
