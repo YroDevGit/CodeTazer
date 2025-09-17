@@ -82,8 +82,25 @@ class DB
             $select = $extra['select'];
         }
 
-        $whereClause = implode(' AND ', array_map(fn($col) => "`$col` = :$col", array_keys($where)));
-        $sql = "SELECT {$select} FROM `{$table}` WHERE $whereClause";
+        $useLegacy = true;
+        foreach ($where as $k => $v) {
+            if (is_array($v) || strtolower($k) === "or" || strtolower($k) === "and" || strtolower($k) === "like" || preg_match('/\s(=|!=|>|<|>=|<=)$/i', $k)) {
+                $useLegacy = false;
+                break;
+            }
+        }
+
+        if ($useLegacy) {
+            $whereClause = implode(' AND ', array_map(fn($col) => "`$col` = :$col", array_keys($where)));
+            $bindings = [];
+            foreach ($where as $col => $val) {
+                $bindings[":$col"] = $val;
+            }
+        } else {
+            [$whereClause, $bindings] = self::buildWhere($where);
+        }
+
+        $sql = "SELECT {$select} FROM `{$table}`" . ($whereClause ? " WHERE $whereClause" : "");
 
         $limit = null;
         $offset = null;
@@ -110,16 +127,17 @@ class DB
         }
 
         self::$lastQuery = $sql;
-        self::$lastBindings = $where;
+        self::$lastBindings = $bindings;
 
         $stmt = self::conn()->prepare($sql);
-
-        foreach ($where as $col => $val) {
-            $stmt->bindValue(":$col", $val);
+        foreach ($bindings as $key => $val) {
+            $stmt->bindValue($key, $val);
         }
         if ($limit !== null) {
             $stmt->bindValue(":limit", $limit, \PDO::PARAM_INT);
-            if ($offset !== null) $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
+            if ($offset !== null) {
+                $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
+            }
         }
 
         $stmt->execute();
@@ -128,8 +146,9 @@ class DB
         self::$rowcount = $rc;
         $stmt->closeCursor();
 
-        $countStmt = self::conn()->prepare("SELECT COUNT(*) as cnt FROM `{$table}` WHERE $whereClause");
-        $countStmt->execute($where);
+        $countSql = "SELECT COUNT(*) as cnt FROM `{$table}`" . ($whereClause ? " WHERE $whereClause" : "");
+        $countStmt = self::conn()->prepare($countSql);
+        $countStmt->execute($bindings);
         $total = (int)$countStmt->fetch(\PDO::FETCH_ASSOC)['cnt'];
         $countStmt->closeCursor();
 
@@ -139,6 +158,62 @@ class DB
 
         return $rc > 0 ? $rows : [];
     }
+
+    protected static function buildWhere(array $where, string $glue = "AND", &$bindings = [], &$paramIndex = 0): array
+    {
+        $clauses = [];
+        foreach ($where as $key => $val) {
+            if (strtolower($key) === "or") {
+                [$subClause, $subBindings] = self::buildWhere($val, "OR", $bindings, $paramIndex);
+                $clauses[] = "($subClause)";
+                $bindings = array_merge($bindings, $subBindings);
+            } elseif (strtolower($key) === "and") {
+                [$subClause, $subBindings] = self::buildWhere($val, "AND", $bindings, $paramIndex);
+                $clauses[] = "($subClause)";
+                $bindings = array_merge($bindings, $subBindings);
+            } elseif (strtolower($key) === "like") {
+                foreach ($val as $col => $v) {
+                    $param = ":p" . (++$paramIndex);
+                    $clauses[] = "`$col` LIKE $param";
+                    $bindings[$param] = "%$v%";
+                }
+            } elseif (is_array($val) && isset($val['between']) && is_array($val['between']) && count($val['between']) === 2) {
+                $param1 = ":p" . (++$paramIndex);
+                $param2 = ":p" . (++$paramIndex);
+                $clauses[] = "`$key` BETWEEN $param1 AND $param2";
+                $bindings[$param1] = $val['between'][0];
+                $bindings[$param2] = $val['between'][1];
+            } elseif (is_array($val) && isset($val['not between']) && is_array($val['not between']) && count($val['not between']) === 2) {
+                $param1 = ":p" . (++$paramIndex);
+                $param2 = ":p" . (++$paramIndex);
+                $clauses[] = "`$key` NOT BETWEEN $param1 AND $param2";
+                $bindings[$param1] = $val['not between'][0];
+                $bindings[$param2] = $val['not between'][1];
+            } else {
+                if (preg_match('/^([a-zA-Z0-9_]+)\s*(=|!=|>|<|>=|<=)$/', $key, $m)) {
+                    $col = $m[1];
+                    $op = $m[2];
+                    $param = ":p" . (++$paramIndex);
+                    $clauses[] = "`$col` $op $param";
+                    $bindings[$param] = $val;
+                } elseif (is_array($val)) {
+                    $placeholders = [];
+                    foreach ($val as $v) {
+                        $param = ":p" . (++$paramIndex);
+                        $placeholders[] = $param;
+                        $bindings[$param] = $v;
+                    }
+                    $clauses[] = "`$key` IN (" . implode(",", $placeholders) . ")";
+                } else {
+                    $param = ":p" . (++$paramIndex);
+                    $clauses[] = "`$key` = $param";
+                    $bindings[$param] = $val;
+                }
+            }
+        }
+        return [implode(" $glue ", $clauses), $bindings];
+    }
+
 
     private static function resetColumnFilters()
     {
