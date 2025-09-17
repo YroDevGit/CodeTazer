@@ -46,6 +46,15 @@ if (! function_exists("include_error_page")) {
     }
 }
 
+if(! function_exists("ctr_storage")){
+    function ctr_storage($filepath=""){
+        if($filepath){
+            return "_frontend/core/system/storage/". str_replace("\\", "/", $filepath);
+        }
+        return "_frontend/core/system/storage";
+    }
+}
+
 if (! function_exists("include_template_page")) {
     function include_template_page(string|null $template_page, $variables = [], $exit = true)
     {

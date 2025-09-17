@@ -2,6 +2,9 @@
 
 namespace Classes;
 
+use Classes\Request;
+use Exception;
+
 class File
 {
 
@@ -50,5 +53,36 @@ class File
         finfo_close($finfo);
 
         return "data:$mime;base64," . base64_encode($blob);
+    }
+
+    public static function get($name, $type = null)
+    {
+        return Request::file($name, $type);
+    }
+
+    public static function is_image($file)
+    {
+        if (! $file) {
+            throw new Exception("File not found");
+        }
+        $tmp = $file['tmp_name'];
+
+        if (is_string($tmp)) {
+            if ($tmp && exif_imagetype($tmp)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (is_array($tmp)) {
+            foreach ($tmp as $t => $v) {
+                $isNot = self::is_image(["tmp_name" => $v]);
+                if (! $isNot) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }

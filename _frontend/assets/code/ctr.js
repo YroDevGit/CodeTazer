@@ -56,7 +56,9 @@ class Ctr {
     }
 
     loaded(callable) {
-        window.addEventListener("DOMContentLoaded", callable);
+        window.addEventListener("DOMContentLoaded", function () {
+            callable();
+        });
     }
 
     click(selector, callable) {
@@ -74,12 +76,16 @@ class Ctr {
             console.error("Callable is not a function.");
             return;
         }
-        form.addEventListener("click", callable());
+        form.addEventListener("click", function(){
+            callable();
+        });
     }
 
     submit(selector, callable) {
         const sel = document.querySelector(selector);
-        sel.addEventListener('submit', callable);
+        sel.addEventListener('submit', function(){
+            callable();
+        });
     }
 
     form_data(selector) {
@@ -115,7 +121,7 @@ class Ctr {
     storage_get(name) {
         localStorage.getItem(name);
     }
-    
+
     storage_clear() {
         localStorage.clear();
     }
@@ -123,6 +129,26 @@ class Ctr {
     storage_remove(name) {
         localStorage.removeItem(name);
     }
+    $(selector) {
+        return document.querySelector(selector);
+    }
+    $all(selector) {
+        return document.querySelectorAll(selector);
+    }
+    load(callable) {
+        window.addEventListener("DOMContentLoaded", function () {
+            callable();
+        });
+    }
+
+    value(selector) {
+        return document.querySelector(selector).value;
+    }
+
+    child(selector) {
+        return document.querySelector(selector).innerHTML;
+    }
+
 }
 
 window.CTR = new Ctr();

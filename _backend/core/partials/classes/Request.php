@@ -78,8 +78,6 @@ class Request
     static function file($name, $type = null)
     {
         try {
-
-
             if (!isset($_FILES[$name]) || ! $_FILES[$name]) {
                 return null;
             }
