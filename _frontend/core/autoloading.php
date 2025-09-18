@@ -55,6 +55,16 @@ if(! function_exists("ctr_storage")){
     }
 }
 
+if(! function_exists("file_multiple")){
+    function file_multiple(array|null $attribute = null){
+        $att = "";
+        foreach($attribute as $attr=>$v){
+            $att .= " $attr='$v'";
+        }
+        return "<input type='file' multiple $att >";
+    }
+}
+
 if (! function_exists("include_template_page")) {
     function include_template_page(string|null $template_page, $variables = [], $exit = true)
     {
