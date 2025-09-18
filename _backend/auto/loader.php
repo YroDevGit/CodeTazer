@@ -3,19 +3,12 @@
 
 //Auto load file inside php folder
 autoload_php([
-    "test"
+    //"test"
 ]);
 
 
 // Autoload file inside routing folder
 autoload_routing([
-    //"web",
+    "web",
     //"api",
-    //"console",
 ]);
-
-
-
-
-
-?>
