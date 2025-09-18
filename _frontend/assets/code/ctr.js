@@ -83,9 +83,11 @@ class Ctr {
 
     submit(selector, callable) {
         const sel = document.querySelector(selector);
+        let formdata = this.form_data(`#`+sel.getAttribute("id"));
         sel.addEventListener('submit', function(event){
             event.preventDefault();
-            callable();
+            let formobject = new FormData(sel);  
+            callable(formdata, formobject, event);
         });
     }
 
