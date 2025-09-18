@@ -49,9 +49,9 @@ if (! function_exists("include_error_page")) {
 if(! function_exists("ctr_storage")){
     function ctr_storage($filepath=""){
         if($filepath){
-            return "_frontend/core/system/storage/". str_replace("\\", "/", $filepath);
+            return "_frontend/core/partials/system/storage/". str_replace("\\", "/", $filepath);
         }
-        return "_frontend/core/system/storage";
+        return "_frontend/core/partials/system/storage";
     }
 }
 

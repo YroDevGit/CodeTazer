@@ -6,7 +6,7 @@ use Exception;
 use Classes\Request;
 use Classes\Random;
 
-class Storage
+class CtrStorage
 {
     protected static $autochangename = true;
 
@@ -25,7 +25,7 @@ class Storage
 
     protected static function relativepath()
     {
-        return "_frontend\\core\\system\\storage\\";
+        return "_frontend\\core\\partials\\system\\storage\\";
     }
 
     //Pag gamit $upload =  Storage::upload_file($file)
