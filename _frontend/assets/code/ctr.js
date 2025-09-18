@@ -76,18 +76,18 @@ class Ctr {
             console.error("Callable is not a function.");
             return;
         }
-        form.addEventListener("click", function(){
+        form.addEventListener("click", function () {
             callable();
         });
     }
 
     submit(selector, callable) {
         const sel = document.querySelector(selector);
-        let formdata = this.form_data(`#`+sel.getAttribute("id"));
-        sel.addEventListener('submit', function(event){
+        let formdata = this.form_data(`#` + sel.getAttribute("id"));
+        sel.addEventListener('submit', function (event) {
             event.preventDefault();
-            let formobject = new FormData(sel);  
-            callable(formdata, formobject, event);
+            let formobject = new FormData(sel);
+            callable(formobject, formdata, event);
         });
     }
 
