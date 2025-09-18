@@ -83,7 +83,8 @@ class Ctr {
 
     submit(selector, callable) {
         const sel = document.querySelector(selector);
-        sel.addEventListener('submit', function(){
+        sel.addEventListener('submit', function(event){
+            event.preventDefault();
             callable();
         });
     }
