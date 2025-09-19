@@ -1,6 +1,6 @@
 <?php
 
-include "_frontend/core/loadenv.php";
+include "_frontend/core/partials/loadenv.php";
 
 if (getenv("rootpath") == "" || getenv("rootpath") == null) {
     $rootpath = get_basixs_root_path();

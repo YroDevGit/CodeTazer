@@ -82,7 +82,7 @@ function basixs_php_rem($path)
  * Please do not modify anything here
  */
 include_once("_backend/core/partials/basixs.php");
-include_once("_frontend/core/fe.php");
+include_once("_frontend/core/partials/fe.php");
 
 $bee = $_GET['be'] ?? $_GET['backend'] ?? false;
 if ($bee) {
@@ -174,7 +174,7 @@ define("mainpage", $bconfig['mainpage'] ?? "main");
 $mainpage = mainpage;
 $page404 = php_file($bconfig["error404"] ?? "page404");
 
-include("_frontend/core/autoloading.php");
+include("_frontend/core/partials/autoloading.php");
 
 $get = $_GET['page'] ?? $_GET['p'] ?? $_GET['fe'] ?? $_GET['frontend'] ?? false;
 $folder_to_fee = '_frontend/auto';

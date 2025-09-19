@@ -114,7 +114,7 @@ if ($route == "deployment" || $route == "deploy") {
 }
 
 if ($route == "run" || $route == "serve" || $route == "start") {
-    include "_frontend/core/loadenv.php";
+    include "_frontend/core/partials/loadenv.php";
     $host = getenv("rootpath");
     $exp = explode("//", $host);
     $runner = $exp[1];
@@ -309,7 +309,7 @@ if ($route == "update") {
 }
 
 if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import") {
-    include "_frontend/core/loadenv.php";
+    include "_frontend/core/partials/loadenv.php";
     $dbname = getenv("database");
     if (! $dbname) {
         echo "❌ No Database found @ .env";
@@ -349,7 +349,7 @@ if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import") {
 }
 
 if ($route == "dbload") {
-    include "_frontend/core/loadenv.php";
+    include "_frontend/core/partials/loadenv.php";
     $dbname = getenv("database");
     if ($dbname == null || $dbname == "") {
         echo "❌ database not found @ .env file\n";
@@ -374,7 +374,7 @@ if ($route == "+dbtable") {
         echo "❌ Please provide a table name.\n";
         exit(1);
     }
-    include "_frontend/core/loadenv.php";
+    include "_frontend/core/partials/loadenv.php";
     $dbname = getenv("database");
     if ($dbname == null || $dbname == "") {
         echo "❌ database not found @ .env file\n";
@@ -395,7 +395,7 @@ if ($route == "+dbtable") {
 }
 
 if ($route == "+base" || $route == "+base_table" || $route == "+basetable") {
-    include "_frontend/core/loadenv.php";
+    include "_frontend/core/partials/loadenv.php";
     $dbname = getenv("database");
 
     if ($filename == "") {
@@ -670,7 +670,7 @@ if ($route == "+model") {
         exit(1);
     }
     if ($filename == "frontend" || $filename == "backend") {
-        include "_frontend/core/loadenv.php";
+        include "_frontend/core/partials/loadenv.php";
         $hostserver = null;
         $ext = "";
         if (getenv("rootpath") == null || getenv("rootpath") == "") {
@@ -689,7 +689,7 @@ if ($route == "+model") {
         }
     }
     if ($filename == "db" || $filename == "database") {
-        include "_frontend/core/loadenv.php";
+        include "_frontend/core/partials/loadenv.php";
         echo getenv("database") == null ? "❌ No database yet" : "🗃️  Your Database:  " . getenv("database");
         exit;
     }
