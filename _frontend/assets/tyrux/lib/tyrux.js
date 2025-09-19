@@ -162,7 +162,7 @@ export class Tyrux {
     justify-content: center;
     z-index: 999999;
     font-family: Arial, sans-serif;
-    color: #222; /* dark text */
+    color: #222;
   `;
 
         let bodyContent = "";
@@ -211,10 +211,7 @@ export class Tyrux {
 
                 bodyContent = JSON.stringify(bodyContent, null, 2);
                 url = url.replace(/\s+/g, "");
-
-            } catch {
-
-            }
+            } catch { }
         }
         let prettyBody = bodyContent;
 
@@ -231,9 +228,19 @@ export class Tyrux {
             prettyHeaders = "—";
         }
 
+        // --- Build cURL ---
+        let curl = `curl -X ${method} "${url}"`;
+        if (headers && typeof headers === "object") {
+            for (const key in headers) {
+                curl += ` \\\n  -H "${key}: ${headers[key]}"`;
+            }
+        }
+        if (prettyBody && prettyBody !== "{}") {
+            curl += ` \\\n  -d '${prettyBody}'`;
+        }
+
         modal.innerHTML = `
     <div style="background: #fff; padding: 20px; width: 600px; max-height: 80vh; overflow:auto; border-radius:10px; box-shadow: 0 5px 25px rgba(0,0,0,0.3); position:relative;">
-        <!-- X button -->
         <button id="closexModax2f3787473b847b8v3tyroneleeemzmodal23" 
             style="position:absolute; top:10px; right:10px; background:transparent; border:none; font-size:20px; font-weight:bold; cursor:pointer; color:#666;">
             ✖
@@ -255,12 +262,24 @@ export class Tyrux {
             <strong style="color:blue;">Request body:</strong>
             <pre style="background:#f6f6f6; padding:8px; border-radius:4px; font-family:monospace; white-space:pre-wrap; color:#222; max-height:210px; height:200px; overflow-y:scroll; color:blue;">${prettyBody}</pre>
         </div>
+        <div style="margin-bottom:10px;">
+            <strong style="color:green;">cURL:</strong>
+            <pre id="curlText" style="background:#f0fff0; padding:8px; border-radius:4px; font-family:monospace; white-space:pre-wrap; color:#060; max-height:150px; overflow-y:scroll;">${curl}</pre>
+            <button id="copyCurlBtn" style="margin-top:5px; padding:5px 10px; background:#28a745; border:none; border-radius:4px; color:#fff; cursor:pointer;">Copy cURL</button>
+        </div>
     </div>
 `;
 
         document.body.appendChild(modal);
 
-        document.getElementById("closexModax2f3787473b847b8v3tyroneleeemzmodal23").onclick = () => { modal.remove(); location.reload() };
+        document.getElementById("closexModax2f3787473b847b8v3tyroneleeemzmodal23").onclick = () => {modal.remove(); if(confirm("Reload window?")){location.reload()} };
+
+        document.getElementById("copyCurlBtn").onclick = () => {
+            const text = document.getElementById("curlText").innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("✅ cURL copied to clipboard!");
+            });
+        };
     }
 
     post(option) {
