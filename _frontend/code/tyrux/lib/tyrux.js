@@ -231,12 +231,19 @@ export class Tyrux {
         // --- Build cURL ---
         let curl = `curl -X ${method} "${url}"`;
         if (headers && typeof headers === "object") {
+            headers['Content-Type'] = "multipart/form-data";
             for (const key in headers) {
                 curl += ` \\\n  -H "${key}: ${headers[key]}"`;
             }
         }
-        if (prettyBody && prettyBody !== "{}") {
-            curl += ` \\\n  -d '${prettyBody}'`;
+        let cnt = JSON.parse(prettyBody);
+        for (const key in cnt) {
+            if (typeof cnt[key] == "object") {
+                curl += ` \\\n  --form '${key}=@""'`;
+            } else {
+                curl += ` \\\n  --form '${key}="${cnt[key]}"'`;
+            }
+
         }
 
         modal.innerHTML = `
@@ -272,7 +279,7 @@ export class Tyrux {
 
         document.body.appendChild(modal);
 
-        document.getElementById("closexModax2f3787473b847b8v3tyroneleeemzmodal23").onclick = () => {modal.remove(); if(confirm("Reload window?")){location.reload()} };
+        document.getElementById("closexModax2f3787473b847b8v3tyroneleeemzmodal23").onclick = () => { modal.remove(); if (confirm("Reload window?")) { location.reload() } };
 
         document.getElementById("copyCurlBtn").onclick = () => {
             const text = document.getElementById("curlText").innerText;
