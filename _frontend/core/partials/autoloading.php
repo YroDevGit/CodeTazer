@@ -130,6 +130,21 @@ if (! function_exists("import_script")) {
     }
 }
 
+if(! function_exists("import_packages")){
+    function import_packages(string ...$packages){
+        $cpath = codepath()."/ctr/";
+        foreach($packages as $p){
+            $fl = substr($p, -3) == ".js" ? $p : $p . ".js";
+            if($fl == "tyrux.js"){
+                echo import_tyrux();
+                continue;
+            }
+            $pt = $cpath.$fl;
+            echo "<script src='$pt'></script>";
+        }
+    }
+}
+
 if (! function_exists("import_currency")) {
     function import_currency()
     {
