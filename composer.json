@@ -21,7 +21,7 @@
     }
   },
   "scripts": {
-    "new codetazer":"create-project yrodevgit/codetazer",
+    "codetazer":"create-project yrodevgit/codetazer",
     "pre-install-cmd": [
       "echo '⚡CodeTazer by CodeYRO⚡'",
       "echo 'Preparing to install Codetazer... Please wait.'"
