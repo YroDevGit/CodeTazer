@@ -120,6 +120,16 @@ if (! function_exists("import_func")) {
     }
 }
 
+if (! function_exists("import_script")) {
+    function import_script(string $filename)
+    {
+        $fl = substr($filename, -3) == ".js" ? $filename : $filename . ".js";
+    ?>
+        <script src="<?= codepath('script/'.$fl) ?>"></script>
+    <?php
+    }
+}
+
 if (! function_exists("import_currency")) {
     function import_currency()
     {
