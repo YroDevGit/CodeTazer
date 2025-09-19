@@ -4,6 +4,7 @@ namespace Classes;
 
 use Classes\Response;
 use Exception;
+use Throwable;
 
 class Routing
 {
@@ -17,8 +18,11 @@ class Routing
         }
     }
 
-    public static function group_route(array $routes, callable $func)
+    private static function route_filtering(array $routes, callable $func, $included = true)
     {
+        if (! $routes) {
+            return false;
+        }
         foreach ($routes as $r) {
             $path = substr($r, -4) == ".php" ? $r : $r . ".php";
             if (! file_exists("_backend/_routes/$path")) {
@@ -26,13 +30,40 @@ class Routing
             }
         }
         $current = current_be();
-        if (in_array($current, $routes)) {
-            $func();
+        if ($included) {
+            if (in_array($current, $routes)) {
+                try {
+                    $func();
+                } catch (Throwable $e) {
+                    throw new Exception($e->getMessage());
+                }
+            }
+        } else {
+            if (! in_array($current, $routes)) {
+                try {
+                    $func();
+                } catch (Throwable $e) {
+                    throw new Exception($e->getMessage());
+                }
+            }
         }
+        return true;
     }
 
-    public static function set(string|array $routes, callable ...$args)
+    public static function group_route(array $routes, callable $func)
     {
+        return self::route_filtering($routes, $func);
+    }
+    public static function except(array $routes, callable $func)
+    {
+        return self::route_filtering($routes, $func, false);
+    }
+
+    public static function set(string|array|null $routes, callable ...$args)
+    {
+        if (! $routes) {
+            return false;
+        }
         if (is_string($routes)) {
             $current = current_be();
             $path = substr($routes, -4) == ".php" ? $routes : $routes . ".php";
@@ -44,7 +75,11 @@ class Routing
 
             if ($routes === $current) {
                 foreach ($args as $func) {
-                    $func();
+                    try {
+                        $func();
+                    } catch (Throwable $e) {
+                        throw new Exception($e->getMessage());
+                    }
                 }
             }
         } elseif (is_array($routes)) {
@@ -54,5 +89,6 @@ class Routing
         } else {
             throw new Exception("Routing::set must be string or array only");
         }
+        return true;
     }
 }

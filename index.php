@@ -136,12 +136,13 @@ if ($bee) {
             exit;
         }
     }
-    $folder_to_bee = '_backend/auto';
-    include_once $folder_to_bee . "/loader.php";
+
     try {
         set_error_handler(function ($errno, $errstr, $errfile, $errline) {
             throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
         });
+        $folder_to_bee = '_backend/auto';
+        include_once $folder_to_bee . "/loader.php";
 
         include("_backend/_routes/$bee");
         exit;
@@ -151,7 +152,8 @@ if ($bee) {
         http_response_code(getenv("error_code"));
         echo json_encode($err);
         exit;
-    } catch (InvalidArgumentException $e) {
+    }
+     catch (InvalidArgumentException $e) {
         $err = BasixsErrorException($e, $bee);
         header('Content-Type: application/json');
         http_response_code(getenv("error_code"));
@@ -167,9 +169,7 @@ if ($bee) {
         restore_error_handler();
     }
 }
-
 include_once "_frontend/core/config/settings.php";
-
 define("mainpage", $bconfig['mainpage'] ?? "main");
 $mainpage = mainpage;
 $page404 = php_file($bconfig["error404"] ?? "page404");
@@ -179,8 +179,6 @@ include("_frontend/core/autoloading.php");
 $get = $_GET['page'] ?? $_GET['p'] ?? $_GET['fe'] ?? $_GET['frontend'] ?? false;
 $folder_to_fee = '_frontend/auto';
 $is_function = false;
-
-
 try {
     if (! $get) {
         if ($_GET['funcpage'] ?? false) {
@@ -192,8 +190,6 @@ try {
         if (strpos($get, '..') !== false || strpos($get, './') !== false) {
             die("Invalid page request! - CodeYro Basixs");
         }
-
-
         $bb = explode("?", $get);
         $bee = $bb[0];
         $param = isset($bb[1]) ? $bb[1] : "";

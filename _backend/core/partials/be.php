@@ -857,9 +857,12 @@ if (! function_exists("use_base")) {
 }
 
 if (! function_exists("use_middleware")) {
-    function use_middleware(string $model)
+    function use_middleware(string $middleware)
     {
-        $model = substr($model, -4) == ".php" ? $model : $model . ".php";
+        $model = substr($middleware, -4) == ".php" ? $middleware : $middleware . ".php";
+        if(! file_exists("_backend/middleware/" . $model)){
+            throw new Exception("Middleware '$middleware' not exist.!");
+        }
         include "_backend/middleware/" . $model;
     }
 }

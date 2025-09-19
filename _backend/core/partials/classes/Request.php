@@ -60,7 +60,7 @@ class Request
 
     static function headers(string|null $key = null, $ucwords = false)
     {
-        if ($key == null) {
+        if (is_null($key)) {
             return server_headers($key);
         } else {
             if ($ucwords) {

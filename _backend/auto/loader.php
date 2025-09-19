@@ -1,7 +1,7 @@
 <?php
-//This is the 1st autoload
+//This is Backend Autoload
 
-//Auto load file inside php folder
+// Auto load file inside php folder
 autoload_php([
     //"test"
 ]);

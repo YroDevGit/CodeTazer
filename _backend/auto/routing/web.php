@@ -1,12 +1,12 @@
 <?php
-//this is the web routing
-
 use Classes\Routing;
 
-$admin = [
+
+$routes = [
     
 ];
 
-Routing::group_route($admin, function () {
-    use_middleware("auth");
+Routing::group_route($routes, function () {
+    // Add auto load function here...
+    
 });

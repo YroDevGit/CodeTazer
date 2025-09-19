@@ -6,7 +6,7 @@ $routes = [
     
 ];
 
-Routing::group_route($routes, function(){
-    // add auto load here...
-    
+Routing::group_route($routes, function () {
+    // Add auto load function here...
+
 });
