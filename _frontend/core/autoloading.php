@@ -32,7 +32,7 @@ if (! function_exists("include_error_page")) {
     function include_error_page(string|null $error_page, $variables = [], $exit = true)
     {
         $error_page = substr($error_page, -4) == ".php" ? $error_page : $error_page . ".php";
-        $path = "_frontend/extra/errors/$error_page";
+        $path = "_frontend/core/errors/$error_page";
         if (! file_exists($path)) {
             die("Error page '$error_page' not found.!");
         }
@@ -70,7 +70,7 @@ if (! function_exists("include_template_page")) {
     {
         $error_page = $template_page;
         $error_page = substr($error_page, -4) == ".php" ? $error_page : $error_page . ".php";
-        $path = "_frontend/extra/template/$error_page";
+        $path = "_frontend/core/template/$error_page";
         if (! file_exists($path)) {
             die("Template page '$error_page' not found.!");
         }
@@ -96,7 +96,7 @@ if (! function_exists("import_swal")) {
     function import_swal()
     {
 ?>
-        <script src="<?= assets('code/swal.js') ?>"></script>
+        <script src="<?= codepath('ctr/swal.js') ?>"></script>
     <?php
     }
 }
@@ -105,7 +105,17 @@ if (! function_exists("import_ctr")) {
     function import_ctr()
     {
     ?>
-        <script src="<?= assets('code/ctr.js') ?>"></script>
+        <script src="<?= codepath('ctr/ctr.js') ?>"></script>
+    <?php
+    }
+}
+
+if (! function_exists("import_func")) {
+    function import_func(string $filename)
+    {
+        $fl = substr($filename, -3) == ".js" ? $filename : $filename . ".js";
+    ?>
+        <script src="<?= codepath('func/'.$fl) ?>"></script>
     <?php
     }
 }
@@ -114,7 +124,7 @@ if (! function_exists("import_currency")) {
     function import_currency()
     {
     ?>
-        <script src="<?= assets('code/currency.js') ?>"></script>
+        <script src="<?= codepath('ctr/currency.js') ?>"></script>
     <?php
     }
 }
@@ -123,7 +133,7 @@ if (! function_exists("import_twal")) {
     function import_twal()
     {
     ?>
-        <script src="<?= assets('code/twal.js') ?>"></script>
+        <script src="<?= codepath('ctr/twal.js') ?>"></script>
     <?php
     }
 }
@@ -132,7 +142,7 @@ if (! function_exists("import_date")) {
     function import_date()
     {
     ?>
-        <script src="<?= assets('code/date.js') ?>"></script>
+        <script src="<?= codepath('ctr/date.js') ?>"></script>
     <?php
     }
 }
@@ -141,7 +151,7 @@ if (! function_exists("import_jquery")) {
     function import_jquery()
     {
     ?>
-        <script src="<?= assets('code/jquery.js') ?>"></script>
+        <script src="<?= codepath('ctr/jquery.js') ?>"></script>
     <?php
     }
 }
@@ -150,7 +160,7 @@ if (! function_exists("import_paths")) {
     function import_paths()
     {
     ?>
-        <script src="<?= assets('code/paths.js') ?>"></script>
+        <script src="<?= codepath('ctr/paths.js') ?>"></script>
     <?php
     }
 }
@@ -159,7 +169,7 @@ if (! function_exists("import_loading")) {
     function import_loading()
     {
     ?>
-        <script src="<?= assets('code/loading.js') ?>"></script>
+        <script src="<?= codepath('ctr/loading.js') ?>"></script>
     <?php
     }
 }
@@ -168,7 +178,7 @@ if (! function_exists("import_secure")) {
     function import_secure()
     {
     ?>
-        <script src="<?= assets('code/secure.js') ?>"></script>
+        <script src="<?= codepath('ctr/secure.js') ?>"></script>
     <?php
     }
 }
@@ -176,7 +186,7 @@ if (! function_exists("import_secure")) {
 if (! function_exists("import_tyrux")) {
     function import_tyrux()
     {
-        $tyrux = assets("tyrux/index.js");
+        $tyrux = codepath."/tyrux/index.js";
         return '<script type="module">import "./' . $tyrux . '";</script>';
     }
 }
@@ -185,8 +195,8 @@ if (! function_exists("import_bundle")) {
     function import_bundle()
     {
     ?>
-        <link rel="stylesheet" href="<?= assets('code/vendor.bundle.base.css') ?>" />
-        <script src="<?= assets('code/vendor.bundle.base.js') ?>"></script>
+        <link rel="stylesheet" href="<?= codepath('ctr/vendor.bundle.base.css') ?>" />
+        <script src="<?= codepath('ctr/vendor.bundle.base.js') ?>"></script>
     <?php
     }
 }
@@ -195,8 +205,8 @@ if (! function_exists("import_datatable")) {
     function import_datatable()
     {
     ?>
-        <link rel="stylesheet" href="<?= assets('code/datatable.css') ?>" />
-        <script src="<?= assets('code/datatable.js') ?>"></script>
+        <link rel="stylesheet" href="<?= codepath('ctr/datatable.css') ?>" />
+        <script src="<?= codepath('ctr/datatable.js') ?>"></script>
     <?php
     }
 }
@@ -204,7 +214,7 @@ if (! function_exists("import_jspost")) {
     function import_jspost()
     {
     ?>
-        <script src="<?= assets('code/jspost.js') ?>"></script>
+        <script src="<?= codepath('ctr/jspost.js') ?>"></script>
 <?php
     }
 }

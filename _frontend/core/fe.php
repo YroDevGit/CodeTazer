@@ -11,6 +11,7 @@ define('rootpath', getenv('rootpath'));
 define('pages', '_frontend/pages');
 define('_backend', '_backend');
 define('assets', '_frontend/assets');
+define('codepath', '_frontend/code');
 
 define('SUCCESS', getenv('success_code'));
 
@@ -234,6 +235,17 @@ if (! function_exists('assets')) {
             return assets;
         } else {
             return assets . "/" . $path;
+        }
+    }
+}
+
+if (! function_exists('codepath')) {
+    function codepath(string $path = "")
+    {
+        if ($path == "" || $path == null) {
+            return codepath;
+        } else {
+            return codepath . "/" . $path;
         }
     }
 }
