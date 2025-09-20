@@ -143,6 +143,6 @@ function BasixsErrorException($e, $bee, string $errorcode = "backend_error_code"
             "data" => []
         ];
     }
-    add_sql_log($getMessage, "be_errors", $hascode . " @" . $bee);
+    add_sql_log($message." :: Trace= ".$getMessage, "be_errors", $hascode . " @" . $bee);
     return $err;
 }
