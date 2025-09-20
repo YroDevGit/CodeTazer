@@ -135,7 +135,7 @@ const tyrax = {// For tyrux default config
     }
 }
 
-const tyrasync = {
+const tyrsync = { // For async await tyrax
     api: function (option) {
         return tyrax.async(option);
     },
@@ -192,5 +192,5 @@ const DOM = new DOMclass();
 window.get_form_data = get_form_data;
 window.tyrequest = tyrequest;
 window.tyrax = tyrax;
-window.tyrasync = tyrasync;
+window.tyrasync = tyrsync;
 window.DOM = DOM;
