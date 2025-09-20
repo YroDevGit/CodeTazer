@@ -6,17 +6,45 @@ class Path {
         this.func = "?funcpage=";
     }
 
-    page($page = "") {
-        return this.frontend + $page;
+    page($page = "", params = {}) {
+        let url = this.frontend + encodeURIComponent($page);
+
+        const query = Object.entries(params)
+            .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+            .join("&");
+
+        if (query) {
+            url += "&" + query;
+        }
+
+        return url;
     }
 
-    funcpage($page = "") {
-        return this.func + $page;
+    funcpage($page = "", params = {}) {
+        let url = this.func + encodeURIComponent($page);
+        const query = Object.entries(params)
+            .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+            .join("&");
+
+        if (query) {
+            url += "&" + query;
+        }
+
+        return url;
     }
 
-    backend($be) {
-        return this.frontend + $be;
+    backend($be = "", params = {}) {
+        let url = this.backend + encodeURIComponent($be);
+        const query = Object.entries(params)
+            .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+            .join("&");
+
+        if (query) {
+            url += "&" + query;
+        }
+        return url;
     }
 }
 
 window.PATH = new Path();
+window.PATHS = new Path();
