@@ -152,6 +152,10 @@ if(! function_exists("import_packages")){
                 echo "<script src='$pt'></script>";
                 continue;
             }
+            if($fl == "paths.js" || $fl == "path.js"){
+                import_paths();
+                continue;
+            }
             echo "<script src='$pt'></script>";
         }
     }
