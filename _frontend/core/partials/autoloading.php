@@ -140,6 +140,18 @@ if(! function_exists("import_packages")){
                 continue;
             }
             $pt = $cpath.$fl;
+            if($fl == "bundle.js"){
+                $css = $cpath."bundle.css";
+                echo "<link rel='stylesheet' href='$css'>";
+                echo "<script src='$pt'></script>";
+                continue;
+            }
+            if($fl == "datatable.js"){
+                $css = $cpath."datatable.css";
+                echo "<link rel='stylesheet' href='$css'>";
+                echo "<script src='$pt'></script>";
+                continue;
+            }
             echo "<script src='$pt'></script>";
         }
     }
