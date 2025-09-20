@@ -961,6 +961,24 @@ if (! function_exists("autoload_routing")) {
     }
 }
 
+if (! function_exists("autoload_api")) {
+    function autoload_api(string|array $filename)
+    {
+        if (!$filename) {
+            return false;
+        }
+        if (is_array($filename)) {
+            foreach ($filename as $f) {
+                $loadpage = substr($f, -4) == ".php" ? $f : $f . ".php";
+                include "_backend/auto/api/" . $loadpage;
+            }
+        } else {
+            $loadpage = substr($filename, -4) == ".php" ? $filename : $filename . ".php";
+            include "_backend/auto/api/" . $loadpage;
+        }
+    }
+}
+
 if (! function_exists("current_be")) {
     function current_be(bool $php_exention = false): string
     {
