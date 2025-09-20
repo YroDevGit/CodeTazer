@@ -118,11 +118,11 @@ function BasixsErrorException($e, $bee, string $errorcode = "backend_error_code"
         ];
     } else if (strtolower($env) == "prod" || strtolower($env) == "production") {
         include "_backend/core/partials/library/PHPErrorClass.php";
-        $clearMSG = PHPErrorClass::error_message($e);
+        $clearMSG = PHPErrorClass::error_message($e, true);
         $err = [
             "code" => getenv($errorcode),
             "status" => "error",
-            "message" => $clearMSG,
+            "message" => $clearMSG ?? "Server Error #". $hascode,
             "msg" => $message . " #" . $hascode,
             "errorcode" => $hascode,
             "data" => []

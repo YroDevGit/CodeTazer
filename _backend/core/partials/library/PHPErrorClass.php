@@ -2,7 +2,7 @@
 class PHPErrorClass
 {
 
-    public static function error_message(mixed $e)
+    public static function error_message(mixed $e, $prod = false)
     {
         $msg = $e->getMessage();
         $code = $e->getCode();
@@ -27,6 +27,9 @@ class PHPErrorClass
                 return "Duplicate entry.";
             }
         } else {
+            if($prod){
+                return null;
+            }
             return $e->getMessage();
         }
     }
