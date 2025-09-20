@@ -6,3 +6,7 @@ npx terser index.js -o index.js --compress --mangle
 
 cd _frontend/code/ctr
 npx terser twareal.js -o twal.js --compress --mangle 
+
+
+cd _frontend/code/tyrux/lib
+npx terser tyreal.js -o tyrux.js --compress --mangle 
