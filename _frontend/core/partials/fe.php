@@ -108,7 +108,7 @@ if (! function_exists("get_date")) {
 }
 
 if (! function_exists('page')) {
-    function page(string $path = "=", mixed $param = [])
+    function page(string $path = "=", mixed $param = [], $ext = false)
     {
         if ($path === "=") {
             return rootpath . "/?page=";
@@ -133,7 +133,7 @@ if (! function_exists('page')) {
         if ($path == "" || $path == null) {
             return rootpath . $params;
         } else {
-            $path = substr($path, -4) == ".php" ? $path : $path . ".php";
+            //$path = substr($path, -4) == ".php" ? $path : $path . ".php";
             return rootpath . "/?page=" . $path . $params;
         }
     }
