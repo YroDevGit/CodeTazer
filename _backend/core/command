@@ -628,18 +628,8 @@ if ($route == "+model") {
     <?php //route: $filename
 
     //Add codes here...
-
-
-
-
-
     
-
-
     
-
-
-    ?>
     EOT;
 
         if (file_exists($phpFile)) {
