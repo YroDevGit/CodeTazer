@@ -45,6 +45,7 @@ function tyrux(request) {
 
 //Exports here...
 window.tyrux = tyrux;
+window.TYRUX = Tyrux;
 window.baseURL = baseURL;
 window.baseRoute = baseRoute;
 window.tyreq = tyreq;
