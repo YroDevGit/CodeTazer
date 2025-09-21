@@ -40,9 +40,6 @@ function tyrux(request) {
     tyreq.request(request);
 }
 
-
-
-
 //Exports here...
 window.tyrux = tyrux;
 window.TYRUX = Tyrux;
@@ -50,8 +47,6 @@ window.baseURL = baseURL;
 window.baseRoute = baseRoute;
 window.tyreq = tyreq;
 window.backend = backend;
-
-
 
 /**
  * tyruxRequest is a raw request
@@ -91,7 +86,6 @@ const tyrequest = {// For raw/universal request:: CodeYRO
         api.request(option);
     },
 }
-
 
 const tyrax = {// For tyrux default config
     api: function (option) {
@@ -169,8 +163,6 @@ const tyrsync = { // For async await tyrax
         return tyrax.async(option);
     },
 }
-
-
 
 function get_form_data(selector) {
     let form = null;
