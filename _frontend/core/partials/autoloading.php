@@ -98,7 +98,7 @@ if (! function_exists("import_swal")) {
     function import_swal()
     {
 ?>
-        <script src="<?= codepath('ctr/swal.js') ?>"></script>
+        <script src="<?= codepath('src/ctr/swal.js') ?>"></script>
     <?php
     }
 }
@@ -107,7 +107,7 @@ if (! function_exists("import_ctr")) {
     function import_ctr()
     {
     ?>
-        <script src="<?= codepath('ctr/ctr.js') ?>"></script>
+        <script src="<?= codepath('src/ctr/ctr.js') ?>"></script>
     <?php
     }
 }
@@ -136,7 +136,7 @@ if (!function_exists("import_script")) {
 if (! function_exists("import_packages")) {
     function import_packages(string ...$packages)
     {
-        $cpath = codepath() . "/ctr/";
+        $cpath = codepath() . "/src/ctr/";
         foreach ($packages as $p) {
             $fl = substr($p, -3) == ".js" ? $p : $p . ".js";
             if ($fl == "tyrux.js") {
@@ -169,7 +169,7 @@ if (! function_exists("import_currency")) {
     function import_currency()
     {
     ?>
-        <script src="<?= codepath('ctr/currency.js') ?>"></script>
+        <script src="<?= codepath('src/ctr/currency.js') ?>"></script>
     <?php
     }
 }
@@ -178,7 +178,7 @@ if (! function_exists("import_twal")) {
     function import_twal()
     {
     ?>
-        <script src="<?= codepath('ctr/twal.js') ?>"></script>
+        <script src="<?= codepath('src/ctr/twal.js') ?>"></script>
     <?php
     }
 }
@@ -187,7 +187,7 @@ if (! function_exists("import_date")) {
     function import_date()
     {
     ?>
-        <script src="<?= codepath('ctr/date.js') ?>"></script>
+        <script src="<?= codepath('src/ctr/date.js') ?>"></script>
     <?php
     }
 }
@@ -196,7 +196,7 @@ if (! function_exists("import_jquery")) {
     function import_jquery()
     {
     ?>
-        <script src="<?= codepath('ctr/jquery.js') ?>"></script>
+        <script src="<?= codepath('src/ctr/jquery.js') ?>"></script>
     <?php
     }
 }
@@ -205,7 +205,7 @@ if (! function_exists("import_paths")) {
     function import_paths()
     {
     ?>
-        <script src="<?= codepath('ctr/paths.js') ?>"></script>
+        <script src="<?= codepath('src/ctr/paths.js') ?>"></script>
     <?php
     }
 }
@@ -214,7 +214,7 @@ if (! function_exists("import_loading")) {
     function import_loading()
     {
     ?>
-        <script src="<?= codepath('ctr/loading.js') ?>"></script>
+        <script src="<?= codepath('src/ctr/loading.js') ?>"></script>
     <?php
     }
 }
@@ -223,7 +223,7 @@ if (! function_exists("import_secure")) {
     function import_secure()
     {
     ?>
-        <script src="<?= codepath('ctr/secure.js') ?>"></script>
+        <script src="<?= codepath('src/ctr/secure.js') ?>"></script>
     <?php
     }
 }
@@ -231,7 +231,7 @@ if (! function_exists("import_secure")) {
 if (! function_exists("import_tyrux")) {
     function import_tyrux()
     {
-        $tyrux = codepath . "/tyrux/index.js";
+        $tyrux = codepath . "/src/tyrux/index.js";
         return '<script type="module">import "./' . $tyrux . '";</script>';
     }
 }
@@ -240,8 +240,8 @@ if (! function_exists("import_bundle")) {
     function import_bundle()
     {
     ?>
-        <link rel="stylesheet" href="<?= codepath('ctr/vendor.bundle.base.css') ?>" />
-        <script src="<?= codepath('ctr/vendor.bundle.base.js') ?>"></script>
+        <link rel="stylesheet" href="<?= codepath('src/ctr/bundle.css') ?>" />
+        <script src="<?= codepath('src/ctr/bundle.js') ?>"></script>
     <?php
     }
 }
@@ -250,8 +250,8 @@ if (! function_exists("import_datatable")) {
     function import_datatable()
     {
     ?>
-        <link rel="stylesheet" href="<?= codepath('ctr/datatable.css') ?>" />
-        <script src="<?= codepath('ctr/datatable.js') ?>"></script>
+        <link rel="stylesheet" href="<?= codepath('src/ctr/datatable.css') ?>" />
+        <script src="<?= codepath('src/ctr/datatable.js') ?>"></script>
     <?php
     }
 }
@@ -259,7 +259,7 @@ if (! function_exists("import_jspost")) {
     function import_jspost()
     {
     ?>
-        <script src="<?= codepath('ctr/jspost.js') ?>"></script>
+        <script src="<?= codepath('src/ctr/jspost.js') ?>"></script>
 <?php
     }
 }
