@@ -46,19 +46,21 @@ if (! function_exists("include_error_page")) {
     }
 }
 
-if(! function_exists("ctr_storage")){
-    function ctr_storage($filepath=""){
-        if($filepath){
-            return "_frontend/core/partials/system/storage/". str_replace("\\", "/", $filepath);
+if (! function_exists("ctr_storage")) {
+    function ctr_storage($filepath = "")
+    {
+        if ($filepath) {
+            return "_frontend/core/partials/system/storage/" . str_replace("\\", "/", $filepath);
         }
         return "_frontend/core/partials/system/storage";
     }
 }
 
-if(! function_exists("file_multiple")){
-    function file_multiple(array|null $attribute = null){
+if (! function_exists("file_multiple")) {
+    function file_multiple(array|null $attribute = null)
+    {
         $att = "";
-        foreach($attribute as $attr=>$v){
+        foreach ($attribute as $attr => $v) {
             $att .= " $attr='$v'";
         }
         return "<input type='file' multiple $att >";
@@ -115,44 +117,46 @@ if (! function_exists("import_func")) {
     {
         $fl = substr($filename, -3) == ".js" ? $filename : $filename . ".js";
     ?>
-        <script src="<?= codepath('func/'.$fl) ?>"></script>
+        <script src="<?= codepath('func/' . $fl) ?>"></script>
     <?php
     }
 }
 
-if (! function_exists("import_script")) {
-    function import_script(string $filename)
+if (!function_exists("import_script")) {
+    function import_script(string ...$filenames)
     {
-        $fl = substr($filename, -3) == ".js" ? $filename : $filename . ".js";
-    ?>
-        <script src="<?= codepath('script/'.$fl) ?>"></script>
-    <?php
+        foreach ($filenames as $flx) {
+            $fl = str_ends_with($flx, '.js') ? $flx : $flx . '.js';
+            echo '<script src="' . htmlspecialchars(codepath('script/' . $fl), ENT_QUOTES) . '"></script>' . PHP_EOL;
+        }
     }
 }
 
-if(! function_exists("import_packages")){
-    function import_packages(string ...$packages){
-        $cpath = codepath()."/ctr/";
-        foreach($packages as $p){
+
+if (! function_exists("import_packages")) {
+    function import_packages(string ...$packages)
+    {
+        $cpath = codepath() . "/ctr/";
+        foreach ($packages as $p) {
             $fl = substr($p, -3) == ".js" ? $p : $p . ".js";
-            if($fl == "tyrux.js"){
+            if ($fl == "tyrux.js") {
                 echo import_tyrux();
                 continue;
             }
-            $pt = $cpath.$fl;
-            if($fl == "bundle.js"){
-                $css = $cpath."bundle.css";
+            $pt = $cpath . $fl;
+            if ($fl == "bundle.js") {
+                $css = $cpath . "bundle.css";
                 echo "<link rel='stylesheet' href='$css'>";
                 echo "<script src='$pt'></script>";
                 continue;
             }
-            if($fl == "datatable.js"){
-                $css = $cpath."datatable.css";
+            if ($fl == "datatable.js") {
+                $css = $cpath . "datatable.css";
                 echo "<link rel='stylesheet' href='$css'>";
                 echo "<script src='$pt'></script>";
                 continue;
             }
-            if($fl == "paths.js" || $fl == "path.js"){
+            if ($fl == "paths.js" || $fl == "path.js") {
                 import_paths();
                 continue;
             }
@@ -227,7 +231,7 @@ if (! function_exists("import_secure")) {
 if (! function_exists("import_tyrux")) {
     function import_tyrux()
     {
-        $tyrux = codepath."/tyrux/index.js";
+        $tyrux = codepath . "/tyrux/index.js";
         return '<script type="module">import "./' . $tyrux . '";</script>';
     }
 }
