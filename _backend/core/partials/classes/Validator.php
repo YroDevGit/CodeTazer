@@ -258,6 +258,11 @@ class Validator
             $ruleName = $ruleParts[0];
             $ruleParam = $ruleParts[1] ?? null;
 
+            if (($ruleName == "collect" || $ruleName == "column") && $ruleParam) {
+                $collected = true;
+                self::$collect[$ruleParam] = $value;
+            }
+
             if ($value === '' && $ruleName !== 'required' && !$hasRequired) {
                 continue;
             }
@@ -279,11 +284,6 @@ class Validator
                         self::addErrs($postname, "must be at least $ruleParam characters.");
                     }
                 }
-            }
-
-            if (($ruleName == "collect" || $ruleName == "column") && $ruleParam) {
-                $collected = true;
-                self::$collect[$ruleParam] = $value;
             }
 
             if ($ruleName === 'max') {
