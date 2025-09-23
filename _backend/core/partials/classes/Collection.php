@@ -171,6 +171,24 @@ class Collection
         return $this;
     }
 
+    public function alter(array $map): self
+    {
+        if ($this->trulyEmpty($this->items)) {
+            return $this;
+        }
+
+        $this->items = array_map(function ($item) use ($map) {
+            foreach ($map as $old => $new) {
+                if (array_key_exists($old, $item)) {
+                    $item[$new] = $item[$old];
+                    unset($item[$old]);
+                }
+            }
+            return $item;
+        }, $this->items);
+
+        return $this;
+    }
 
     static function string_format(string $string, string $separator, string $format, bool $asArray = false): string|array
     {

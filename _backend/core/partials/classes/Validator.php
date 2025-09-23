@@ -231,6 +231,25 @@ class Validator
         return $this->validate();
     }
 
+    static function rules(array $data)
+    {
+        foreach ($data as $k => $v) {
+            if (is_string($v)) {
+                self::check($k, $k, $v);
+            } else if (is_array($v)) {
+                $label = $v[0] ?? null;
+                $newv = $v[1] ?? null;
+                if (! $label || ! $newv) {
+                    throw new Exception("Invalid rule pattern.");
+                }
+                self::check($k, $label, $newv);
+            } else {
+                throw new Exception("Rule value should only be string or array only.");
+            }
+        }
+        return self::data();
+    }
+
     public static function check($postname, $label, $rules)
     {
         $postdata = postdata();
