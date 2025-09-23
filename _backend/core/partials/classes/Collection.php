@@ -297,6 +297,111 @@ class Collection
         return $this;
     }
 
+    public function strtolower(string|array $keys): self
+    {
+        if ($this->trulyEmpty($this->items)) {
+            return $this;
+        }
+        if (is_string($keys)) {
+            $keys = [$keys];
+        }
+
+        $this->items = array_map(function ($item) use ($keys) {
+            foreach ($keys as $key) {
+                if (isset($item[$key])) {
+                    $item[$key] = strtolower((string)$item[$key]);
+                }
+            }
+            return $item;
+        }, $this->items);
+
+        return $this;
+    }
+
+    public function strtoupper(string|array $keys): self
+    {
+        if ($this->trulyEmpty($this->items)) {
+            return $this;
+        }
+        if (is_string($keys)) {
+            $keys = [$keys];
+        }
+
+        $this->items = array_map(function ($item) use ($keys) {
+            foreach ($keys as $key) {
+                if (isset($item[$key])) {
+                    $item[$key] = strtoupper((string)$item[$key]);
+                }
+            }
+            return $item;
+        }, $this->items);
+
+        return $this;
+    }
+
+    public function ucfirst(string|array $keys): self
+    {
+        if ($this->trulyEmpty($this->items)) {
+            return $this;
+        }
+        if (is_string($keys)) {
+            $keys = [$keys];
+        }
+
+        $this->items = array_map(function ($item) use ($keys) {
+            foreach ($keys as $key) {
+                if (isset($item[$key])) {
+                    $item[$key] = ucfirst((string)$item[$key]);
+                }
+            }
+            return $item;
+        }, $this->items);
+
+        return $this;
+    }
+
+    public function ucwords(string|array $keys): self
+    {
+        if ($this->trulyEmpty($this->items)) {
+            return $this;
+        }
+        if (is_string($keys)) {
+            $keys = [$keys];
+        }
+
+        $this->items = array_map(function ($item) use ($keys) {
+            foreach ($keys as $key) {
+                if (isset($item[$key])) {
+                    $item[$key] = ucwords((string)$item[$key]);
+                }
+            }
+            return $item;
+        }, $this->items);
+
+        return $this;
+    }
+
+    public function apply(string|array $keys, callable $callback): self
+    {
+        if ($this->trulyEmpty($this->items)) {
+            return $this;
+        }
+        if (is_string($keys)) {
+            $keys = [$keys];
+        }
+
+        $this->items = array_map(function ($item) use ($keys, $callback) {
+            foreach ($keys as $key) {
+                if (isset($item[$key])) {
+                    $item[$key] = $callback($item[$key], $key, $item);
+                }
+            }
+            return $item;
+        }, $this->items);
+
+        return $this;
+    }
+
     public function all(): array|null
     {
         if ($this->trulyEmpty($this->items)) return [];

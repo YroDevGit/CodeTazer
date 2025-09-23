@@ -17,6 +17,7 @@ class Validator
     private string|null $field;
     private string|null $label = '';
     private array $rules = [];
+    private static array $collect = [];
 
     public function __construct(string $field)
     {
@@ -116,6 +117,17 @@ class Validator
         return $this;
     }
 
+    public function column(string $columnName)
+    {
+        $this->rules[] = "collect:$columnName";
+        return $this;
+    }
+
+    public function collect(string $key)
+    {
+        return $this->column($key);
+    }
+
     public function in(array $options): self
     {
         $this->rules[] = "in:" . implode(',', $options);
@@ -209,11 +221,13 @@ class Validator
         return $this->validate();
     }
 
-    public function run(){
+    public function run()
+    {
         return $this->validate();
     }
 
-    public function go(){
+    public function go()
+    {
         return $this->validate();
     }
 
@@ -224,7 +238,7 @@ class Validator
             $postdata[$postname] = null;
         }
 
-        if(is_array($postdata[$postname])){
+        if (is_array($postdata[$postname])) {
             throw new Exception("Validator is not allowed for arrays");
         }
 
@@ -237,6 +251,7 @@ class Validator
         if (in_array("trim", $rulesArray)) {
             $value = trim($org ?? "");
         }
+        $collected = false;
 
         foreach ($rulesArray as $rule) {
             $ruleParts = explode(':', $rule, 2);
@@ -264,6 +279,11 @@ class Validator
                         self::addErrs($postname, "must be at least $ruleParam characters.");
                     }
                 }
+            }
+
+            if (($ruleName == "collect" || $ruleName == "column") && $ruleParam) {
+                $collected = true;
+                self::$collect[$ruleParam] = $value;
             }
 
             if ($ruleName === 'max') {
@@ -399,6 +419,10 @@ class Validator
             }
         }
 
+        if (! $collected) {
+            self::$collect[$postname] = $value;
+        }
+
         return $org;
     }
 
@@ -417,6 +441,8 @@ class Validator
     {
         return $complete ? self::$errors : self::$ers;
     }
+
+
 
     protected static function addError(string $post, string $message)
     {
@@ -437,7 +463,12 @@ class Validator
         self::$failed = true;
     }
 
-    public static function field_error(string|null|bool $field, bool $complete = true)
+    static function data()
+    {
+        return self::$collect;
+    }
+
+    public static function post_error(string|null|bool $field, bool $complete = true)
     {
         if (is_null($field) || is_bool($field)) {
             return null;
@@ -456,5 +487,10 @@ class Validator
 
         $err = isset($errors[$field]) ? $errors[$field] : null;
         return $err;
+    }
+
+    public static function field_error(string|null|bool $field, bool $complete = true)
+    {
+        return self::post_error($field, $complete);
     }
 }

@@ -139,7 +139,7 @@ if (! function_exists("import_packages")) {
         $cpath = codepath() . "/src/ctr/";
         foreach ($packages as $p) {
             $fl = substr($p, -3) == ".js" ? $p : $p . ".js";
-            if ($fl == "tyrux.js") {
+            if ($fl == "tyrux.js" || $fl == "tyrax.js") {
                 echo import_tyrux();
                 continue;
             }
@@ -233,6 +233,12 @@ if (! function_exists("import_tyrux")) {
     {
         $tyrux = codepath . "/src/tyrux/index.js";
         return '<script type="module">import "./' . $tyrux . '";</script>';
+    }
+}
+
+if(! function_exists("import_tyrax")){
+    function import_tyrax(){
+        return import_tyrux();
     }
 }
 
