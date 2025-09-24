@@ -127,7 +127,7 @@ if (!function_exists("import_script")) {
     {
         foreach ($filenames as $flx) {
             $fl = str_ends_with($flx, '.js') ? $flx : $flx . '.js';
-            echo '<script src="' . htmlspecialchars(codepath('script/' . $fl), ENT_QUOTES) . '"></script>' . PHP_EOL;
+            echo '<script type="module" src="' . htmlspecialchars(codepath('script/' . $fl), ENT_QUOTES) . '"></script>' . PHP_EOL;
         }
     }
 }
