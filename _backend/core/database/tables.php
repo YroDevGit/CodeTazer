@@ -24,13 +24,3 @@ Migration::table("user", [
 ]);
 
 
-
-
-
-
-
-
-
-
-
-?>
