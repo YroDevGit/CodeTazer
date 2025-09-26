@@ -18,6 +18,12 @@ class Routing
         }
     }
 
+    public static function route_middleware(array $routes, string $midleware, $included = true){
+        self::route_filtering($routes, function(){
+            use_middleware($midleware);
+        }, $included);
+    }
+
     private static function route_filtering(array $routes, callable $func, $included = true)
     {
         if (! $routes) {
