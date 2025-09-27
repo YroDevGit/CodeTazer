@@ -104,10 +104,12 @@ if ($route == "deployment" || $route == "deploy") {
     $realpath = realpath(__DIR__ . "/../..");
     if ($filename == "--ready") {
         file_put_contents($realpath . "/.gitignore", ".env");
-        echo "✔️ Deployment ready\n\n";exit;
+        echo "✔️ Deployment ready\n\n";
+        exit;
     } else if ($filename == "--reset") {
         unlink($realpath . "/.gitignore");
-        echo "✔️ Deployment reset\n\n";exit;
+        echo "✔️ Deployment reset\n\n";
+        exit;
     } else {
         echo "❌ Invalid deployment parameter\n\n";
     }
@@ -730,6 +732,16 @@ if ($route == "+model") {
     } else {
         echo "❌ Invalid clear command";
         exit;
+    }
+} else if ($route == "keygen") {
+    if(!$filename){
+        echo "❌ Parameter lenght is missing\n\n";exit;
+    }
+    if(! is_numeric($filename)){
+        echo "❌ Parameter should be numberic\n\n";exit;
+    }else{
+        include "_frontend/core/partials/loadenv.php";
+        echo "Key generated: ". substr(md5(date("ymdHisA").getenv("hash_secret")), 0, $filename) ."\n\n";exit;
     }
 } else {
     echo "Invalid command.\n";
