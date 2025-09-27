@@ -132,6 +132,16 @@ class BaseTable
         return $data[0] ?? [];
     }
 
+    public static function count(array|null $where = null, array|int|null $extra = null):int|null{
+        $find = [];
+        if(is_null($where)){
+            $find = self::getAll();
+        }else{
+            $find = self::find($where, $extra);
+        }
+        return sizeof($find);
+    }
+
     public static function get(array $where, int|array|null $extra = null): array
     {
         $self = static::instance();
