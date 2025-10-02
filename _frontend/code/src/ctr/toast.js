@@ -53,7 +53,7 @@ class CtrTOAST {
         document.head.appendChild(style);
     }
 
-    fire({ text = "", bg = "#333", color = "#fff", icon = "", duration = 3000, effect = "top" }) {
+    fire({ text = "", bg = "#333", color = "#fff", icon = "", duration = 3000, effect = "top", click }) {
         const toast = document.createElement("div");
         toast.className = "ctr-toast";
         toast.style.minWidth = "240px";
@@ -69,13 +69,23 @@ class CtrTOAST {
         toast.style.opacity = "0";
         toast.style.transition = "all 0.5s ease";
 
+        if (click) {
+            if (! typeof click == "function") {
+                console.err("Toast 'click' should be a function");
+                return;
+            }
+            toast.addEventListener("click", () => {
+                click(toast);
+            });
+        }
+
         switch (effect) {
             case "bottom": toast.style.transform = "translateY(30px)"; break;
             case "left": toast.style.transform = "translateX(-50px)"; break;
             case "right": toast.style.transform = "translateX(50px)"; break;
             case "bounce": toast.style.transform = "scale(0.5)"; break;
             case "flip": toast.style.transform = "rotateY(90deg)"; break;
-            default: toast.style.transform = "translateY(-20px)"; // top
+            default: toast.style.transform = "translateY(-20px)";
         }
 
         const contentWrap = document.createElement("div");
@@ -102,7 +112,7 @@ class CtrTOAST {
         }
 
         const textNode = document.createElement("span");
-        textNode.textContent = text;
+        textNode.innerHTML = text;
         contentWrap.appendChild(textNode);
 
         const closeBtn = document.createElement("span");
@@ -110,7 +120,10 @@ class CtrTOAST {
         closeBtn.style.cursor = "pointer";
         closeBtn.style.marginLeft = "12px";
         closeBtn.style.fontWeight = "bold";
-        closeBtn.onclick = () => this.removeToast(toast, effect);
+        closeBtn.onclick = (e) => {
+            e.stopPropagation();
+            this.removeToast(toast, effect)
+        };
 
         toast.appendChild(contentWrap);
         toast.appendChild(closeBtn);

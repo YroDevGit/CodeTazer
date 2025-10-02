@@ -4,7 +4,11 @@
  * CodeTazer made by CodeYRO
  * Inspired to: ExpressJS, Laravel, NodeJS, Codeigniter
  * Please do not modify anything here, might broke some functionalities
- * @Author Tyrone Malocon
+ * @author Tyrone Malocon
+ */
+
+/**
+ * Auto start the session so user dont manually start it
  */
 session_start();
 /**
@@ -54,7 +58,9 @@ function get_basixs_root_path()
 
     return $baseURL;
 }
-
+/**
+ * Use for basixs old function
+ */
 function basixs_param_getter($param)
 {
     if ($param != "" && $param != null) {
@@ -67,8 +73,9 @@ function basixs_param_getter($param)
         }
     }
 }
-
-
+/**
+ * Use for basixs old function
+ */
 function basixs_php_rem($path)
 {
     $bee = $path;
@@ -83,7 +90,11 @@ function basixs_php_rem($path)
  */
 include_once("_backend/core/partials/basixs.php");
 include_once("_frontend/core/partials/fe.php");
-
+/**
+ * Generic CodeTazeR routing
+ * Please do not modify anything in here, might broke CodeTazeR functionalities
+ * @author Tyrone Limen Malocon
+ */
 $bee = $_GET['be'] ?? $_GET['backend'] ?? false;
 if ($bee) {
     $bb = explode("?", $bee);
@@ -136,7 +147,10 @@ if ($bee) {
             exit;
         }
     }
-
+    /**
+     * @author Tyrone Limen Malocon
+     * This is try catch block so system will early catch errors and return json
+     */
     try {
         set_error_handler(function ($errno, $errstr, $errfile, $errline) {
             throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
@@ -152,8 +166,7 @@ if ($bee) {
         http_response_code(getenv("error_code"));
         echo json_encode($err);
         exit;
-    }
-     catch (InvalidArgumentException $e) {
+    } catch (InvalidArgumentException $e) {
         $err = BasixsErrorException($e, $bee);
         header('Content-Type: application/json');
         http_response_code(getenv("error_code"));
@@ -173,9 +186,14 @@ include_once "_frontend/core/config/settings.php";
 define("mainpage", $bconfig['mainpage'] ?? "main");
 $mainpage = mainpage;
 $page404 = php_file($bconfig["error404"] ?? "page404");
-
+/**
+ * CodeTazeR frontend
+ */
 include("_frontend/core/partials/autoloading.php");
-
+/**
+ * Generic routing for CodeTazeR routing
+ * @author Tyrone Limen Malocon
+ */
 $get = $_GET['page'] ?? $_GET['p'] ?? $_GET['fe'] ?? $_GET['frontend'] ?? false;
 $folder_to_fee = '_frontend/auto';
 $is_function = false;
