@@ -26,8 +26,13 @@ if (! function_exists("autoload_php")) {
         }
     }
 }
-
-
+/**
+ * THis is optional function for CodeTazer
+ * include files from error page
+ * @param string error_page
+ * @param array variables
+ * @param mixed exit
+ */
 if (! function_exists("include_error_page")) {
     function include_error_page(string|null $error_page, $variables = [], $exit = true)
     {
@@ -45,7 +50,10 @@ if (! function_exists("include_error_page")) {
         }
     }
 }
-
+/**
+ * This is optional function for CodeTazer
+ * @param mixed filepath
+ */
 if (! function_exists("ctr_storage")) {
     function ctr_storage($filepath = "")
     {
@@ -111,7 +119,11 @@ if (! function_exists("import_ctr")) {
     <?php
     }
 }
-
+/**
+ * This is optional PHP func page where other PHP process works here
+ * @param string filename: name of the function file
+ * @author CodeYro
+ */
 if (! function_exists("import_func")) {
     function import_func(string $filename)
     {
@@ -121,7 +133,12 @@ if (! function_exists("import_func")) {
     <?php
     }
 }
-
+/**
+ * Generic import js script file
+ * this import file from :_frontend/code/script
+ * @param string filenames
+ * @author Tyrone Limen Malocon
+ */
 if (!function_exists("import_script")) {
     function import_script(string ...$filenames)
     {
@@ -131,31 +148,62 @@ if (!function_exists("import_script")) {
         }
     }
 }
-
-
+/**
+ * Generic import package for ctr js files,
+ * You can use js file name with or without .js extension
+ * @author CodeYro
+ */
 if (! function_exists("import_packages")) {
     function import_packages(string ...$packages)
     {
+        /**
+         * Code path @_frontend/code
+         * @param null no param
+         * @author Tyrone Limen Malocon
+         * @author CodeYro
+         */
         $cpath = codepath() . "/src/ctr/";
         foreach ($packages as $p) {
             $fl = substr($p, -3) == ".js" ? $p : $p . ".js";
+            /**
+             * this is default tyrax FE-BE communication tool
+             * @author CodeTazer
+             * @author Tyrone Limen Malocon
+             * @author CodeYro
+             * @param null no param
+             */
             if ($fl == "tyrux.js" || $fl == "tyrax.js") {
                 echo import_tyrux();
                 continue;
             }
             $pt = $cpath . $fl;
+            /**
+             * Bundle js
+             * @use for javascript/jquery bundle libraries
+             * @author CodeYro
+             */
             if ($fl == "bundle.js") {
                 $css = $cpath . "bundle.css";
                 echo "<link rel='stylesheet' href='$css'>";
                 echo "<script src='$pt'></script>";
                 continue;
             }
+            /**
+             * Optional DataTable Library
+             * @use let dtable = new DataTable(document.querySelector("#tableid"));
+             * @author CodeYro
+             */
             if ($fl == "datatable.js") {
                 $css = $cpath . "datatable.css";
                 echo "<link rel='stylesheet' href='$css'>";
                 echo "<script src='$pt'></script>";
                 continue;
             }
+            /**
+             * Import path or paths is one
+             * use: PATH.page("user/manage")
+             * @author Tyrone Limen Malocon
+             */
             if ($fl == "paths.js" || $fl == "path.js") {
                 import_paths();
                 continue;
