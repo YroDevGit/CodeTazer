@@ -613,17 +613,20 @@ if ($route == "+model") {
     $newname = ucfirst($filename);
     $exp = explode("/", $filename);
     $fdr = $exp[0];
-    $fls = $exp[1];
+    $fls = $exp[sizeof($exp)-1];
+    unset($exp[sizeof($exp)-1]);
     if (!$fdr || !$fls) {
         echo "❌ Invalid file format";
         exit;
     }
+
+    $fpath = implode("/",$exp);
     $exp1 = explode(",", $fls);
     $filename = "";
     $counter = 0;
     echo "\n";
     foreach ($exp1 as $ee) {
-        $filename = $fdr . "/" . $ee;
+        $filename = $fpath . "/" . $ee;
         $phpFile = "_backend/_routes/" . $filename . ".php";
 
         $phpContent = <<<EOT
