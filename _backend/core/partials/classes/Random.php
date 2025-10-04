@@ -52,12 +52,12 @@ class Random
         $str = "";
         if ($strict) {
             $d = date("ymdhis");
-            for ($i = 0; $i <= $characters-12; $i++) {
+            for ($i = 1; $i <= $characters - 12; $i++) {
                 $str .= (string)$arr[$i];
             }
             $str .= $d;
         } else {
-            for ($i = 0; $i <= $characters; $i++) {
+            for ($i = 1; $i <= $characters; $i++) {
                 $str .= (string)$arr[$i];
             }
         }
