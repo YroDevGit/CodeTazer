@@ -28,7 +28,7 @@ class CtrTOAST {
         style.id = "ctr-toast-style";
         style.innerHTML = `
             .ctr-toast {
-                width: 500px;
+                width: 100%;
                 max-width:820px;
             }
 
@@ -40,13 +40,13 @@ class CtrTOAST {
 
             @media (max-width: 768px) {
                 .ctr-toast {
-                    max-width: 300px;
+                    max-width: 100%;
                 }
             }
 
             @media (max-width: 480px) {
                 .ctr-toast {
-                    max-width: 90%; 
+                    max-width: 100%; 
                 }
             }
         `;
