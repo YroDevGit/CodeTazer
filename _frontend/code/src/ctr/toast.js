@@ -140,6 +140,13 @@ class CtrTOAST {
         }
     }
 
+    reset() {
+        let allToast = document.querySelectorAll(".ctr-toast");
+        allToast.forEach(tst => {
+            tst.style.display = 'none';
+        });
+    }
+
     removeToast(toast, effect) {
         if (!toast) return;
         toast.style.opacity = "0";
