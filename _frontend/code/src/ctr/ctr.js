@@ -1,5 +1,62 @@
 class Ctr {
 
+    constructor(rootpath = "") {
+        this.global_root = rootpath;
+        this.frontend = "?page=";
+        this.backend = "?be=";
+        this.func = "?funcpage=";
+    }
+
+    page($page = "", params = {}) {
+        let url = this.frontend + $page;
+        if (typeof params === "object" && Object.keys(params).length > 0) {
+            const query = Object.entries(params)
+                .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+                .join("&");
+            url += "?" + query;
+        }
+        return url;
+    }
+
+    backend($be = "", params = {}) {
+        let url = this.backend + $be;
+        if (typeof params === "object" && Object.keys(params).length > 0) {
+            const query = Object.entries(params)
+                .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+                .join("&");
+            url += (url.includes("?") ? "&" : "&") + query;
+        }
+        return url;
+    }
+
+    redirect(page = "", params = {}) {
+        window.location.href = this.page(page, params);
+    }
+
+    reload(hardRefresh = false) {
+        if (hardRefresh) {
+            caches.keys().then(names => {
+                for (let name of names) caches.delete(name);
+            }).then(() => {
+                location.reload(true);
+            });
+        }
+        else {
+            window.location.reload();
+        }
+    }
+
+    funcpage($page = "", params = {}) {
+        let url = this.func + $page;
+        if (typeof params === "object" && Object.keys(params).length > 0) {
+            const query = Object.entries(params)
+                .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+                .join("&");
+            url += (url.includes("?") ? "&" : "&") + query;
+        }
+        return url;
+    }
+
     dom_loaded(callable) {
         window.addEventListener("DOMContentLoaded", callable());
     }
