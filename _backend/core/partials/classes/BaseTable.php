@@ -2,6 +2,8 @@
 
 namespace Classes;
 
+use Exception;
+
 /**
  * This is Basixs BaseTable Extension
  * this is like table models ORM
@@ -11,6 +13,8 @@ class BaseTable
 {
     protected $pdo;
     protected $table;
+    protected $create_date;
+    protected $update_date;
     protected $fillable = [];
     protected $guarded = [];
     protected $timestamps = true;
@@ -132,11 +136,12 @@ class BaseTable
         return $data[0] ?? [];
     }
 
-    public static function count(array|null $where = null, array|int|null $extra = null):int|null{
+    public static function count(array|null $where = null, array|int|null $extra = null): int|null
+    {
         $find = [];
-        if(is_null($where)){
+        if (is_null($where)) {
             $find = self::getAll();
-        }else{
+        } else {
             $find = self::find($where, $extra);
         }
         return sizeof($find);
@@ -399,10 +404,18 @@ class BaseTable
     {
         $self = static::instance();
         $data = $self->filterFillable($data);
-        if ($self->timestamps) {
+        $ts = $self->timestamps;
+        if ($ts) {
             $now = date('Y-m-d H:i:s');
-            $data['created_at'] = $now;
-            $data['updated_at'] = $now;
+            if (is_array($ts)) {
+                $data[$ts['created'] ?? 'created_at'] = $now;
+                $data[$ts['updated'] ?? 'updated_at'] = $now;
+            }else if(is_bool($ts)){
+                $data['created_at'] = $now;
+                $data['updated_at'] = $now;
+            }else{
+                throw new Exception("Base table timestamps should only boolean or array");
+            }
         }
 
         $columns = array_map(fn($col) => "`$col`", array_keys($data));
@@ -429,7 +442,16 @@ class BaseTable
     {
         $self = static::instance();
         $data = $self->filterFillable($data);
-        if ($self->timestamps) $data['updated_at'] = date('Y-m-d H:i:s');
+        $ts = $self->timestamps;
+        if ($ts) {
+            if (is_array($ts)) {
+                $data[$ts['updated'] ?? 'updated_at'] = date('Y-m-d H:i:s');
+            } else if (is_bool($ts)) {
+                $data['updated_at'] = date('Y-m-d H:i:s');
+            } else {
+                throw new Exception("Base table timestamps should only boolean or array");
+            }
+        }
 
         $setClause = implode(', ', array_map(fn($col) => "`$col` = :$col", array_keys($data)));
         $whereClause = implode(' AND ', array_map(fn($col) => "`$col` = :where_$col", array_keys($where)));
