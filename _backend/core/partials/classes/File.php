@@ -67,7 +67,8 @@ class File
         if ($type == "file") {
             $filename = $file['name'];
         } else if ($type == "name") {
-            $filename = $file;
+            $fl = $_FILES[$file];
+            $filename = $fl['name'];
         } else {
             throw new Exception("Invalid file type");
         }
