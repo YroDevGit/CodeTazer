@@ -153,7 +153,7 @@ if (!function_exists("import_script")) {
  * You can use js file name with or without .js extension
  * @author CodeYro
  */
-if (! function_exists("import_packages")) {
+if (!function_exists("import_packages")) {
     function import_packages(string ...$packages)
     {
         /**
@@ -162,9 +162,24 @@ if (! function_exists("import_packages")) {
          * @author Tyrone Limen Malocon
          * @author CodeYro
          */
+        global $__imported_packages;
+        if (!isset($__imported_packages)) {
+            $__imported_packages = [];
+        }
+
         $cpath = codepath() . "/src/ctr/";
+
         foreach ($packages as $p) {
             $fl = substr($p, -3) == ".js" ? $p : $p . ".js";
+
+            // ✅ Skip if already imported anywhere before (whole page scope)
+            if (in_array($fl, $__imported_packages)) {
+                continue;
+            }
+
+            // Mark this file as imported
+            $__imported_packages[] = $fl;
+
             /**
              * this is default tyrax FE-BE communication tool
              * @author CodeTazer
@@ -176,7 +191,9 @@ if (! function_exists("import_packages")) {
                 echo import_tyrux();
                 continue;
             }
+
             $pt = $cpath . $fl;
+
             /**
              * Bundle js
              * @use for javascript/jquery bundle libraries
@@ -188,6 +205,7 @@ if (! function_exists("import_packages")) {
                 echo "<script src='$pt'></script>";
                 continue;
             }
+
             /**
              * Optional DataTable Library
              * @use let dtable = new DataTable(document.querySelector("#tableid"));
@@ -199,6 +217,7 @@ if (! function_exists("import_packages")) {
                 echo "<script src='$pt'></script>";
                 continue;
             }
+
             /**
              * Import path or paths is one
              * use: PATH.page("user/manage")
@@ -208,10 +227,12 @@ if (! function_exists("import_packages")) {
                 import_paths();
                 continue;
             }
+
             echo "<script src='$pt'></script>";
         }
     }
 }
+
 
 if (! function_exists("import_currency")) {
     function import_currency()
@@ -284,8 +305,9 @@ if (! function_exists("import_tyrux")) {
     }
 }
 
-if(! function_exists("import_tyrax")){
-    function import_tyrax(){
+if (! function_exists("import_tyrax")) {
+    function import_tyrax()
+    {
         return import_tyrux();
     }
 }
