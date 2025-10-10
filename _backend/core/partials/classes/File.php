@@ -82,7 +82,7 @@ class File
         }
 
         $extensions = array_map('strtolower', $extensions);
-        $filename = $file['name'];
+        $filename = $file;
 
         if (is_string($filename)) {
             $ext = self::file_extension($filename, "name");
