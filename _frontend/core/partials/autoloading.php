@@ -276,9 +276,17 @@ if (! function_exists("import_jquery")) {
 if (! function_exists("import_paths")) {
     function import_paths()
     {
+        /**
+         * @author CodeTazeR
+         * @param Null
+         * Import path for page and backend routes
+         */
     ?>
-        <script src="<?= codepath('src/ctr/paths.js') ?>"></script>
+        <script type="module" src="<?= codepath('src/ctr/paths.js') ?>"></script>
     <?php
+    /**
+     * This is for frontend function
+     */
     }
 }
 
