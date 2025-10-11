@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "../",
     "paths": {
       "tyrux/*": ["_frontend/code/*"]
     }
