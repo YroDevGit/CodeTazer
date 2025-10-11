@@ -190,3 +190,13 @@ class Loading {
 }
 
 const LOADING = new Loading("dark");
+
+if (typeof window !== "undefined") {
+    window.LOADING = LOADING;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = LOADING;
+}
+
+export default LOADING;

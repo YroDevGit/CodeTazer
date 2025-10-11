@@ -88,3 +88,6 @@ class SOUND {
         }
     }
 }
+
+
+export default SOUND;

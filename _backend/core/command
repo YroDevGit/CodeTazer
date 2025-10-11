@@ -558,6 +558,42 @@ if ($route == "+middleware") {
     }
 }
 
+if ($route == "+script") {
+    if ($filename == "") {
+        echo "❌ Please provide a filename for the script.\n";
+        exit(1);
+    }
+    $newname = strtolower($filename);
+    $phpFile = "_frontend/code/script/" . $newname . ".js";
+
+    $phpContent = <<<EOT
+    //CodeTazeR CTR script: $newname
+
+
+
+    EOT;
+
+    if (file_exists($phpFile)) {
+        echo "❌ File already exists. Please choose a different name.\n\n";
+        exit(1);
+    } else {
+        $directory = dirname($phpFile);
+        if (!is_dir($directory)) {
+            if (!mkdir($directory, 0777, true)) {
+                echo "Failed to create directories: $directory";
+                exit;
+            }
+        }
+        if (file_put_contents($phpFile, $phpContent) !== false) {
+            echo "✔️ Script file created successfully: $phpFile\n\n";
+            exit(0);
+        } else {
+            echo "❌ Failed to create script file.\n\n";
+            exit(1);
+        }
+    }
+}
+
 if ($route == "+model") {
     if ($filename == "") {
         echo "❌ Please provide a filename for the model.\n";
@@ -613,14 +649,14 @@ if ($route == "+model") {
     $newname = ucfirst($filename);
     $exp = explode("/", $filename);
     $fdr = $exp[0];
-    $fls = $exp[sizeof($exp)-1];
-    unset($exp[sizeof($exp)-1]);
+    $fls = $exp[sizeof($exp) - 1];
+    unset($exp[sizeof($exp) - 1]);
     if (!$fdr || !$fls) {
         echo "❌ Invalid file format";
         exit;
     }
 
-    $fpath = implode("/",$exp);
+    $fpath = implode("/", $exp);
     $exp1 = explode(",", $fls);
     $filename = "";
     $counter = 0;
@@ -737,14 +773,17 @@ if ($route == "+model") {
         exit;
     }
 } else if ($route == "keygen") {
-    if(!$filename){
-        echo "❌ Parameter lenght is missing\n\n";exit;
+    if (!$filename) {
+        echo "❌ Parameter lenght is missing\n\n";
+        exit;
     }
-    if(! is_numeric($filename)){
-        echo "❌ Parameter should be numberic\n\n";exit;
-    }else{
+    if (! is_numeric($filename)) {
+        echo "❌ Parameter should be numberic\n\n";
+        exit;
+    } else {
         include "_frontend/core/partials/loadenv.php";
-        echo "Key generated: ". substr(md5(date("ymdHisA").getenv("hash_secret")), 0, $filename) ."\n\n";exit;
+        echo "Key generated: " . substr(md5(date("ymdHisA") . getenv("hash_secret")), 0, $filename) . "\n\n";
+        exit;
     }
 } else {
     echo "Invalid command.\n";

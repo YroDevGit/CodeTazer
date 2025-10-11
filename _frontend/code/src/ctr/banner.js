@@ -191,4 +191,14 @@ class CtrBANNER {
     }
 }
 
-window.BANNER = new CtrBANNER();
+const BANNER = new CtrBANNER();
+
+if (typeof window !== "undefined") {
+    window.BANNER = BANNER;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = BANNER;
+}
+
+export default BANNER;

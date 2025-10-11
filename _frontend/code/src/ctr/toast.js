@@ -206,4 +206,14 @@ class CtrTOAST {
     }
 }
 
-window.TOAST = new CtrTOAST();
+const TOAST = new CtrTOAST();
+
+if (typeof window !== "undefined") {
+    window.TOAST = TOAST;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = TOAST;
+}
+
+export default TOAST;

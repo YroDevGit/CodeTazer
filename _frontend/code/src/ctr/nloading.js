@@ -99,4 +99,14 @@ class NLoading {
     }
 }
 
-window.NLOADING = new NLoading();
+const NLOADING = new NLoading();
+
+if (typeof window !== "undefined") {
+    window.NLOADING = NLOADING;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = NLOADING;
+}
+
+export default NLOADING;

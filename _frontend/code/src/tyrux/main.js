@@ -182,8 +182,23 @@ function get_form_data(selector) {
 
 const DOM = new DOMclass();
 
-window.get_form_data = get_form_data;
-window.tyrequest = tyrequest;
-window.tyrax = tyrax;
-window.tyrasync = tyrsync;
-window.DOM = DOM;
+if (typeof window !== "undefined") {
+    window.get_form_data = get_form_data;
+    window.tyrequest = tyrequest;
+    window.tyrax = tyrax;
+    window.tyrasync = tyrsync;
+    window.DOM = DOM;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = SECURE;
+}
+
+export {
+    tyrax,
+    tyrequest,
+    get_form_data,
+    tyrsync,
+    tyrux,
+};
+

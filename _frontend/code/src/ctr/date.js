@@ -112,4 +112,14 @@ class CtrDate {
 
 }
 
-window.DATE = new CtrDate();
+const CtrDATE = new CtrDate();
+
+if (typeof window !== "undefined") {
+    window.CtrDATE = CtrDATE;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = CtrDATE;
+}
+
+export default CtrDATE;

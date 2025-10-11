@@ -98,3 +98,13 @@ class RLoading {
 }
 
 const RLOADING = new RLoading();
+
+if (typeof window !== "undefined") {
+    window.RLOADING = RLOADING;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = RLOADING;
+}
+
+export default RLOADING;

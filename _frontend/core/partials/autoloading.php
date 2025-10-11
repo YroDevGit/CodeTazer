@@ -228,7 +228,10 @@ if (!function_exists("import_packages")) {
                 continue;
             }
 
-            echo "<script src='$pt'></script>";
+            $p = strtoupper($p);
+            echo "<script type='module' src='$pt'>
+            import '$p' from '$pt';
+            </script>";
         }
     }
 }
@@ -300,7 +303,7 @@ if (! function_exists("import_secure")) {
 if (! function_exists("import_tyrux")) {
     function import_tyrux()
     {
-        $tyrux = codepath . "/src/tyrux/index.js";
+        $tyrux = codepath . "/src/tyrux/main.js";
         return '<script type="module">import "./' . $tyrux . '";</script>';
     }
 }

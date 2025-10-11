@@ -40,5 +40,15 @@ class Path {
     }
 }
 
-window.PATH = new Path();
-window.PATHS = new Path();
+const PATH = new Path();
+
+if (typeof window !== "undefined") {
+    window.PATH = PATH;
+    window.PATHS = PATH;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = PATH;
+}
+
+export default PATH;

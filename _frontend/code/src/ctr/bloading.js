@@ -226,3 +226,13 @@ class BLoading {
 }
 
 const BLOADING = new BLoading("dark");
+
+if (typeof window !== "undefined") {
+    window.BLOADING = BLOADING;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = BLOADING;
+}
+
+export default BLOADING;

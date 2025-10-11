@@ -41,4 +41,14 @@ class CtrNotify {
     }
 }
 
-window.NOTIFY = new CtrNotify();
+const NOTIFY = new CtrNotify();
+
+if (typeof window !== "undefined") {
+    window.NOTIFY = NOTIFY;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = NOTIFY;
+}
+
+export default NOTIFY;

@@ -211,4 +211,14 @@ class Ctr {
 
 }
 
-window.CTR = new Ctr();
+const CTR = new Ctr();
+
+if (typeof window !== "undefined") {
+    window.CTR = CTR;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = CTR;
+}
+
+export default CTR;

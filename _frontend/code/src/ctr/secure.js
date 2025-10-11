@@ -148,4 +148,14 @@ class Secure {
   }
 }
 
-window.SECURE = new Secure();
+const SECURE = new Secure();
+
+if (typeof window !== "undefined") {
+    window.SECURE = SECURE;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = SECURE;
+}
+
+export default SECURE;

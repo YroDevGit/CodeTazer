@@ -64,4 +64,15 @@ class Currency {
     }
 }
 
-window.CURRENCY = new Currency();
+const CURRENCY = new Currency();
+
+if (typeof window !== "undefined") {
+    window.CURRENCY = CURRENCY;
+}
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = CURRENCY;
+}
+
+export default CURRENCY;
+
