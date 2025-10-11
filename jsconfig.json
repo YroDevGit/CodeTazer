@@ -1,9 +1,3 @@
 {
-  "compilerOptions": {
-    "baseUrl": "../",
-    "paths": {
-      "tyrux/*": ["_frontend/code/*"]
-    }
-  },
   "include": ["_frontend/code/**/*"]
 }
