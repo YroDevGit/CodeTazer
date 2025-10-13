@@ -7,6 +7,9 @@ class Path {
     }
 
     page($page = "", params = {}) {
+        if(! $page || $page == "/"){
+            return "/";
+        }
         let url = this.frontend + $page;
         if (typeof params === "object" && Object.keys(params).length > 0) {
             const query = Object.entries(params)
