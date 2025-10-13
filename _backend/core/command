@@ -568,7 +568,6 @@ if ($route == "+script") {
 
     $phpContent = <<<EOT
     //CodeTazeR CTR script: $newname
-    import '../src/tyrux/main.js';
     
 
 
