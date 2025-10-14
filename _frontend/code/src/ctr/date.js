@@ -110,6 +110,92 @@ class CtrDate {
         return format.replace(/Y|m|d|H|h|i|s|A|a/g, m => map[m]);
     }
 
+    dateInterval(date1, date2, type = "days") {
+        const start = new Date(date1);
+        const end = new Date(date2);
+        const diffMs = end - start;
+        const diffSeconds = diffMs / 1000;
+        const diffMinutes = diffSeconds / 60;
+        const diffHours = diffMinutes / 60;
+        const diffDays = diffHours / 24;
+
+        switch (type.toLowerCase()) {
+            case "second":
+            case "seconds":
+                return diffSeconds;
+
+            case "minute":
+            case "minutes":
+                return diffMinutes;
+
+            case "hour":
+            case "hours":
+                return diffHours;
+
+            case "day":
+            case "days":
+                return diffDays;
+
+            case "week":
+            case "weeks":
+                return diffDays / 7;
+
+            case "month":
+            case "months": {
+                const years = end.getFullYear() - start.getFullYear();
+                const months = years * 12 + (end.getMonth() - start.getMonth());
+                const dayAdjust = end.getDate() - start.getDate();
+                return months + (dayAdjust / 30);
+            }
+
+            case "year":
+            case "years": {
+                const years = end.getFullYear() - start.getFullYear();
+                const monthDiff = end.getMonth() - start.getMonth();
+                const dayDiff = end.getDate() - start.getDate();
+                return years + (monthDiff / 12) + (dayDiff / 365);
+            }
+
+            default:
+                throw new Error("Invalid interval type: " + type);
+        }
+    }
+
+    intervalName(date1, date2 = new Date()) {
+        const start = new Date(date1);
+        const end = new Date(date2);
+
+        const diffMs = end - start;
+        const isFuture = diffMs < 0;
+        const diffSeconds = Math.abs(diffMs) / 1000;
+
+        let value, unit;
+
+        if (diffSeconds < 60) {
+            value = Math.floor(diffSeconds);
+            unit = "second";
+        } else if (diffSeconds < 3600) {
+            value = Math.floor(diffSeconds / 60);
+            unit = "minute";
+        } else if (diffSeconds < 86400) {
+            value = Math.floor(diffSeconds / 3600);
+            unit = "hour";
+        } else if (diffSeconds < 2592000) {
+            value = Math.floor(diffSeconds / 86400);
+            unit = "day";
+        } else if (diffSeconds < 31536000) {
+            value = Math.floor(diffSeconds / 2592000);
+            unit = "month";
+        } else {
+            value = Math.floor(diffSeconds / 31536000);
+            unit = "year";
+        }
+
+        const plural = value !== 1 ? "s" : "";
+        const suffix = isFuture ? "left" : "ago";
+
+        return `${value} ${unit}${plural} ${suffix}`;
+    }
 }
 
 const CtrDATE = new CtrDate();
