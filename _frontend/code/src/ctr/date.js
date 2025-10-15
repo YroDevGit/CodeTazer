@@ -228,7 +228,7 @@ class CtrDate {
             Object.assign(container.style, {
                 position: 'absolute',
                 border: '1px solid #ccc',
-                background: '#fff',
+                background: options.color ?? "rgb(197 255 138)",
                 padding: '10px',
                 display: 'none',
                 zIndex: '999999',
