@@ -285,6 +285,7 @@ class CtrDate {
             nextBtn.addEventListener('mouseleave', () => nextBtn.style.background = '#f0f0f0');
 
             const monthSelect = document.createElement('select');
+            monthSelect.setAttribute("id", "CODETZRD-SELMONTH");
             Object.assign(monthSelect.style, { padding: '4px', borderRadius: '5px', border: '1px solid #ccc', cursor: 'pointer', background: '#fafafa' });
             for (let i = 0; i < 12; i++) {
                 const opt = document.createElement('option');
@@ -294,6 +295,8 @@ class CtrDate {
             }
 
             const yearSelect = document.createElement('select');
+            yearSelect.setAttribute("id", "CODETZRD-SELYEAR");
+
             Object.assign(yearSelect.style, { padding: '4px', borderRadius: '5px', border: '1px solid #ccc', cursor: 'pointer', background: '#fafafa' });
             const currentYear = new Date().getFullYear();
             for (let i = currentYear - 50; i <= currentYear + 50; i++) {
@@ -420,6 +423,7 @@ class CtrDate {
                         }
                     }
 
+                    dayDiv.setAttribute("id", "CODETZRD-" + yearSelect.value + "-" + (parseInt(monthSelect.value) + 1) + "-" + d);
                     if (selectedDay === d) {
                         dayDiv.style.background = '#007bff';
                         dayDiv.style.color = '#fff';
@@ -467,8 +471,6 @@ class CtrDate {
                     selectedDate = new Date(`${y}-${m}-${d}`);
                 }
 
-
-
                 input.value = val;
                 container.style.display = 'none';
                 overlay.style.display = 'none';
@@ -506,8 +508,35 @@ class CtrDate {
             input.addEventListener('click', (e) => {
                 container.style.display = 'block';
                 overlay.style.display = 'block';
-                renderCalendar(currentDate);
-                e.stopPropagation();
+                if (!input.value) {
+                    currentDate = new Date();
+                    renderCalendar(currentDate);
+                    if (enableTime) {
+                        let ap = currentDate.getHours() >= 12 ? 'PM' : 'AM';
+                        let GHour = currentDate.getHours() % 12 || 12;
+                        let GMinute = parseInt(currentDate.getMinutes());
+                        hourSelect.value = GHour;
+                        minSelect.value = GMinute;
+                        ampmSelect.value = ap;
+                    }
+                    e.stopPropagation();
+                } else {
+                    currentDate = new Date(input.value);
+                    let ff = currentDate.getFullYear() + "-" + (parseInt(currentDate.getMonth() + 1)) + "-" + currentDate.getDate();
+                    document.querySelector("#CODETZRD-SELMONTH").value = currentDate.getMonth();
+                    document.querySelector("#CODETZRD-SELYEAR").value = currentDate.getFullYear();
+                    renderCalendar(currentDate);
+                    if (enableTime) {
+                        let ap = currentDate.getHours() >= 12 ? 'PM' : 'AM';
+                        let GHour = currentDate.getHours() % 12 || 12;
+                        let GMinute = parseInt(currentDate.getMinutes());
+                        hourSelect.value = GHour;
+                        minSelect.value = GMinute;
+                        ampmSelect.value = ap;
+                    }
+                    document.querySelector("#CODETZRD-" + ff).click();
+                    e.stopPropagation();
+                }
             });
 
             overlay.addEventListener('click', () => {
