@@ -236,8 +236,8 @@ class CtrDate {
             const container = document.createElement('div');
             container.className = 'ctr-calendar';
             const title = document.createElement("div");
-            title.innerHTML = "CodeTazer Calendar";
-            title.style.color = "blue";
+            title.innerHTML = input.getAttribute("ctrtitle") ?? "CodeTazer Calendar";
+            title.style.color = "black";
             title.style.fontFamily = "monospaced";
             title.setAttribute("align", "center");
             title.style.padding = "5px 0px";
@@ -248,7 +248,7 @@ class CtrDate {
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
                 border: '1px solid #ccc',
-                background: options.color ?? "rgb(184 255 160)",
+                background: options.bg ?? "rgb(144 228 219)",
                 padding: '10px',
                 display: 'none',
                 zIndex: '999999',
