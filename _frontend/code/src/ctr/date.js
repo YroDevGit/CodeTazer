@@ -233,8 +233,6 @@ class CtrDate {
                 zIndex: '999998',
             });
             document.body.appendChild(overlay);
-
-            // Create calendar container
             const container = document.createElement('div');
             container.className = 'ctr-calendar';
             const title = document.createElement("div");
