@@ -218,7 +218,23 @@ class CtrDate {
 
         fields.forEach(selector => {
             const input = document.querySelector(selector);
+            input.setAttribute("autocomplete", "off");
             if (!input) return;
+
+            const overlay = document.createElement('div');
+            Object.assign(overlay.style, {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'rgba(0,0,0,0.5)',
+                display: 'none',
+                zIndex: '999998',
+            });
+            document.body.appendChild(overlay);
+
+            // Create calendar container
             const container = document.createElement('div');
             container.className = 'ctr-calendar';
             const title = document.createElement("div");
@@ -229,7 +245,10 @@ class CtrDate {
             title.style.padding = "5px 0px";
             container.appendChild(title);
             Object.assign(container.style, {
-                position: 'absolute',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
                 border: '1px solid #ccc',
                 background: options.color ?? "rgb(197 255 138)",
                 padding: '10px',
@@ -241,6 +260,7 @@ class CtrDate {
                 borderRadius: '8px'
             });
             document.body.appendChild(container);
+
             const header = document.createElement('div');
             header.style.display = 'flex';
             header.style.justifyContent = 'space-between';
@@ -352,8 +372,9 @@ class CtrDate {
 
                 const firstDay = new Date(year, month, 1).getDay();
                 const lastDate = new Date(year, month + 1, 0).getDate();
-
                 const nowdatetoday = new Date().getDate();
+                const nowdatetomonth = new Date().getMonth();
+                const nowdatetoyear = new Date().getFullYear();
                 for (let i = 0; i < firstDay; i++) daysGrid.innerHTML += '<div></div>';
 
                 for (let d = 1; d <= lastDate; d++) {
@@ -383,7 +404,7 @@ class CtrDate {
                         dayDiv.style.color = '#fff';
                     }
 
-                    if (nowdatetoday === d) {
+                    if (nowdatetoday === d && nowdatetomonth === month && nowdatetoyear == year) {
                         dayDiv.style.border = "solid 1px #007bff";
                     }
 
@@ -411,6 +432,7 @@ class CtrDate {
                 }
                 input.value = val;
                 container.style.display = 'none';
+                overlay.style.display = 'none';
             });
 
             TodayBtn.addEventListener('click', () => {
@@ -425,21 +447,30 @@ class CtrDate {
                 }
                 input.value = val;
                 container.style.display = 'none';
+                overlay.style.display = 'none';
             });
 
             resetBtn.addEventListener('click', () => { input.value = ''; selectedDay = null; renderCalendar(currentDate); cancelBtn.click(); });
-            cancelBtn.addEventListener('click', () => { container.style.display = 'none'; });
+            cancelBtn.addEventListener('click', () => { container.style.display = 'none'; overlay.style.display = 'none'; });
 
             input.addEventListener('click', (e) => {
-                const rect = input.getBoundingClientRect();
-                container.style.top = rect.bottom + window.scrollY + 'px';
-                container.style.left = rect.left + window.scrollX + 'px';
                 container.style.display = 'block';
+                overlay.style.display = 'block';
                 renderCalendar(currentDate);
                 e.stopPropagation();
             });
 
-            document.addEventListener('click', e => { if (!container.contains(e.target) && e.target !== input) container.style.display = 'none'; });
+            overlay.addEventListener('click', () => {
+                container.style.display = 'none';
+                overlay.style.display = 'none';
+            });
+
+            document.addEventListener('click', e => {
+                if (!container.contains(e.target) && e.target !== input) {
+                    container.style.display = 'none';
+                    overlay.style.display = 'none';
+                }
+            });
         });
     }
 }
