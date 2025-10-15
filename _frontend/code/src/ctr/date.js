@@ -310,7 +310,7 @@ class CtrDate {
                 timeContainer.appendChild(document.createTextNode(':'));
                 timeContainer.appendChild(minSelect);
                 timeContainer.appendChild(ampmSelect);
-                [hourSelect, minSelect, ampmSelect].forEach(b => Object.assign(b.style,{cursor: "pointer", borderRadius: "5px", border:"1px solid rgb(204, 204, 204)", marginRight:"5px"}));
+                [hourSelect, minSelect, ampmSelect].forEach(b => Object.assign(b.style, { cursor: "pointer", borderRadius: "5px", border: "1px solid rgb(204, 204, 204)", marginRight: "5px" }));
             }
 
             const buttonContainer = document.createElement('div');
