@@ -219,6 +219,7 @@ class CtrDate {
         fields.forEach(selector => {
             const input = document.querySelector(selector);
             input.setAttribute("autocomplete", "off");
+            input.setAttribute("readonly", true);
             if (!input) return;
 
             const overlay = document.createElement('div');
