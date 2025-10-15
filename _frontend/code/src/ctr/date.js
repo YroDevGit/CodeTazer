@@ -212,14 +212,19 @@ class CtrDate {
         }
 
         const fields = options.fields || [];
-        const enableTime = options.time || false;
-        const minDate = options.min ? new Date(options.min === 'today' ? new Date() : options.min) : null;
-        const maxDate = options.max ? new Date(options.max === 'today' ? new Date() : options.max) : null;
+
 
         fields.forEach(selector => {
             const input = document.querySelector(selector);
             input.setAttribute("autocomplete", "off");
             input.setAttribute("readonly", true);
+            let mx = input.getAttribute("maxdate") ?? null;
+            let mn = input.getAttribute("mindate") ?? null;
+            let etime = input.getAttribute("time") ?? null;
+            const maxDate = mx ? new Date((mx === 'today' || mx === 'now') ? new Date() : mx) : null;
+            const minDate = mn ? new Date((mn === 'today' || mn === 'now') ? new Date() : mn) : null;
+            const enableTime = etime || false;
+
             if (!input) return;
 
             const overlay = document.createElement('div');
@@ -387,15 +392,32 @@ class CtrDate {
 
                     dayDiv.style.color = (dayOfWeek === 0) ? 'red' : '#000';
 
-                    if ((minDate && thisDate < minDate) || (maxDate && thisDate > maxDate)) {
-                        dayDiv.style.color = '#ccc';
-                        dayDiv.style.cursor = 'not-allowed';
+                    const dayOnly = new Date(thisDate.getFullYear(), thisDate.getMonth(), thisDate.getDate());
+                    const minDay = minDate ? new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate()) : null;
+                    const maxDay = maxDate ? new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate()) : null;
+
+                    if (enableTime) {
+                        if ((minDay && dayOnly < minDay) || (maxDay && dayOnly > maxDay)) {
+                            dayDiv.style.color = '#ccc';
+                            dayDiv.style.cursor = 'not-allowed';
+                        } else {
+                            dayDiv.addEventListener('click', (e) => {
+                                selectedDay = d;
+                                renderCalendar(currentDate);
+                                e.stopPropagation();
+                            });
+                        }
                     } else {
-                        dayDiv.addEventListener('click', (e) => {
-                            selectedDay = d;
-                            renderCalendar(currentDate);
-                            e.stopPropagation();
-                        });
+                        if ((minDay && dayOnly <= minDay) || (maxDay && dayOnly >= maxDay)) {
+                            dayDiv.style.color = '#ccc';
+                            dayDiv.style.cursor = 'not-allowed';
+                        } else {
+                            dayDiv.addEventListener('click', (e) => {
+                                selectedDay = d;
+                                renderCalendar(currentDate);
+                                e.stopPropagation();
+                            });
+                        }
                     }
 
                     if (selectedDay === d) {
@@ -421,14 +443,32 @@ class CtrDate {
 
             okBtn.addEventListener('click', () => {
                 if (!selectedDay) return;
+
                 const y = currentDate.getFullYear(), m = currentDate.getMonth() + 1, d = selectedDay;
                 let val = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+
+                let selectedDate;
                 if (enableTime) {
-                    const h = parseInt(hourSelect.value).toString().padStart(2, '0');
-                    const mi = parseInt(minSelect.value).toString().padStart(2, '0');
+                    const h = parseInt(hourSelect.value);
+                    const mi = parseInt(minSelect.value);
                     const ap = ampmSelect.value;
-                    val += ` ${h}:${mi} ${ap}`;
+                    const hour24 = ap === 'PM' && h !== 12 ? h + 12 : (ap === 'AM' && h === 12 ? 0 : h);
+                    selectedDate = new Date(`${y}-${m}-${d} ${hour24}:${mi}`);
+                    if (minDate && selectedDate < minDate) {
+                        alert(`⛔ Date/Time should be ahead of the minimum date: ${mn}`);
+                        return;
+                    }
+                    if (maxDate && selectedDate > maxDate) {
+                        alert(`⛔ Date/Time should be behind the maximum date: ${mx}`);
+                        return;
+                    }
+                    val += ` ${h.toString().padStart(2, '0')}:${mi.toString().padStart(2, '0')} ${ap}`;
+                } else {
+                    selectedDate = new Date(`${y}-${m}-${d}`);
                 }
+
+
+
                 input.value = val;
                 container.style.display = 'none';
                 overlay.style.display = 'none';
