@@ -198,6 +198,9 @@ class CtrDate {
     }
 
     datePicker(options) {
+        if (typeof options !== "string") {
+            options.fields = options.fields ?? options.field;
+        }
         if (typeof options === 'string') {
             options = { fields: [options] };
         } else if (options && !Array.isArray(options.fields) && typeof options.fields === 'string') {
@@ -221,7 +224,7 @@ class CtrDate {
             const title = document.createElement("div");
             title.innerHTML = "CodeTazer Calendar";
             title.style.color = "blue";
-            title.style.fontFamily ="monospaced";
+            title.style.fontFamily = "monospaced";
             title.setAttribute("align", "center");
             title.style.padding = "5px 0px";
             container.appendChild(title);
@@ -297,7 +300,6 @@ class CtrDate {
                 timeContainer.style.marginBottom = '8px';
                 timeContainer.style.padding = "8px 0px";
                 container.appendChild(timeContainer);
-
                 hourSelect = document.createElement('select');
                 for (let h = 1; h <= 12; h++) { const opt = document.createElement('option'); opt.value = h; opt.text = h.toString().padStart(2, '0'); hourSelect.add(opt); }
                 minSelect = document.createElement('select');
@@ -308,6 +310,7 @@ class CtrDate {
                 timeContainer.appendChild(document.createTextNode(':'));
                 timeContainer.appendChild(minSelect);
                 timeContainer.appendChild(ampmSelect);
+                [hourSelect, minSelect, ampmSelect].forEach(b => Object.assign(b.style,{cursor: "pointer", borderRadius: "5px", border:"1px solid rgb(204, 204, 204)", marginRight:"5px"}));
             }
 
             const buttonContainer = document.createElement('div');
@@ -315,14 +318,16 @@ class CtrDate {
             buttonContainer.style.justifyContent = 'space-between';
             container.appendChild(buttonContainer);
 
-            const okBtn = document.createElement('button'); okBtn.textContent = 'Okay';
-            const resetBtn = document.createElement('button'); resetBtn.textContent = 'Reset';
-            const cancelBtn = document.createElement('button'); cancelBtn.textContent = 'Cancel';
-            [okBtn, resetBtn, cancelBtn].forEach(b => Object.assign(b.style, { cursor: 'pointer', padding: '5px 10px', borderRadius: '5px', border: '1px solid #ccc', background: '#f9f9f9', transition: '0.2s' }));
-            [okBtn, resetBtn, cancelBtn].forEach(b => { b.addEventListener('mouseenter', () => b.style.background = '#e0e0e0'); b.addEventListener('mouseleave', () => b.style.background = '#f9f9f9'); });
+            const okBtn = document.createElement('button'); okBtn.textContent = '👍';
+            const TodayBtn = document.createElement('button'); TodayBtn.textContent = 'now';
+            const resetBtn = document.createElement('button'); resetBtn.textContent = 'clear';
+            const cancelBtn = document.createElement('button'); cancelBtn.textContent = '❌';
+            [okBtn, resetBtn, cancelBtn, TodayBtn].forEach(b => Object.assign(b.style, { cursor: 'pointer', padding: '5px 10px', borderRadius: '5px', border: '1px solid #ccc', background: '#f9f9f9', transition: '0.2s' }));
+            [okBtn, resetBtn, cancelBtn, TodayBtn].forEach(b => { b.addEventListener('mouseenter', () => b.style.background = '#e0e0e0'); b.addEventListener('mouseleave', () => b.style.background = '#f9f9f9'); });
 
-            buttonContainer.appendChild(resetBtn);
             buttonContainer.appendChild(cancelBtn);
+            buttonContainer.appendChild(resetBtn);
+            buttonContainer.appendChild(TodayBtn);
             buttonContainer.appendChild(okBtn);
 
             let selectedDay = null;
@@ -348,6 +353,7 @@ class CtrDate {
                 const firstDay = new Date(year, month, 1).getDay();
                 const lastDate = new Date(year, month + 1, 0).getDate();
 
+                const nowdatetoday = new Date().getDate();
                 for (let i = 0; i < firstDay; i++) daysGrid.innerHTML += '<div></div>';
 
                 for (let d = 1; d <= lastDate; d++) {
@@ -377,6 +383,10 @@ class CtrDate {
                         dayDiv.style.color = '#fff';
                     }
 
+                    if (nowdatetoday === d) {
+                        dayDiv.style.border = "solid 1px #007bff";
+                    }
+
                     dayDiv.addEventListener('mouseenter', () => { if (!selectedDay || selectedDay !== d) dayDiv.style.background = '#eee'; });
                     dayDiv.addEventListener('mouseleave', () => { if (!selectedDay || selectedDay !== d) dayDiv.style.background = ''; });
 
@@ -403,7 +413,21 @@ class CtrDate {
                 container.style.display = 'none';
             });
 
-            resetBtn.addEventListener('click', () => { input.value = ''; selectedDay = null; renderCalendar(currentDate); });
+            TodayBtn.addEventListener('click', () => {
+                const thedate = new Date();
+                const y = thedate.getFullYear(), m = thedate.getMonth() + 1, d = thedate.getDate();
+                let val = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+                if (enableTime) {
+                    const h = thedate.getHours() % 12 || 12;
+                    const mi = thedate.getMinutes();
+                    const ap = thedate.getHours() >= 12 ? 'PM' : 'AM';
+                    val += ` ${h}:${mi} ${ap}`;
+                }
+                input.value = val;
+                container.style.display = 'none';
+            });
+
+            resetBtn.addEventListener('click', () => { input.value = ''; selectedDay = null; renderCalendar(currentDate); cancelBtn.click(); });
             cancelBtn.addEventListener('click', () => { container.style.display = 'none'; });
 
             input.addEventListener('click', (e) => {
