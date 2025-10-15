@@ -478,10 +478,21 @@ class CtrDate {
                 const thedate = new Date();
                 const y = thedate.getFullYear(), m = thedate.getMonth() + 1, d = thedate.getDate();
                 let val = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+                let selectedDate;
                 if (enableTime) {
                     const h = thedate.getHours() % 12 || 12;
                     const mi = thedate.getMinutes();
                     const ap = thedate.getHours() >= 12 ? 'PM' : 'AM';
+                    const hour24 = ap === 'PM' && h !== 12 ? h + 12 : (ap === 'AM' && h === 12 ? 0 : h);
+                    selectedDate = new Date(`${y}-${m}-${d} ${hour24}:${mi}`);
+                    if (minDate && selectedDate < minDate) {
+                        alert(`⛔ Date/Time should be ahead of the minimum date: ${mn}`);
+                        return;
+                    }
+                    if (maxDate && selectedDate > maxDate) {
+                        alert(`⛔ Date/Time should be behind the maximum date: ${mx}`);
+                        return;
+                    }
                     val += ` ${h}:${mi} ${ap}`;
                 }
                 input.value = val;
