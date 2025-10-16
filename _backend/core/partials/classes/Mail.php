@@ -43,7 +43,7 @@ class Mail
         );
     }
 
-    public static function send_email(string $to, string $subject, $message, string|null $sender = null, string|null $sender_email = null)
+    public static function send_email(string|array $to, string $subject, $message, string|null $sender = null, string|null $sender_email = null)
     {
         if (!function_exists('has_internet_connection') || !has_internet_connection()) {
             throw new Exception("No Internet Connection");
@@ -65,7 +65,14 @@ class Mail
         $e_sendemail = $sender_email ?? getenv("sender_email") ?? "codetazer@test.com";
 
         $mail->setFrom($e_sendemail, $e_sender);
-        $mail->addAddress($to);
+        if(is_string($to)){
+            $mail->addAddress($to);
+        }
+        if(is_array($to)){
+            foreach($to as $t){
+                $mail->addAddress($t);
+            }
+        }
 
         $mail->isHTML(true);
         $mail->Subject = $subject;
