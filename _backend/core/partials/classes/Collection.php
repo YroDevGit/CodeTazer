@@ -48,6 +48,33 @@ class Collection
         return $this->pick($keys);
     }
 
+    public function extract(string|array $keys): self
+    {
+        if ($this->trulyEmpty($this->items)) {
+            $this->items = [];
+            return $this;
+        }
+
+        if (is_string($keys)) {
+            $keys = [$keys];
+        }
+
+        $flat = [];
+        foreach ($this->items as $item) {
+            foreach ($keys as $key) {
+                if (array_key_exists($key, $item)) {
+                    $flat[] = $item[$key];
+                }
+            }
+        }
+
+        $this->items = $flat;
+        $this->singleRow = false;
+        $this->wasMultiDim = false;
+
+        return $this;
+    }
+
     public function pick(string|array $keys): self
     {
         if ($this->trulyEmpty($this->items)) {
