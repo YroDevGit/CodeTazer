@@ -15,10 +15,16 @@ class CtrDate {
             i: String(d.getMinutes()).padStart(2, "0"),      // Minutes
             s: String(d.getSeconds()).padStart(2, "0"),      // Seconds
             A: ampm,                                         // AM/PM
-            a: ampm.toLowerCase()                            // am/pm
+            a: ampm.toLowerCase(),                           // am/pm
+            m: String(d.getMonth()).padStart(2, "0"),
+            M: d.getUTCMonth()
         };
 
-        return $format.replace(/F|d|Y|H|h|i|s|A|a/g, m => map[m]);
+        return $format.replace(/F|d|Y|H|h|i|s|A|m|M|a/g, m => map[m]);
+    }
+
+    format(date, format = "Y-m-d H:i:s") {
+        return this.get_name(date, format);
     }
 
     change_date(date, interval) {
