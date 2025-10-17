@@ -54,13 +54,13 @@ window.backend = backend;
  */
 
 const tyrequest = { // For raw/universal request :: CodeYRO
-    options: {},
+    config: {},
     _mergeOptions(option) {
         return {
-            ...tyrequest.options,
+            ...tyrequest.config,
             ...option,
             headers: {
-                ...(api.options?.headers || {}),
+                ...(tyrequest.config?.headers || {}),
                 ...(option.headers || {})
             }
         };
@@ -109,14 +109,14 @@ const tyrequest = { // For raw/universal request :: CodeYRO
 };
 
 const tyrax = { // tyrux default config :: CodeTazeR
-    options: {},
+    config: {},
 
     _mergeOptions(option) {
         return {
-            ...tyrax.options,
+            ...tyrax.config,
             ...option,
             headers: {
-                ...(tyrax.options.headers || {}),
+                ...(tyrax.config.headers || {}),
                 ...(option.headers || {})
             }
         };
@@ -173,14 +173,14 @@ const tyrax = { // tyrux default config :: CodeTazeR
 };
 
 const tyrsync = { // For async/await tyrax :: CodeTazeR
-    options: {},
+    config: {},
 
     _mergeOptions(option) {
         return {
-            ...tyrsync.options,
+            ...tyrsync.config,
             ...option,
             headers: {
-                ...(tyrsync.options.headers || {}),
+                ...(tyrsync.config.headers || {}),
                 ...(option.headers || {})
             }
         };
