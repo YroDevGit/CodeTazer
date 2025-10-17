@@ -107,10 +107,6 @@ const configure = {
                 ...(global.headers || {}),
                 ...(option.headers || {})
             },
-            request: {
-                ...(global.request || global.data || global.Request || {}),
-                ...(option.request || option.data || option.Request || {})
-            },
             response: (res) => {
                 if (typeof global?.response === "function") global.response(res);
                 if (typeof global?.Response === "function") global.Response(res);
