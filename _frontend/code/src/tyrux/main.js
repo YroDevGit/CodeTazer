@@ -55,156 +55,158 @@ window.backend = backend;
 
 const tyrequest = { // For raw/universal request :: CodeYRO
     config: {},
-    _mergeOptions(option) {
-        return {
-            ...tyrequest.config,
-            ...option,
-            headers: {
-                ...(tyrequest.config?.headers || {}),
-                ...(option.headers || {})
-            }
-        };
-    },
-
     api(option) {
-        api.request(this._mergeOptions(option));
+        api.request(configure._mergeOptions(option, this));
     },
     post(option) {
         option.method = "POST";
-        api.request(this._mergeOptions(option));
+        api.request(configure._mergeOptions(option), this);
     },
     put(option) {
         option.method = "PUT";
-        api.request(this._mergeOptions(option));
+        api.request(configure._mergeOptions(option), this);
     },
     get(option) {
         option.method = "GET";
-        api.request(this._mergeOptions(option));
+        api.request(configure._mergeOptions(option), this);
     },
     patch(option) {
         option.method = "PATCH";
-        api.request(this._mergeOptions(option));
+        api.request(configure._mergeOptions(option), this);
     },
     delete(option) {
         option.method = "DELETE";
-        api.request(this._mergeOptions(option));
+        api.request(configure._mergeOptions(option), this);
     },
     head(option) {
         option.method = "HEAD";
-        api.request(this._mergeOptions(option));
+        api.request(configure._mergeOptions(option), this);
     },
     options(option) {
         option.method = "OPTIONS";
-        api.request(this._mergeOptions(option));
+        api.request(configure._mergeOptions(option), this);
     },
     async(option) {
         return new Promise((resolve, reject) => {
-            api.request(this._mergeOptions({
+            api.request(configure._mergeOptions({
                 ...option,
                 response: res => resolve(res),
                 error: err => reject(err)
-            }));
+            }, this));
         });
     }
 };
 
-const tyrax = { // tyrux default config :: CodeTazeR
-    config: {},
-
-    _mergeOptions(option) {
+const configure = {
+    _mergeOptions(option, tyrax) {
+        const global = tyrax.config || {};
         return {
-            ...tyrax.config,
+            ...global,
             ...option,
             headers: {
-                ...(tyrax.config.headers || {}),
+                ...(global.headers || {}),
                 ...(option.headers || {})
+            },
+            request: {
+                ...(global.request || global.data || global.Request || {}),
+                ...(option.request || option.data || option.Request || {})
+            },
+            response: (res) => {
+                if (typeof global?.response === "function") global.response(res);
+                if (typeof global?.Response === "function") global.Response(res);
+                if (typeof option?.response === "function") option.response(res);
+                if (typeof option?.Response === "function") option.Response(res);
+            },
+            error: (err) => {
+                if (typeof global?.error === "function") global.error(err);
+                if (typeof option?.error === "function") option.error(err);
+            },
+            wait: (xhr) => {
+                if (typeof global?.wait === "function") global.wait(xhr);
+                if (typeof option?.wait === "function") option.wait(xhr);
+            },
+            done: (xhr) => {
+                if (typeof global?.done === "function") global.done(xhr);
+                if (typeof option?.done === "function") option.done(xhr);
             }
         };
-    },
+    }
+}
 
+const tyrax = { // tyrux default config :: CodeTazeR
+    config: {},
     api(option) {
-        tyrux(this._mergeOptions(option));
+        tyrux(configure._mergeOptions(option, this));
     },
 
     post(option) {
         option.method = "POST";
-        tyrux(this._mergeOptions(option));
+        tyrux(configure._mergeOptions(option, this));
     },
 
     put(option) {
         option.method = "PUT";
-        tyrux(this._mergeOptions(option));
+        tyrux(configure._mergeOptions(option, this));
     },
 
     get(option) {
         option.method = "GET";
-        tyrux(this._mergeOptions(option));
+        tyrux(configure._mergeOptions(option, this));
     },
 
     patch(option) {
         option.method = "PATCH";
-        tyrux(this._mergeOptions(option));
+        tyrux(configure._mergeOptions(option, this));
     },
 
     delete(option) {
         option.method = "DELETE";
-        tyrux(this._mergeOptions(option));
+        tyrux(configure._mergeOptions(option, this));
     },
 
     head(option) {
         option.method = "HEAD";
-        tyrux(this._mergeOptions(option));
+        tyrux(configure._mergeOptions(option, this));
     },
 
     options(option) {
         option.method = "OPTIONS";
-        tyrux(this._mergeOptions(option));
+        tyrux(configure._mergeOptions(option, this));
     },
 
     async(option) {
         return new Promise((resolve, reject) => {
-            tyrux(this._mergeOptions({
+            tyrux({
                 ...option,
                 response: res => resolve(res),
                 error: err => reject(err)
-            }));
+            });
         });
     }
 };
 
 const tyrsync = { // For async/await tyrax :: CodeTazeR
     config: {},
-
-    _mergeOptions(option) {
-        return {
-            ...tyrsync.config,
-            ...option,
-            headers: {
-                ...(tyrsync.config.headers || {}),
-                ...(option.headers || {})
-            }
-        };
-    },
     api(option) {
-        return tyrax.async(tyrsync._mergeOptions(option));
+        return tyrax.async(configure._mergeOptions(option));
     },
     post(option) {
-        return tyrax.async(tyrsync._mergeOptions({ ...option, method: "POST" }));
+        return tyrax.async(configure._mergeOptions({ ...option, method: "POST" }, this));
     },
     put(option) {
-        return tyrax.async(tyrsync._mergeOptions({ ...option, method: "PUT" }));
+        return tyrax.async(configure._mergeOptions({ ...option, method: "PUT" }, this));
     },
     get(option) {
-        return tyrax.async(tyrsync._mergeOptions({ ...option, method: "GET" }));
+        return tyrax.async(configure._mergeOptions({ ...option, method: "GET" }, this));
     },
     patch(option) {
-        return tyrax.async(tyrsync._mergeOptions({ ...option, method: "PATCH" }));
+        return tyrax.async(configure._mergeOptions({ ...option, method: "PATCH" }, this));
     },
     delete(option) {
-        return tyrax.async(tyrsync._mergeOptions({ ...option, method: "DELETE" }));
+        return tyrax.async(configure._mergeOptions({ ...option, method: "DELETE" }, this));
     },
     head(option) {
-        return tyrax.async(tyrsync._mergeOptions({ ...option, method: "HEAD" }));
+        return tyrax.async(configure._mergeOptions({ ...option, method: "HEAD" }, this));
     }
 };
 
@@ -245,4 +247,3 @@ export {
     tyrsync,
     tyrux,
 };
-
