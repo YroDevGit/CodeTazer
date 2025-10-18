@@ -5,6 +5,7 @@ namespace Classes;
 use Exception;
 use TypeError;
 use ValueError;
+use Classes\Response;
 
 class Request
 {
@@ -24,13 +25,14 @@ class Request
         return $post;
     }
 
-    static function array(string $key, string|null|int $subkey = null){
+    static function array(string $key, string|null|int $subkey = null)
+    {
         $post = post($key);
-        if(! is_array($post)){
+        if (! is_array($post)) {
             $type = gettype($post);
             throw new Exception("Request::array should be an array, given value is $type");
         }
-        if($subkey){
+        if ($subkey) {
             return $post[$subkey] ?? null;
         }
         return $post;
@@ -67,6 +69,17 @@ class Request
                 return server_headers(ucwords(strtolower($key)));
             }
             return server_headers($key);
+        }
+    }
+
+    static function validate_csrf()
+    {
+        $post = self::post("csrf_field");
+        if (! $post) {
+            Response::code(unauthorized_code)->message("csrf not found")->send(unauthorized_code);
+        }
+        if ($post !== csrf_token()) {
+            Response::code(unauthorized_code)->message("Unauthorize request")->send(unauthorized_code);
         }
     }
 

@@ -81,9 +81,51 @@ if (! function_exists("val")) {
                 case "bool":
                     return false;
                     break;
-                default: return ""; break;
+                default:
+                    return "";
+                    break;
             }
         }
+    }
+}
+
+if (! function_exists("decrypt_csrf_codetazer")) {
+    function encrypted_csrf_codetazer($characters = 18, $strict = true)
+    {
+        $arr = range("A", "Z");
+        for ($x = 1; $x <= 9; $x++) {
+            $arr[] = (string) $x;
+        }
+        shuffle($arr);
+        $str = "";
+        if ($strict) {
+            $s = date("ymdhis");
+            for ($i = 0; $i <= $characters - 12; $i++) {
+                $str .= (string)$arr[$i];
+            }
+            $str .= $s;
+        } else {
+            for ($i = 0; $i <= $characters; $i++) {
+                $str .= (string)$arr[$i];
+            }
+        }
+        return $str;
+    }
+}
+
+if (! function_exists("csrf_field")) {
+    function csrf_field()
+    {
+        $tkn = $_SESSION['csrf_codetazer_session_sec'];
+        return "<input type='hidden' name='csrf_field' value='$tkn'>";
+    }
+    define("csrf_field", csrf_field());
+}
+
+if (! function_exists("csrf_token")) {
+    function csrf_token()
+    {
+        return $_SESSION['csrf_codetazer_session_sec'] ?? null;
     }
 }
 
