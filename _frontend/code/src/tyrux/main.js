@@ -11,7 +11,10 @@ const headers = {
 };
 
 const config = {
-    error: "alert",
+    error: (err, message)=>{ // Tyrax error handler ::CodeTazer
+        alert(message);
+    },
+
     baseURL: backend
 };
 
