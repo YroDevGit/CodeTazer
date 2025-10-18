@@ -81,7 +81,7 @@ class Request
         if ($post !== cfsr_token()) {
             Response::code(unauthorized_code)->message("Unauthorize request ")->var([
                 "post" => $post,
-                "csfr" =>cfsr_token(),
+                "csfr" => cfsr_token(),
             ])->send(unauthorized_code);
         }
     }
@@ -158,5 +158,46 @@ class Request
         } catch (Exception $e) {
             return null;
         }
+    }
+
+    public static function x_rate_limit($limit = 80, $seconds = 60)
+    {
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $limit = 50;
+        $window = $seconds;
+
+        $file = sys_get_temp_dir() . '/ratelimit_' . md5($ip);
+
+        if (file_exists($file)) {
+            $data = json_decode(file_get_contents($file), true);
+            if (time() - $data['start'] > $window) {
+                $data = ['count' => 0, 'start' => time()];
+            }
+        } else {
+            $data = ['count' => 0, 'start' => time()];
+        }
+
+        $data['count']++;
+        $remaining = max(0, $limit - $data['count']);
+        $reset = $data['start'] + $window;
+
+        header("X-RateLimit-Limit: $limit");
+        header("X-RateLimit-Remaining: $remaining");
+        header("X-RateLimit-Reset: $reset");
+
+        if ($data['count'] > $limit) {
+            http_response_code(429);
+            header('Retry-After: ' . ($window - (time() - $data['start'])));
+            echo json_encode([
+                'code' => 429,
+                'message' => 'Request limit exceed',
+                'error' => 'Request limit exceeded',
+                'limit' => $limit,
+                'window' => $window,
+                'retry_after' => $window - (time() - $data['start'])
+            ]);
+            exit;
+        }
+        file_put_contents($file, json_encode($data));
     }
 }
