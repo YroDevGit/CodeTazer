@@ -16,7 +16,7 @@ class CtrDate {
             s: String(d.getSeconds()).padStart(2, "0"),      // Seconds
             A: ampm,                                         // AM/PM
             a: ampm.toLowerCase(),                           // am/pm
-            m: String(d.getMonth()).padStart(2, "0"),
+            m: String(parseInt(d.getMonth())+1).padStart(2, "0"),
             M: d.getUTCMonth()
         };
 
@@ -529,7 +529,7 @@ class CtrDate {
                 } else {
                     currentDate = new Date(input.value);
                     let ff = currentDate.getFullYear() + "-" + (parseInt(currentDate.getMonth() + 1)) + "-" + currentDate.getDate();
-                    document.querySelector("#CODETZRD-SELMONTH").value = currentDate.getMonth();
+                    document.querySelector("#CODETZRD-SELMONTH").value = parseInt(currentDate.getMonth()) + 1;
                     document.querySelector("#CODETZRD-SELYEAR").value = currentDate.getFullYear();
                     renderCalendar(currentDate);
                     if (enableTime) {
