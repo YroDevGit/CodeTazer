@@ -152,13 +152,14 @@ const opt = {
     error: undefined,
     catch: undefined,
     test: undefined,
-    inspect: undefined
+    inspect: undefined,
+    cfsr: true
 };
 
 const tyrax = { // tyrux default config :: CodeTazeR
     config: {},
-    api(option) {
-        tyrux(configure._mergeOptions(option, this));
+    api(op) {
+        tyrux(configure._mergeOptions(op, this));
     },
 
     post(option = opt) {

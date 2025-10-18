@@ -72,14 +72,17 @@ class Request
         }
     }
 
-    static function validate_csrf()
+    static function validate_cfsr()
     {
-        $post = self::post("csrf_field");
+        $post = self::post("cfsr_field") ?? self::get("cfsr_field") ?? null;
         if (! $post) {
-            Response::code(unauthorized_code)->message("csrf not found")->send(unauthorized_code);
+            Response::code(unauthorized_code)->message("cfsr not found")->send(unauthorized_code);
         }
-        if ($post !== csrf_token()) {
-            Response::code(unauthorized_code)->message("Unauthorize request")->send(unauthorized_code);
+        if ($post !== cfsr_token()) {
+            Response::code(unauthorized_code)->message("Unauthorize request ")->var([
+                "post" => $post,
+                "csfr" =>cfsr_token(),
+            ])->send(unauthorized_code);
         }
     }
 

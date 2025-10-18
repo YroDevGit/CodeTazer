@@ -198,9 +198,9 @@ $get = $_GET['page'] ?? $_GET['p'] ?? $_GET['fe'] ?? $_GET['frontend'] ?? false;
 $folder_to_fee = '_frontend/auto';
 $is_function = false;
 try {
-    $csrfHashCode = encrypted_csrf_codetazer(25);
-    $_SESSION['csrf_codetazer_session_sec'] = $csrfHashCode;
-    define("csrf", $csrfHashCode);
+    $csrfHashCode = encrypted_cfsr_codetazer(25);
+    $_SESSION['cfsr_codetazer_session_sec'] = $csrfHashCode;
+    define("cfsr", $csrfHashCode);
     if (! $get) {
         if ($_GET['funcpage'] ?? false) {
             $get =  $_GET['funcpage'];
