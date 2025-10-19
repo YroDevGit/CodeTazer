@@ -3,7 +3,8 @@
 
 // Auto load file inside php folder
 autoload_php([
-    //"test"
+    //"autoload",
+    //xrate_limit,
 ]);
 
 

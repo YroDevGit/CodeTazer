@@ -174,6 +174,7 @@ class Request
 
         $data['count']++;
         $data['limit'] = $limit;
+        $data['seconds'] = $seconds;
         $remaining = max(0, $limit - $data['count']);
         $reset = $data['start'] + $window;
 
@@ -186,7 +187,7 @@ class Request
             header('Retry-After: ' . ($window - (time() - $data['start'])));
             echo json_encode([
                 'code' => 429,
-                'message' => 'Request limit exceed',
+                'message' => 'Request limit exceed, Please try again later.',
                 'error' => 'Request limit exceeded',
                 'limit' => $limit,
                 'window' => $window,
@@ -200,10 +201,13 @@ class Request
     public static function x_rate_details()
     {
         $ip = $_SERVER['REMOTE_ADDR'];
-        $window = $seconds;
+        $window = 60;
+        $limit = 100;
         $file = sys_get_temp_dir() . '/ratelimit_' . md5($ip);
         if (file_exists($file)) {
             $data = json_decode(file_get_contents($file), true);
+            $window = $data['seconds'] ?? $window;
+            $limit = $data['limit'] ?? $limit;
             if (time() - $data['start'] > $window) {
                 $data = ['count' => 0, 'start' => time()];
             }
