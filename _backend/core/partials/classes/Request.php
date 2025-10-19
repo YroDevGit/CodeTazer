@@ -173,6 +173,7 @@ class Request
         }
 
         $data['count']++;
+        $data['limit'] = $limit;
         $remaining = max(0, $limit - $data['count']);
         $reset = $data['start'] + $window;
 
@@ -194,5 +195,27 @@ class Request
             exit;
         }
         file_put_contents($file, json_encode($data));
+    }
+
+    public static function x_rate_details()
+    {
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $window = $seconds;
+        $file = sys_get_temp_dir() . '/ratelimit_' . md5($ip);
+        if (file_exists($file)) {
+            $data = json_decode(file_get_contents($file), true);
+            if (time() - $data['start'] > $window) {
+                $data = ['count' => 0, 'start' => time()];
+            }
+        } else {
+            $data = ['count' => 0, 'start' => time()];
+        }
+
+        $data['count']++;
+        $remaining = max(0, $limit - $data['count']);
+        $reset = $data['start'] + $window;
+        $data['reset'] = $reset;
+
+        return $data;
     }
 }
