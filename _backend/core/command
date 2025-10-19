@@ -786,6 +786,40 @@ if ($route == "+model") {
         echo "Key generated: " . substr(md5(date("ymdHisA") . getenv("hash_secret")), 0, $filename) . "\n\n";
         exit;
     }
+} else if ($route == "--secret") {
+    $realpath = realpath(__DIR__ . "/../..");
+    $dir = $realpath . "/_frontend/code/src/ctr/";
+    if (! is_dir($dir)) {
+        $creating = @mkdir($dir, 0777, true);
+    }
+    $secret = ! $filename ? "codetazer_yroez" : $filename;
+    try {
+        $fl = "env.json";
+        $fullpath = $dir . $fl;
+        if (file_exists($fullpath)) {
+            unlink($fullpath);
+        }
+        $content = <<<EOT
+            {  
+                "appname": "codetazer",
+                "author": "tyronemalocon",
+                "secret": "$secret",
+                "key": "codetazerapp",
+                "fe": "frontend",
+                "be": "backend"
+            }
+            EOT;
+
+        if (file_put_contents($fullpath, $content)) {
+            echo "✔️ Secret has been generated\n\n";
+            exit;
+        } else {
+            echo "❌ Error generating secret\n\n";
+            exit;
+        }
+    } catch (Exception $e) {
+        $a = 1;
+    }
 } else {
     echo "Invalid command.\n";
     exit(1);
