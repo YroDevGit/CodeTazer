@@ -158,13 +158,11 @@ class Request
         }
     }
 
-    public static function x_rate_limit($limit = 80, $seconds = 60)
+    public static function x_rate_limit($limit = 100, $seconds = 60)
     {
         $ip = $_SERVER['REMOTE_ADDR'];
         $window = $seconds;
-
         $file = sys_get_temp_dir() . '/ratelimit_' . md5($ip);
-
         if (file_exists($file)) {
             $data = json_decode(file_get_contents($file), true);
             if (time() - $data['start'] > $window) {
