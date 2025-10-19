@@ -90,7 +90,7 @@ if (! function_exists("val")) {
 }
 
 if (! function_exists("decrypt_csrf_codetazer")) {
-    function encrypted_cfsr_codetazer($characters = 18, $strict = true)
+    function encrypted_csrf_codetazer($characters = 18, $strict = true)
     {
         $arr = range("A", "Z");
         for ($x = 1; $x <= 9; $x++) {
@@ -113,18 +113,18 @@ if (! function_exists("decrypt_csrf_codetazer")) {
     }
 }
 
-if (! function_exists("cfsr_field")) {
-    function cfsr_field()
+if (! function_exists("csrf")) {
+    function csrf()
     {
-        $tkn = $_SESSION['cfsr_codetazer_session_sec'] ?? null;
-        return "<input type='hidden' name='cfsr_field' value='$tkn'>";
+        $tkn = $_SESSION['csrf_codetazer_session_sec'] ?? null;
+        return "<input type='hidden' name='csrf_ctr_field' value='$tkn'>";
     }
 }
 
-if (! function_exists("cfsr_token")) {
-    function cfsr_token()
+if (! function_exists("csrf_token")) {
+    function csrf_token()
     {
-        return $_SESSION['cfsr_codetazer_session_sec'] ?? null;
+        return $_SESSION['csrf_codetazer_session_sec'] ?? null;
     }
 }
 
