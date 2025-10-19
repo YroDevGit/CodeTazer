@@ -161,7 +161,6 @@ class Request
     public static function x_rate_limit($limit = 80, $seconds = 60)
     {
         $ip = $_SERVER['REMOTE_ADDR'];
-        $limit = 50;
         $window = $seconds;
 
         $file = sys_get_temp_dir() . '/ratelimit_' . md5($ip);
