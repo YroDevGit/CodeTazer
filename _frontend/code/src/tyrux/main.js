@@ -1,5 +1,4 @@
 import { Tyrux } from "./lib/tyrux.js";
-import { DOMclass } from "./lib/functions.js";
 
 const baseURL = "";   //Backend url end-point
 const baseRoute = "";   // Default api rout
@@ -249,14 +248,11 @@ function get_form_data(selector) {
     return dataObject;
 }
 
-const DOM = new DOMclass();
-
 if (typeof window !== "undefined") {
     window.get_form_data = get_form_data;
     window.tyrequest = tyrequest;
     window.tyrax = tyrax;
     window.tyrasync = tyrsync;
-    window.DOM = DOM;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
