@@ -158,11 +158,12 @@ class Request
         }
     }
 
-    public static function x_rate_limit($limit = 100, $seconds = 60)
+    public static function x_rate_limit($limit = 100, $seconds = 60, $route = "")
     {
         $ip = $_SERVER['REMOTE_ADDR'];
         $window = $seconds;
-        $file = sys_get_temp_dir() . '/ratelimit_' . md5($ip);
+        $route = ! $route ? current_be() : $route;
+        $file = sys_get_temp_dir() . '/ratelimit_' . md5($route.'_'.$ip);
         if (file_exists($file)) {
             $data = json_decode(file_get_contents($file), true);
             if (time() - $data['start'] > $window) {
@@ -172,6 +173,7 @@ class Request
             $data = ['count' => 0, 'start' => time()];
         }
 
+        $data['route'] = $route;
         $data['count']++;
         $data['limit'] = $limit;
         $data['seconds'] = $seconds;
@@ -195,15 +197,24 @@ class Request
             ]);
             exit;
         }
-        file_put_contents($file, json_encode($data));
+        return file_put_contents($file, json_encode($data));
     }
 
-    public static function x_rate_details()
+    public static function x_rate_limit_global($limit = 100, $seconds = 60){
+        return self::x_rate_limit($limit, $seconds, "all");
+    }
+
+    public static function x_rate_limit_route($limit = 100, $seconds = 60){
+        return self::x_rate_limit($limit, $seconds);
+    }
+
+    public static function x_rate_details($route = "")
     {
         $ip = $_SERVER['REMOTE_ADDR'];
         $window = 60;
         $limit = 100;
-        $file = sys_get_temp_dir() . '/ratelimit_' . md5($ip);
+        $route = ! $route ? current_be() : $route;
+        $file = sys_get_temp_dir() . '/ratelimit_' . md5($route.'_'.$ip);
         if (file_exists($file)) {
             $data = json_decode(file_get_contents($file), true);
             $window = $data['seconds'] ?? $window;
@@ -221,5 +232,9 @@ class Request
         $data['reset'] = $reset;
 
         return $data;
+    }
+
+    public static function x_rate_details_global(){
+        return self::x_rate_details("all");
     }
 }
