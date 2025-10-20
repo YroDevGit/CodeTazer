@@ -9,6 +9,7 @@ use Classes\Response;
 
 class Request
 {
+    private static string|null $xrateMessage = null;
 
     static function post(string $key, bool $trim = true)
     {
@@ -122,9 +123,10 @@ class Request
             header('Content-Type: application/json');
             http_response_code(429);
             header('Retry-After: ' . ($window - (time() - $data['start'])));
+            $msg = ! self::$xrateMessage ? 'Request limit exceed, Please try again later.' : self::$xrateMessage;
             echo json_encode([
                 'code' => 429,
-                'message' => 'Request limit exceed, Please try again later.',
+                'message' => $msg,
                 'error' => 'Request limit exceeded',
                 'limit' => $limit,
                 'window' => $window,
@@ -236,6 +238,12 @@ class Request
     public static function x_rate_limit(int $limit = 100, int $seconds = 60, string|null $route = "")
     {
         return self::ctrratelimit($limit, $seconds, $route);
+    }
+
+    public static function x_rate_limit_message(string|null $message){
+        if($message){
+            self::$xrateMessage = $message;
+        }
     }
 
     public static function x_rate_limit_global(int $limit = 100, int $seconds = 60)
