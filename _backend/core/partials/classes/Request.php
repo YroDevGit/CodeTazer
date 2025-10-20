@@ -108,6 +108,7 @@ class Request
         $data['route'] = $org;
         $data['ctr'] = $route;
         $data['count']++;
+        $data['left'] = $limit - intval($data['count']);
         $data['limit'] = $limit;
         $data['seconds'] = $seconds;
         $remaining = max(0, $limit - $data['count']);
@@ -150,8 +151,6 @@ class Request
         } else {
             $data = ['count' => 0, 'start' => time()];
         }
-
-        $data['count']++;
         $remaining = max(0, $limit - $data['count']);
         $reset = $data['start'] + $window;
         $data['reset'] = $reset;
