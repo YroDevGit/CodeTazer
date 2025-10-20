@@ -89,6 +89,75 @@ class Request
         return $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
     }
 
+    private static function ctrratelimit($limit = 100, $seconds = 60, $route = "")
+    {
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $window = $seconds;
+        $org = $route;
+        $route = ! $route ? current_be() : "ctzr_" . $route;
+        $file = sys_get_temp_dir() . '/ratelimit_' . md5($route . '_' . $ip);
+        if (file_exists($file)) {
+            $data = json_decode(file_get_contents($file), true);
+            if (time() - $data['start'] > $window) {
+                $data = ['count' => 0, 'start' => time()];
+            }
+        } else {
+            $data = ['count' => 0, 'start' => time()];
+        }
+
+        $data['route'] = $org;
+        $data['ctr'] = $route;
+        $data['count']++;
+        $data['limit'] = $limit;
+        $data['seconds'] = $seconds;
+        $remaining = max(0, $limit - $data['count']);
+        $reset = $data['start'] + $window;
+
+        header("X-RateLimit-Limit: $limit");
+        header("X-RateLimit-Remaining: $remaining");
+        header("X-RateLimit-Reset: $reset");
+
+        if ($data['count'] > $limit) {
+            http_response_code(429);
+            header('Retry-After: ' . ($window - (time() - $data['start'])));
+            echo json_encode([
+                'code' => 429,
+                'message' => 'Request limit exceed, Please try again later.',
+                'error' => 'Request limit exceeded',
+                'limit' => $limit,
+                'window' => $window,
+                'retry_after' => $window - (time() - $data['start'])
+            ]);
+            exit;
+        }
+        return file_put_contents($file, json_encode($data));
+    }
+
+    private static function ctrratedetails($route = "")
+    {
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $window = 60;
+        $limit = 100;
+        $route = ! $route ? current_be() : "ctzr_" . $route;
+        $file = sys_get_temp_dir() . '/ratelimit_' . md5($route . '_' . $ip);
+        if (file_exists($file)) {
+            $data = json_decode(file_get_contents($file), true);
+            $window = $data['seconds'] ?? $window;
+            $limit = $data['limit'] ?? $limit;
+            if (time() - $data['start'] > $window) {
+                $data = ['count' => 0, 'start' => time()];
+            }
+        } else {
+            $data = ['count' => 0, 'start' => time()];
+        }
+
+        $data['count']++;
+        $remaining = max(0, $limit - $data['count']);
+        $reset = $data['start'] + $window;
+        $data['reset'] = $reset;
+        return $data;
+    }
+
     static function file($name, $type = null)
     {
         try {
@@ -158,83 +227,34 @@ class Request
         }
     }
 
-    public static function x_rate_limit($limit = 100, $seconds = 60, $route = "")
+    /**
+     * Limit the request to backend
+     * @param int $limit : max request
+     * @param int $seconds: max request per seconds
+     * @param string $route: unique route/name for this limit
+     */
+    public static function x_rate_limit(int $limit = 100, int $seconds = 60, string|null $route = "")
     {
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $window = $seconds;
-        $route = ! $route ? current_be() : $route;
-        $file = sys_get_temp_dir() . '/ratelimit_' . md5($route.'_'.$ip);
-        if (file_exists($file)) {
-            $data = json_decode(file_get_contents($file), true);
-            if (time() - $data['start'] > $window) {
-                $data = ['count' => 0, 'start' => time()];
-            }
-        } else {
-            $data = ['count' => 0, 'start' => time()];
-        }
-
-        $data['route'] = $route;
-        $data['count']++;
-        $data['limit'] = $limit;
-        $data['seconds'] = $seconds;
-        $remaining = max(0, $limit - $data['count']);
-        $reset = $data['start'] + $window;
-
-        header("X-RateLimit-Limit: $limit");
-        header("X-RateLimit-Remaining: $remaining");
-        header("X-RateLimit-Reset: $reset");
-
-        if ($data['count'] > $limit) {
-            http_response_code(429);
-            header('Retry-After: ' . ($window - (time() - $data['start'])));
-            echo json_encode([
-                'code' => 429,
-                'message' => 'Request limit exceed, Please try again later.',
-                'error' => 'Request limit exceeded',
-                'limit' => $limit,
-                'window' => $window,
-                'retry_after' => $window - (time() - $data['start'])
-            ]);
-            exit;
-        }
-        return file_put_contents($file, json_encode($data));
+        return self::ctrratelimit($limit, $seconds, $route);
     }
 
-    public static function x_rate_limit_global($limit = 100, $seconds = 60){
+    public static function x_rate_limit_global(int $limit = 100, int $seconds = 60)
+    {
         return self::x_rate_limit($limit, $seconds, "all");
     }
 
-    public static function x_rate_limit_route($limit = 100, $seconds = 60){
+    public static function x_rate_limit_route(int $limit = 100, int $seconds = 60)
+    {
         return self::x_rate_limit($limit, $seconds);
     }
 
-    public static function x_rate_details($route = "")
+    public static function x_rate_details(string|null $route = "")
     {
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $window = 60;
-        $limit = 100;
-        $route = ! $route ? current_be() : $route;
-        $file = sys_get_temp_dir() . '/ratelimit_' . md5($route.'_'.$ip);
-        if (file_exists($file)) {
-            $data = json_decode(file_get_contents($file), true);
-            $window = $data['seconds'] ?? $window;
-            $limit = $data['limit'] ?? $limit;
-            if (time() - $data['start'] > $window) {
-                $data = ['count' => 0, 'start' => time()];
-            }
-        } else {
-            $data = ['count' => 0, 'start' => time()];
-        }
-
-        $data['count']++;
-        $remaining = max(0, $limit - $data['count']);
-        $reset = $data['start'] + $window;
-        $data['reset'] = $reset;
-
-        return $data;
+        return self::ctrratedetails($route);
     }
 
-    public static function x_rate_details_global(){
+    public static function x_rate_details_global()
+    {
         return self::x_rate_details("all");
     }
 }
