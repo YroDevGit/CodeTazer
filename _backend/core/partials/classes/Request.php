@@ -119,6 +119,7 @@ class Request
         header("X-RateLimit-Reset: $reset");
 
         if ($data['count'] > $limit) {
+            header('Content-Type: application/json');
             http_response_code(429);
             header('Retry-After: ' . ($window - (time() - $data['start'])));
             echo json_encode([
