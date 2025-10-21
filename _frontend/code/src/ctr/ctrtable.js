@@ -485,7 +485,8 @@ class CtrTableClass {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "table.csv";
+        let thename = this.table.getAttribute("ctr-name") || "table";
+        a.download = thename + ".csv";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
