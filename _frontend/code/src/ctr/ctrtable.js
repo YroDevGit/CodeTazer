@@ -163,7 +163,6 @@ class CtrTableClass {
             background: #fff;
         }
     
-        /* ===== BOTTOM ===== */
         .ctrtable-bottom {
             display: flex;
             justify-content: space-between;
@@ -194,7 +193,6 @@ class CtrTableClass {
             background: #0b5ed7;
         }
     
-        /* ===== MOBILE ===== */
         @media (max-width: 600px) {
             .ctrtable-container {
                 width: 100%;
@@ -369,7 +367,7 @@ class CtrTableClass {
                 }
                 this.headers.forEach(k => {
                     const td = document.createElement("td");
-                    td.textContent = r[k] ?? "";
+                    td.innerHTML = r[k] ?? "";
                     td.setAttribute("data-label", k);
                     tr.appendChild(td);
                 });
