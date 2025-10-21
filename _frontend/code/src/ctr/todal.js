@@ -51,7 +51,7 @@ class CtrTodal {
                 background: #fff;
                 border-radius: 8px;
                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-                z-index: 1001;
+                z-index: 9999;
                 opacity: 0;
                 transition: opacity 0.25s ease, transform 0.25s ease;
                 max-width: 450px;
