@@ -142,12 +142,18 @@ class Ctr {
     }
 
     submit(selector, callable) {
-        const sel = document.querySelector(selector);
-        let formdata = this.form_data(`#` + sel.getAttribute("id"));
-        sel.addEventListener('submit', function (event) {
-            event.preventDefault();
-            let formobject = new FormData(sel);
-            callable(formobject, formdata, event);
+        let elem = document.querySelectorAll(selector);
+        elem.forEach(element => {
+            const sel = element;
+            sel.addEventListener('submit', function (event) {
+                event.preventDefault();
+                let formobject = new FormData(sel);
+                const dataObject = {};
+                formobject.forEach((value, key) => {
+                    dataObject[key] = value;
+                });
+                callable(formobject, dataObject, event);
+            });
         });
     }
 
