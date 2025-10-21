@@ -124,21 +124,26 @@ class Ctr {
     click(selector, callable) {
         let form = null;
         if (selector.charAt(0) === "#" || selector.charAt(0) === ".") {
-            form = document.querySelector(selector);
+            form = document.querySelectorAll(selector);
+            form.forEach(element => {
+                const attrs = {};
+                for (let attr of element.attributes) {
+                    attrs[attr.name] = attr.value;
+                }
+                element.addEventListener("click", function () {
+                    callable(attrs);
+                });
+            });
         } else {
             form = document.getElementById(selector);
+            const attrs = {};
+            for (let attr of form.attributes) {
+                attrs[attr.name] = attr.value;
+            }
+            form.addEventListener("click", function () {
+                callable(attrs);
+            });
         }
-        if (!form) {
-            console.error(`Tag with id '${selector}' not found.`);
-            return;
-        }
-        if (typeof callable !== "function") {
-            console.error("Callable is not a function.");
-            return;
-        }
-        form.addEventListener("click", function () {
-            callable();
-        });
     }
 
     submit(selector, callable) {
