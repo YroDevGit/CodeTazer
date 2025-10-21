@@ -30,9 +30,15 @@ class CtrTableClass {
 
     _mapHeaders() {
         this.headers = [];
+        this.includeMap = [];
+
         this.thead?.querySelectorAll("th").forEach(th => {
             const key = th.getAttribute("key") || th.getAttribute("col") || th.innerText.trim();
+            const include = th.getAttribute("ctr-include");
+            const isIncluded = include === null || include.toLowerCase() !== "false";
+
             this.headers.push(key);
+            this.includeMap.push(isIncluded);
         });
     }
 
@@ -459,12 +465,18 @@ class CtrTableClass {
 
     _export(type) {
         const rows = [];
-        const ths = Array.from(this.thead.querySelectorAll("th")).map(th => th.innerText.trim());
+        const ths = Array.from(this.thead.querySelectorAll("th"))
+            .filter((th, i) => this.includeMap[i])
+            .map(th => th.innerText.trim());
         rows.push(ths);
+
         this.filtered.forEach(r => {
-            const row = this.headers.map(k => r[k]);
+            const row = this.headers
+                .map((k, i) => (this.includeMap[i] ? r[k] : null))
+                .filter(v => v !== null);
             rows.push(row);
         });
+
         if (type === "csv") this._downloadCSV(rows);
         else alert(type.toUpperCase() + " export coming soon");
     }
