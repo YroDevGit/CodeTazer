@@ -1,4 +1,4 @@
-class Path {
+class CtrPath {
     constructor(rootpath = "http://localhost:9999") {
         this.global_root = rootpath;
         this.frontend = "?page=";
@@ -43,15 +43,18 @@ class Path {
     }
 }
 
-const PATH = new Path();
+const PATH = new CtrPath();
+const Path = PATH;
 
 if (typeof window !== "undefined") {
     window.PATH = PATH;
     window.PATHS = PATH;
+    window.Path = PATH;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = PATH;
+    module.exports = Path;
 }
-
+export {Path};
 export default PATH;

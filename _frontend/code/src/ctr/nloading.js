@@ -1,4 +1,4 @@
-class NLoading {
+class CtrNLoading {
     constructor() {
         this.bodyColor = "#f3f3f3";
         this.spinnerColor = "#3498db";
@@ -99,14 +99,17 @@ class NLoading {
     }
 }
 
-const NLOADING = new NLoading();
+const NLOADING = new CtrNLoading();
+const NLoading = NLOADING;
 
 if (typeof window !== "undefined") {
     window.NLOADING = NLOADING;
+    window.NLoading = NLOADING;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = NLOADING;
+    module.exports = NLoading;
 }
-
+export {NLoading};
 export default NLOADING;

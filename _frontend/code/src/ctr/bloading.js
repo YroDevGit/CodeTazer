@@ -1,4 +1,4 @@
-class BLoading {
+class CtrBLoading {
     constructor(theme = "dark") {
         this.theme = theme;
         this.loaderId = "ctr-loader-overlay";
@@ -225,14 +225,17 @@ class BLoading {
     }
 }
 
-const BLOADING = new BLoading("dark");
+const BLOADING = new CtrBLoading("dark");
+const BLoading = BLOADING;
 
 if (typeof window !== "undefined") {
     window.BLOADING = BLOADING;
+    window.BLoading = BLOADING;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = BLOADING;
+    module.exports = BLoading;
 }
-
+export {BLoading};
 export default BLOADING;

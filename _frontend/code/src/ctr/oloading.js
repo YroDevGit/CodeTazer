@@ -151,13 +151,16 @@ class OrbitLoader {
 }
 
 const OLOADING = new OrbitLoader("blue");
+const OLoading = OLOADING;
 
 if (typeof window !== "undefined") {
     window.OLOADING = OLOADING;
+    window.OLoading = OLOADING;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = OLOADING;
+    module.exports = OLoading;
 }
-
+export {OLoading};
 export default OLOADING;

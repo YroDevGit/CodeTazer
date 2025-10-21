@@ -192,13 +192,16 @@ class CtrBANNER {
 }
 
 const BANNER = new CtrBANNER();
+const Banner = BANNER;
 
 if (typeof window !== "undefined") {
     window.BANNER = BANNER;
+    window.Banner = BANNER;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = BANNER;
+    module.exports = Banner;
 }
-
+export {Banner};
 export default BANNER;

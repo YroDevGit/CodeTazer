@@ -1,4 +1,4 @@
-class Currency {
+class CtrCurrency {
     static currencies = {
         USD: "$",
         EUR: "€",
@@ -64,15 +64,18 @@ class Currency {
     }
 }
 
-const CURRENCY = new Currency();
+const CURRENCY = new CtrCurrency();
+const Currency = CURRENCY;
 
 if (typeof window !== "undefined") {
     window.CURRENCY = CURRENCY;
+    window.Currency = CURRENCY;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = CURRENCY;
+    module.exports = Currency;
 }
-
+export {Currency};
 export default CURRENCY;
 

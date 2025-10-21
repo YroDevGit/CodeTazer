@@ -1,4 +1,4 @@
-class Loading {
+class CtrLoading {
     constructor(theme = "dark") {
         this.theme = theme;
         this.loaderId = "s-loader-overlay";
@@ -189,14 +189,17 @@ class Loading {
     }
 }
 
-const LOADING = new Loading("dark");
+const LOADING = new CtrLoading("dark");
+const Loading = LOADING;
 
 if (typeof window !== "undefined") {
     window.LOADING = LOADING;
+    window.Loading = LOADING;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = LOADING;
+    module.exports = Loading;
 }
-
+export {Loading};
 export default LOADING;

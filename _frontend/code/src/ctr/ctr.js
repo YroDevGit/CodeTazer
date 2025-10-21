@@ -1,4 +1,4 @@
-class Ctr {
+class CtrClass {
 
     constructor(rootpath = "") {
         this.global_root = rootpath;
@@ -224,14 +224,18 @@ class Ctr {
 
 }
 
-const CTR = new Ctr();
+const CTR = new CtrClass();
+const Ctr = CTR;
 
 if (typeof window !== "undefined") {
     window.CTR = CTR;
+    window.Ctr = CTR;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = CTR;
+    module.exports = Ctr;
 }
 
+export {Ctr};
 export default CTR;

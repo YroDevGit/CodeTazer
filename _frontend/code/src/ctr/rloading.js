@@ -1,4 +1,4 @@
-class RLoading {
+class CtrRLoading {
     constructor() {
         this.loaderId = "rinnegan-loader-overlay";
         this.styleId = "rinnegan-style";
@@ -97,14 +97,17 @@ class RLoading {
     }
 }
 
-const RLOADING = new RLoading();
+const RLOADING = new CtrRLoading();
+const RLoading = RLOADING;
 
 if (typeof window !== "undefined") {
     window.RLOADING = RLOADING;
+    window.RLoading = RLOADING;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = RLOADING;
+    module.exports = RLoading;
 }
-
+export {RLoading};
 export default RLOADING;
