@@ -144,10 +144,9 @@ class Ctr {
     submit(selector, callable) {
         let elem = document.querySelectorAll(selector);
         elem.forEach(element => {
-            const sel = element;
-            sel.addEventListener('submit', function (event) {
+            element.addEventListener('submit', function (event) {
                 event.preventDefault();
-                let formobject = new FormData(sel);
+                let formobject = new FormData(element);
                 const dataObject = {};
                 formobject.forEach((value, key) => {
                     dataObject[key] = value;
