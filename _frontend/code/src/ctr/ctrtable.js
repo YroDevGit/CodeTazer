@@ -47,11 +47,10 @@ class CtrTableClass {
         const style = document.createElement("style");
         style.id = "ctrtable-style";
         style.textContent = `
-        /* ===== CTR TABLE BASE ===== */
         .ctrtable-container {
             width: 100%;
             display: block;
-            overflow-x: auto; /* ✅ Always scrollable if content exceeds width */
+            overflow-x: auto;
             overflow-y: hidden;
             -webkit-overflow-scrolling: touch;
             font-family: "Segoe UI", Arial, sans-serif;
@@ -126,12 +125,11 @@ class CtrTableClass {
             width: 200px;
         }
     
-        /* ===== TABLE ===== */
         table.ctrtable {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
-            min-width: 600px; /* ✅ forces scroll on small widths */
+            min-width: 600px; 
             box-sizing: border-box;
         }
     
@@ -140,7 +138,7 @@ class CtrTableClass {
             border: 1px solid #dee2e6;
             padding: 10px 14px;
             text-align: left;
-            white-space: nowrap; /* ✅ prevents column breaking */
+            white-space: nowrap;
         }
     
         table.ctrtable th {
@@ -200,17 +198,17 @@ class CtrTableClass {
         @media (max-width: 600px) {
             .ctrtable-container {
                 width: 100%;
-                padding: 10px; /* ✅ consistent padding */
-                overflow-x: auto; /* ✅ ensure scroll works properly */
+                padding: 10px; 
+                overflow-x: auto; 
             }
     
             table.ctrtable {
-                min-width: 500px; /* ✅ scrolls horizontally */
+                min-width: 500px; 
             }
     
             table.ctrtable th,
             table.ctrtable td {
-                padding: 10px; /* ✅ even padding on mobile */
+                padding: 10px; 
                 white-space: nowrap;
             }
     
