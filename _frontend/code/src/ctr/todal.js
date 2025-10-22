@@ -166,6 +166,19 @@ class CtrTodal {
         document.addEventListener("keydown", this._escHandler);
     }
 
+    get_attribute(attribute = null) {
+        let allAttr = this.modal.attributes;
+        const attrs = {};
+        for (let attr of allAttr) {
+            attrs[attr.name] = attr.value;
+        }
+        if (attribute) {
+            return attrs[attribute] ?? null;
+        } else {
+            return attrs;
+        }
+    }
+
     set_id(id) {
         this.modal.setAttribute("todal-atr", id);
     }
