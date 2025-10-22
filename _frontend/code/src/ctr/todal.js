@@ -20,7 +20,7 @@ class CtrTodal {
     }
 
     static bindGlobalButtons() {
-        const buttons = document.querySelectorAll('[parent="todal"]');
+        const buttons = document.querySelectorAll('[todal-type="hide"], [todal-type="show"], [todal-type="close"]');
         buttons.forEach((btn) => {
             const type = btn.getAttribute("todal-type");
             const target = btn.getAttribute("todal-target");
@@ -113,7 +113,15 @@ class CtrTodal {
         document.head.appendChild(style);
     }
 
-    show() {
+    show(attribute = {}) {
+        if (attribute) {
+            for (let a in attribute) {
+                if (a == "id" || a == "class" || a == "todal-atr") {
+                    continue;
+                }
+                this.modal.setAttribute(a, attribute[a]);
+            }
+        }
         if (CtrTodal.current && CtrTodal.current !== this) {
             CtrTodal.current.hide();
         }
@@ -130,6 +138,14 @@ class CtrTodal {
 
         this._escHandler = (e) => e.key === "Escape" && this.hide();
         document.addEventListener("keydown", this._escHandler);
+    }
+
+    set_id(id) {
+        this.modal.setAttribute("todal-atr", id);
+    }
+
+    get_id() {
+        return this.modal.getAttribute("todal-atr");
     }
 
     hide() {
