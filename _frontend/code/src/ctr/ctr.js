@@ -162,11 +162,11 @@ class CtrClass {
     }
 
     apply(...callable) {
-        callable.forEach(element => {
-            if (typeof element !== "function") {
+        callable.forEach(call => {
+            if (typeof call !== "function") {
                 return;
             }
-            element();
+            call();
         });
     }
 
