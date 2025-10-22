@@ -487,10 +487,19 @@ class Validator
         return self::$collect;
     }
 
-    public static function post_error(string|null|bool $field, bool $complete = true)
+    public static function post_error(string|null|bool $field = null, bool $complete = true)
     {
         if (is_null($field) || is_bool($field)) {
-            return null;
+            $errs = null;
+            if ($complete) {
+                $errs = self::$errors;
+            } else {
+                $errs = self::$ers;
+            }
+            if (! $errs) {
+                return null;
+            }
+            return $errs[array_key_first($errs)];
         }
 
         $errors = null;
@@ -508,7 +517,7 @@ class Validator
         return $err;
     }
 
-    public static function field_error(string|null|bool $field, bool $complete = true)
+    public static function field_error(string|null|bool $field = null, bool $complete = true)
     {
         return self::post_error($field, $complete);
     }
