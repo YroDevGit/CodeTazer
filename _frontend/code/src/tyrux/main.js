@@ -260,10 +260,13 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = SECURE;
 }
 
+const Tyrax = tyrax;
+const Tyrsync = tyrsync;
 export {
     tyrax,
     tyrequest,
-    get_form_data,
     tyrsync,
     tyrux,
+    Tyrax,
+    Tyrsync
 };
