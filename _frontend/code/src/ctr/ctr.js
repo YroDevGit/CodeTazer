@@ -161,6 +161,15 @@ class CtrClass {
         });
     }
 
+    apply(...callable) {
+        callable.forEach(element => {
+            if (typeof element !== "function") {
+                return;
+            }
+            element();
+        });
+    }
+
     form_data(selector) {
         let form = null;
         if (selector.charAt(0) === "#" || selector.charAt(0) === ".") {
@@ -237,5 +246,5 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = Ctr;
 }
 
-export {Ctr};
+export { Ctr };
 export default CTR;
