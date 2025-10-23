@@ -131,27 +131,37 @@ class CtrClass {
     }
 
     click(selector, callable) {
-        let form = null;
-        if (selector.charAt(0) === "#" || selector.charAt(0) === ".") {
-            form = document.querySelectorAll(selector);
-            form.forEach(element => {
+        if (typeof selector == "string") {
+            let form = null;
+            if (selector.charAt(0) === "#" || selector.charAt(0) === ".") {
+                form = document.querySelectorAll(selector);
+                form.forEach(element => {
+                    const attrs = {};
+                    for (let attr of element.attributes) {
+                        attrs[attr.name] = attr.value;
+                    }
+                    element.addEventListener("click", function () {
+                        callable(attrs);
+                    });
+                });
+            } else {
+                form = document.getElementById(selector);
                 const attrs = {};
-                for (let attr of element.attributes) {
+                for (let attr of form.attributes) {
                     attrs[attr.name] = attr.value;
                 }
-                element.addEventListener("click", function () {
+                form.addEventListener("click", function () {
                     callable(attrs);
                 });
-            });
-        } else {
-            form = document.getElementById(selector);
-            const attrs = {};
-            for (let attr of form.attributes) {
-                attrs[attr.name] = attr.value;
             }
-            form.addEventListener("click", function () {
+        } else if (selector instanceof HTMLElement) {
+            selector.addEventListener("click", () => {
+                const attrs = {};
+                for (let attr of selector.attributes) {
+                    attrs[attr.name] = attr.value;
+                }
                 callable(attrs);
-            });
+            })
         }
     }
 
