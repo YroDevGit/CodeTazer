@@ -82,7 +82,12 @@ class CtrClass {
         }
         if (elements.length > 0) {
             elements.forEach(element => {
-                element.innerHTML = strhtml;
+                if (strhtml instanceof HTMLElement) {
+                    element.innerHTML = "";
+                    element.appendChild(strhtml);
+                } else {
+                    element.innerHTML = strhtml;
+                }
             });
         } else {
             console.warn(`No elements found for selector: "${selector}"`);
@@ -108,7 +113,11 @@ class CtrClass {
 
         if (elements.length > 0) {
             elements.forEach(element => {
-                element.insertAdjacentHTML('beforeend', strhtml);
+                if (strhtml instanceof HTMLElement) {
+                    element.appendChild(strhtml);
+                } else {
+                    element.insertAdjacentHTML('beforeend', strhtml);
+                }
             });
         } else {
             console.warn(`No elements found for selector: "${selector}"`);

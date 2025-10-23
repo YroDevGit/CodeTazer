@@ -367,7 +367,22 @@ class CtrTableClass {
                 }
                 this.headers.forEach(k => {
                     const td = document.createElement("td");
-                    td.innerHTML = r[k] ?? "";
+                    let cont =  r[k] ?? "";
+                    if (Array.isArray(cont)) {
+                        cont.forEach(item => {
+                            if (item instanceof HTMLElement) {
+                                td.appendChild(item);
+                            } else {
+                                td.insertAdjacentHTML('beforeend', item);
+                            }
+                        });
+                    } 
+                    else if (cont instanceof HTMLElement) {
+                        td.appendChild(cont);
+                    } 
+                    else {
+                        td.innerHTML = cont;
+                    }
                     td.setAttribute("data-label", k);
                     tr.appendChild(td);
                 });
