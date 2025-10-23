@@ -67,19 +67,28 @@ class CtrClass {
     set_html(selector, strhtml) {
         let elements = [];
 
-        if (selector.charAt(0) === "#") {
-            const element = document.getElementById(selector.substring(1));
-            if (element) {
-                elements.push(element);
+        if (typeof selector == "string") {
+            if (selector.charAt(0) === "#") {
+                const element = document.getElementById(selector.substring(1));
+                if (element) {
+                    elements.push(element);
+                }
+            } else if (selector.charAt(0) === ".") {
+                elements = Array.from(document.querySelectorAll(selector));
+            } else {
+                const element = document.getElementById(selector);
+                if (element) {
+                    elements.push(element);
+                }
             }
-        } else if (selector.charAt(0) === ".") {
-            elements = Array.from(document.querySelectorAll(selector));
-        } else {
-            const element = document.getElementById(selector);
-            if (element) {
-                elements.push(element);
-            }
+        } else if (selector instanceof HTMLElement) {
+            elements.push(selector);
+        } else if (Array.isArray(selector)) {
+            selector.forEach(sel => {
+                elements.push(sel);
+            });
         }
+
         if (elements.length > 0) {
             elements.forEach(element => {
                 if (strhtml instanceof HTMLElement) {
@@ -97,18 +106,26 @@ class CtrClass {
     add_html(selector, strhtml) {
         let elements = [];
 
-        if (selector.charAt(0) === "#") {
-            const element = document.getElementById(selector.substring(1));
-            if (element) {
-                elements.push(element);
+        if (typeof selector == "string") {
+            if (selector.charAt(0) === "#") {
+                const element = document.getElementById(selector.substring(1));
+                if (element) {
+                    elements.push(element);
+                }
+            } else if (selector.charAt(0) === ".") {
+                elements = Array.from(document.querySelectorAll(selector));
+            } else {
+                const element = document.getElementById(selector);
+                if (element) {
+                    elements.push(element);
+                }
             }
-        } else if (selector.charAt(0) === ".") {
-            elements = Array.from(document.querySelectorAll(selector));
-        } else {
-            const element = document.getElementById(selector);
-            if (element) {
-                elements.push(element);
-            }
+        } else if (selector instanceof HTMLElement) {
+            elements.push(selector);
+        } else if (Array.isArray(selector)) {
+            selector.forEach(sel => {
+                elements.push(sel);
+            });
         }
 
         if (elements.length > 0) {
