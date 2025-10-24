@@ -269,6 +269,10 @@ class CtrTodal {
         if (!footerBtns) return;
         footerBtns.forEach(element => {
             let attr = element.getAttribute("bg");
+            let cls = element.getAttribute("todal-type") ?? null;
+            if (cls && (cls == "close" || cls == "hide")) {
+                element.setAttribute("type", "button");
+            }
             element.classList.add("ctr-todal-btn-primary");
             if (!attr) return;
             if (attr == "primary" || attr == "success" || attr == "warning" || attr == "info" || attr == "danger" || attr == "dark") {
