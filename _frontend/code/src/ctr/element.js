@@ -266,8 +266,9 @@ class CtrElement {
             menuItem.addEventListener("click", e => {
                 e.stopPropagation();
                 menu.style.display = "none";
-                btn.classList.remove("ctr-dropdown-active"); // remove highlight
-                if (typeof item.action === "function") item.action();
+                btn.classList.remove("ctr-dropdown-active");
+                let action = item.action ?? item.click ?? undefined;
+                if (typeof action === "function") action();
             });
             menuItem.addEventListener("mouseover", () => menuItem.style.background = "#f2f2f2");
             menuItem.addEventListener("mouseout", () => menuItem.style.background = "");
@@ -444,7 +445,8 @@ class CtrElement {
                 }
                 menuItem.addEventListener("click", ev => {
                     ev.stopPropagation();
-                    if (typeof item.action === "function") item.action();
+                    let action = item.action ?? item.click ?? undefined;
+                    if (typeof action === "function") action();
                     document.body.removeChild(modal);
                     btn.classList.remove("ctr-menu-toggle-active");
                 });
