@@ -6,7 +6,7 @@ class CtrElement {
             if (typeof attribute == "string") {
                 txt = attribute;
             } else {
-                txt = attribute.text ?? element;
+                txt = attribute.text ?? attribute.html ?? element;
                 if (attribute) {
                     for (let a in attribute) {
                         if (a == 'text') {
@@ -18,9 +18,14 @@ class CtrElement {
             }
         }
         if (element == "input" || element == "textarea") {
+            if (txt instanceof HTMLElement) return;
             this.elem.value = txt;
         } else {
-            this.elem.innerHTML = txt;
+            if (txt instanceof HTMLElement) {
+                this.elem.appendChild(txt);
+            } else {
+                this.elem.innerHTML = txt;
+            }
         }
         this._injectCSS();
         return this.elem;
@@ -224,12 +229,14 @@ class CtrElement {
         let attr = {};
         if (typeof attribute == "string") {
             attr.text = attribute;
+        } else if (attribute instanceof HTMLElement) {
+            attr.text = attribute.outerHTML;
         } else {
             attr = attribute;
         }
         const btn = document.createElement("span");
         btn.classList.add("ctr-dropdown-toggle");
-        btn.textContent = attr.text || "⋮";
+        btn.innerHTML = attr.text || "⋮";
         btn.style.cursor = "pointer";
         Object.entries(attr).forEach(([k, v]) => {
             if (k !== "text") btn.setAttribute(k, v);
