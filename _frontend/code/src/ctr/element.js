@@ -180,7 +180,7 @@ class CtrElement {
         return btn;
     }
 
-    static dropdown(attr = {}, items = []) {
+    static dropdown(attribute, items = []) {
         if (!CtrElement._dropdowns) CtrElement._dropdowns = [];
 
         if (!CtrElement._dropdownCSSInjected) {
@@ -199,7 +199,12 @@ class CtrElement {
         wrapper.classList.add("ctr-dropdown");
         wrapper.style.position = "relative";
         wrapper.style.display = "inline-block";
-
+        let attr = {};
+        if (typeof attribute == "string") {
+            attr.text = attribute;
+        } else {
+            attr = attribute;
+        }
         const btn = document.createElement("span");
         btn.classList.add("ctr-dropdown-toggle");
         btn.textContent = attr.text || "⋮";
@@ -220,7 +225,7 @@ class CtrElement {
             borderRadius: "6px",
             display: "none",
             zIndex: 9999,
-            minWidth: "120px",
+            minWidth: "90px",
             overflow: "hidden"
         });
 
@@ -228,6 +233,9 @@ class CtrElement {
             const menuItem = document.createElement("div");
             menuItem.classList.add("ctr-dropdown-item");
             menuItem.innerHTML = item.text;
+            if (item.color) {
+                menuItem.style.color = item.color;
+            }
             Object.assign(menuItem.style, {
                 padding: "8px 12px",
                 cursor: "pointer",
@@ -284,7 +292,7 @@ class CtrElement {
         return wrapper;
     }
 
-    static menu(attr = {}, items = []) {
+    static menu(attribute, items = []) {
         if (!CtrElement._menuCSSInjected) {
             const style = document.createElement("style");
             style.textContent = `
@@ -301,7 +309,7 @@ class CtrElement {
                 .ctr-menu-content {
                     background: #fff;
                     border-radius: 8px;
-                    min-width: 200px;
+                    min-width: 150px;
                     max-width: 90%;
                     max-height: 80%;
                     overflow-y: auto;
@@ -327,6 +335,14 @@ class CtrElement {
                     padding: 10px 16px;
                     cursor: pointer;
                     user-select: none;
+                    color:#0e8297;
+                }
+                .ctr-menu-item-center {
+                    padding: 10px 16px;
+                    cursor: pointer;
+                    user-select: none;
+                    text-align:center;
+                    color:#0e8297;
                 }
                 .ctr-menu-item:hover {
                     background: #f2f2f2;
@@ -350,6 +366,12 @@ class CtrElement {
         wrapper.classList.add("ctr-menu-wrapper");
         wrapper.style.display = "inline-block";
 
+        let attr = {};
+        if (typeof attribute == "string") {
+            attr.text = attribute;
+        } else {
+            attr = attribute;
+        }
         const btn = document.createElement("span");
         btn.classList.add("ctr-menu-toggle");
         btn.textContent = attr.text || "⋮";
@@ -361,6 +383,11 @@ class CtrElement {
 
         btn.addEventListener("click", e => {
             e.stopPropagation();
+            let align = btn.getAttribute("menu-align") ?? null;
+            let itemclass = "ctr-menu-item";
+            if (align && align == "center") {
+                itemclass = "ctr-menu-item-center";
+            }
             btn.classList.add("ctr-menu-toggle-active");
 
             const modal = document.createElement("div");
@@ -386,8 +413,11 @@ class CtrElement {
                 }
 
                 const menuItem = document.createElement("div");
-                menuItem.classList.add("ctr-menu-item");
+                menuItem.classList.add(itemclass);
                 menuItem.innerHTML = item.text;
+                if (item.color) {
+                    menuItem.style.color = item.color;
+                }
                 menuItem.addEventListener("click", ev => {
                     ev.stopPropagation();
                     if (typeof item.action === "function") item.action();
