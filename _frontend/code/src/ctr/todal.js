@@ -3,6 +3,8 @@ class CtrTodal {
         this.modal = document.querySelector(selector);
         //if (!this.modal) throw new Error(`Todal: element ${selector} not found`);
         this._injectCSS();
+        this._ensureHeader();
+        this._ensureFooter();
     }
 
     static init(selector) {
@@ -75,13 +77,26 @@ class CtrTodal {
                 box-sizing: border-box;
                 transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
             }
-        
-            .todal-form-control:focus {
+            .todal-form-control:focus, .todal-form-textarea:focus {
                 border-color: #80bdff;
                 outline: 0;
                 box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
             }
-        
+            .todal-form-textarea {
+                display: block;
+                width: 100%;
+                font-size: 1rem;
+                font-weight: 400;
+                line-height: 1.5;
+                color: #495057;
+                background-color: #fff;
+                background-clip: padding-box;
+                border: 1px solid #ced4da;
+                border-radius: .25rem;
+                padding: 0px 8px;
+                box-sizing: border-box;
+                transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+              }
             .todal-form-group {
                 margin-bottom: 0.7rem;
             }
@@ -126,17 +141,145 @@ class CtrTodal {
                 text-align: right;
             }
             .todal-footer button {
-                background: #0d6efd;
-                color: white;
                 border: none;
-                padding: 0.4rem 0.8rem;
+                padding: 0.3rem 0.8rem;
                 border-radius: 4px;
                 font-size: 0.9rem;
                 cursor: pointer;
             }
-            .todal-footer button:hover { background: #0b5ed7; }
+            .ctr-todal-btn-primary {
+                background: #007bff;
+                color: white;
+            }
+            .ctr-todal-btn-primary:hover {
+                background: #0069d9;
+            }
+            .ctr-todal-btn-success {
+                background: #28a745;
+                color: white;
+            }
+            .ctr-todal-btn-success:hover {
+                background: #218838;
+            }
+            .ctr-todal-btn-warning {
+                background: #ffc107;
+                color: #212529;
+            }
+            .ctr-todal-btn-warning:hover {
+                background: #e0a800;
+            }
+            .ctr-todal-btn-danger {
+                background: red;
+                color: white;
+            }
+            .ctr-todal-btn-danger:hover {
+                background: #c82333;
+            }
+            .ctr-todal-btn-info {
+                background: #17a2b8;
+                color: white;
+            }
+            .ctr-todal-btn-info:hover {
+                background: #138496;
+            }
+            .ctr-todal-btn-dark {
+                background: #343a40;
+                color: white;
+            }
+            .ctr-todal-btn-dark:hover {
+                background: #23272b;
+            }
+            .ctr-todal-btn-primary {
+                background: #007bff;
+                color: white;
+            }
+            .ctr-todal-btn-primary:hover {
+                background: #0069d9;
+            }
+            .ctr-todal-btn-success {
+                background: #28a745;
+                color: white;
+            }
+            .ctr-todal-btn-success:hover {
+                background: #218838;
+            }
+            .ctr-todal-btn-warning {
+                background: #ffc107;
+                color: #212529;
+            }
+            .ctr-todal-btn-warning:hover {
+                background: #e0a800;
+            }
+            .ctr-todal-btn-danger {
+                background: red;
+                color: white;
+            }
+            .ctr-todal-btn-danger:hover {
+                background: #c82333;
+            }
+            .ctr-todal-btn-info {
+                background: #17a2b8;
+                color: white;
+            }
+            .ctr-todal-btn-info:hover {
+                background: #138496;
+            }
+            .ctr-todal-btn-dark {
+                background: #343a40;
+                color: white;
+            }
+            .ctr-todal-btn-dark:hover {
+                background: #23272b;
+            }
         `;
         document.head.appendChild(style);
+    }
+
+    _ensureHeader() {
+        const headerExists = this.modal.querySelector(".todal-header");
+
+        if (headerExists) return;
+
+        const title = this.modal.getAttribute("todal-title") || "CTR TODAL";
+        const header = document.createElement("div");
+        header.className = "todal-header";
+        const h3 = document.createElement("h3");
+        h3.textContent = title;
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "todal-close";
+        closeBtn.setAttribute("parent", "todal");
+        closeBtn.setAttribute("todal-type", "close");
+        closeBtn.setAttribute("todal-target", `#${this.modal.id}`);
+        closeBtn.textContent = "×";
+        header.appendChild(h3);
+        header.appendChild(closeBtn);
+
+        const firstChild = this.modal.firstElementChild;
+        if (firstChild) {
+            this.modal.insertBefore(header, firstChild);
+        } else {
+            this.modal.appendChild(header);
+        }
+    }
+
+    _ensureFooter() {
+        const footerExists = this.modal.querySelector(".todal-footer");
+        if (!footerExists) return;
+        const footerBtns = Array.from(footerExists.getElementsByTagName("button"));
+        if (!footerBtns) return;
+        footerBtns.forEach(element => {
+            let attr = element.getAttribute("bg");
+            element.classList.add("ctr-todal-btn-primary");
+            if (!attr) return;
+            if (attr == "primary" || attr == "success" || attr == "warning" || attr == "info" || attr == "danger" || attr == "dark") {
+                element.classList.add("ctr-todal-btn-" + attr);
+            } else {
+                let color = element.getAttribute("color");
+                element.style.background = attr;
+                if (!color) return;
+                element.style.color = color;
+            }
+        });
     }
 
     show(attribute = {}) {
@@ -239,16 +382,12 @@ export default Todal;
 /**
  *Usage 
  * <button parent="todal" todal-type="open" todal-target="#tdl">click me</button>
-    <div id="tdl" class="todal">
-        <div class="todal-header">
-            <h3>My Todal</h3>
-            <button class="todal-close" parent="todal" todal-type="close" todal-target="#tdl">×</button>
-        </div>
+    <div id="tdl" class="todal todal-title='CTR TODAL'">
         <div class="todal-body">
             <p>This is a Todal modal window!</p>
         </div>
         <div class="todal-footer">
-            <button parent="todal" todal-type="close" todal-target="#tdl">Close</button>
+            <button todal-type="close" todal-target="#tdl">Close</button>
         </div>
     </div>
  */
