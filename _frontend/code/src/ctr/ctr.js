@@ -182,18 +182,33 @@ class CtrClass {
         }
     }
 
-    submit(selector, callable) {
-        let elem = document.querySelectorAll(selector);
-        elem.forEach(element => {
-            element.addEventListener('submit', function (event) {
-                event.preventDefault();
-                let formobject = new FormData(element);
-                const dataObject = {};
-                formobject.forEach((value, key) => {
-                    dataObject[key] = value;
-                });
-                callable(formobject, dataObject, event);
-            });
+    submit(selector, callable, clean = true) {
+        let elements = [];
+
+        if (typeof selector === "string") {
+            elements = Array.from(document.querySelectorAll(selector));
+        } else if (selector instanceof HTMLElement) {
+            elements = [selector];
+        } else if (Array.isArray(selector)) {
+            elements = selector.filter(el => el instanceof HTMLElement);
+        }
+
+        const handleSubmit = (element) => (event) => {
+            event.preventDefault();
+            const formData = new FormData(element);
+            const dataObject = Object.fromEntries(formData.entries());
+            callable(formData, dataObject, event);
+        };
+
+        elements.forEach(element => {
+            if (element.tagName !== "FORM") return;
+
+            if (clean && element._submitHandler) {
+                element.removeEventListener('submit', element._submitHandler);
+            }
+            const boundHandler = handleSubmit(element);
+            element._submitHandler = boundHandler;
+            element.addEventListener('submit', boundHandler);
         });
     }
 
