@@ -23,7 +23,7 @@ class CtrLoading {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                z-index: 9999;
+                z-index: 999999;
                 opacity: 0;
                 background: ${this.theme === 'dark' ? 'rgba(0, 0, 0, 0.9)' : 'rgba(255, 255, 255, 0.9)'};
                 transition: opacity 0.3s ease;
@@ -165,17 +165,17 @@ class CtrLoading {
 
         const overlay = document.createElement("div");
         overlay.id = this.loaderId;
-        
+
         overlay.appendChild(this.createSVG());
         document.body.appendChild(overlay);
 
         requestAnimationFrame(() => overlay.style.opacity = "1");
     }
 
-    load(bool = true){
-        if(bool){
+    load(bool = true) {
+        if (bool) {
             this.loadss();
-        }else{
+        } else {
             this.unload();
         }
     }
@@ -201,5 +201,5 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = LOADING;
     module.exports = Loading;
 }
-export {Loading};
+export { Loading };
 export default LOADING;
