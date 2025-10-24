@@ -1,4 +1,5 @@
 import { Tyrux } from "./lib/tyrux.js";
+import errorHandler from "./error.js";
 
 const baseURL = "";   //Backend url end-point
 const baseRoute = "";   // Default api rout
@@ -11,7 +12,7 @@ const headers = {
 
 const config = {
     error: (err, message)=>{ // Tyrax error handler ::CodeTazer
-        alert(message);
+        errorHandler(err, message);
     },
 
     baseURL: backend
