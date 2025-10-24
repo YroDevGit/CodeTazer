@@ -1,13 +1,20 @@
 class CtrElement {
     constructor(element, attribute = {}) {
         this.elem = document.createElement(element);
-        let txt = attribute.text ?? element;
+        let txt = "";
         if (attribute) {
-            for (let a in attribute) {
-                if (a == 'text') {
-                    continue;
+            if (typeof attribute == "string") {
+                txt = attribute;
+            } else {
+                txt = attribute.text ?? element;
+                if (attribute) {
+                    for (let a in attribute) {
+                        if (a == 'text') {
+                            continue;
+                        }
+                        this.elem.setAttribute(a, attribute[a]);
+                    }
                 }
-                this.elem.setAttribute(a, attribute[a]);
             }
         }
         if (element == "input" || element == "textarea") {
@@ -136,10 +143,16 @@ class CtrElement {
 
     static button(attribute, actions = {}) {
         let attr = {};
+        let hasClicked = false;
+        let clickbtn = undefined;
         if (typeof attribute == "string") {
             attr = { ...attr, text: attribute };
         } else {
             attr = attribute;
+        }
+        if (attr.click) {
+            clickbtn = attr.click;
+            delete attr.click;
         }
         let btn = new CtrElement("button", attr);
         if (attr.color) {
@@ -156,10 +169,19 @@ class CtrElement {
                 btn.style.background = bg;
             }
         }
+        if (clickbtn) {
+            if (typeof clickbtn !== "function") return;
+            hasClicked = true;
+            btn.addEventListener("click", () => {
+                clickbtn();
+            });
+            delete attr.ckick;
+        }
         if (actions) {
             console.log(typeof actions);
             if (typeof actions == "function") {
                 btn.addEventListener("click", () => {
+                    if (hasClicked) return;
                     actions();
                 });
             } else if (typeof actions == "object") {
@@ -369,12 +391,14 @@ class CtrElement {
         let attr = {};
         if (typeof attribute == "string") {
             attr.text = attribute;
+        } else if (attribute instanceof HTMLElement) {
+            attr.text = attribute.outerHTML;
         } else {
             attr = attribute;
         }
         const btn = document.createElement("span");
         btn.classList.add("ctr-menu-toggle");
-        btn.textContent = attr.text || "⋮";
+        btn.innerHTML = attr.text || "⋮";
         btn.style.cursor = "pointer";
         Object.entries(attr).forEach(([k, v]) => {
             if (k !== "text") btn.setAttribute(k, v);
