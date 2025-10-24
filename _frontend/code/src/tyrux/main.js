@@ -1,14 +1,12 @@
 import { Tyrux } from "./lib/tyrux.js";
-import errorHandler from "./error.js";
+import { headerHandler, errorHandler } from "./config.js";
+
 
 const baseURL = "";   //Backend url end-point
 const baseRoute = "";   // Default api rout
 const backend = "?be=";  // This app default backend path
 
-const headers = {
-    Authorization: "Bearer sometoken",
-    "Content-Type": "application/json",
-};
+const headers = headerHandler;
 
 const config = {
     error: (err, message)=>{ // Tyrax error handler ::CodeTazer
