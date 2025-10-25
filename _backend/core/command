@@ -725,6 +725,14 @@ if ($route == "+model") {
         echo getenv("database") == null ? "❌ No database yet" : "🗃️  Your Database:  " . getenv("database");
         exit;
     }
+    if ($filename == "link") {
+        if ($extra == "") {
+            echo "❌ parameter not found for (what link) command.\n";
+            exit(1);
+        } else if ($extra == "fontawesome" || $extra == "ficon") {
+            echo "🔗 Download fontawesome @: https://raw.githubusercontent.com/YroDevGit/important/main/ficon.zip\n💻 Or use: https://raw.githubusercontent.com/YroDevGit/important/refs/heads/main/GUIDE/ficon/icon.css\n🌐 or embed: <link rel='stylesheet' href='https://raw.githubusercontent.com/YroDevGit/important/refs/heads/main/GUIDE/ficon/icon.css'>\n\n";
+        }
+    }
 } else if ($route == "author") {
     echo "\n";
     echo "⚡CodeTazer⚡\n\n";
