@@ -474,6 +474,205 @@ class CtrElement {
         return wrapper;
     }
 
+    static image_picker(selector) {
+        const input = typeof selector === "string"
+            ? document.querySelector(selector)
+            : selector;
+
+        if (!input) return console.error("image_picker: input not found");
+        if (input.type !== "file") {
+            console.error("image_picker: element must be <input type='file'>");
+            return;
+        }
+
+        let ctrname = input.getAttribute("name") ?? null;
+
+        if (ctrname) {
+            if (ctrname.includes("[]")) {
+                input.setAttribute("multiple", true);
+            } else {
+                input.removeAttribute("multiple");
+            }
+        }
+
+        const isMultiple = input.hasAttribute("multiple");
+        console.log(isMultiple);
+        input.setAttribute("accept", "image/*");
+        input.style.display = "none";
+        let selectedFiles = [];
+
+        // Custom attributes
+        const wd = input.getAttribute("ctr-width") || "100%";
+        const bg = input.getAttribute("ctr-bg") || "white";
+        const col = input.getAttribute("ctr-color") || "black";
+        const container = document.createElement("div");
+        container.classList.add("ctr-image-picker-container");
+        Object.assign(container.style, {
+            border: "2px solid #e0e0e0",
+            borderRadius: "12px",
+            padding: "15px",
+            background: bg,
+            color: col,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+            maxWidth: wd,
+        });
+
+        const titleText = input.getAttribute("ctr-title") || "";
+        const align = input.getAttribute("ctr-align") || "center";
+
+        if (titleText) {
+            const title = document.createElement("div");
+            title.textContent = titleText;
+            Object.assign(title.style, {
+                fontWeight: "600",
+                fontSize: "15px",
+                marginBottom: "10px",
+                textAlign: align
+            });
+            container.appendChild(title);
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("ctr-image-picker");
+        wrapper.innerHTML = `<p style="margin:0;color:black;">📁 Drop image${isMultiple ? "s" : ""} here or click to browse</p>`;
+        Object.assign(wrapper.style, {
+            border: "2px dashed #ccc",
+            borderRadius: "10px",
+            padding: "20px",
+            textAlign: "center",
+            cursor: "pointer",
+            transition: "0.2s ease",
+            background: "#fafafa",
+        });
+
+        const preview = document.createElement("div");
+        preview.classList.add("ctr-image-preview");
+        Object.assign(preview.style, {
+            display: "flex",
+            flexWrap: "nowrap",
+            gap: "12px",
+            overflowX: isMultiple ? "auto" : "hidden",
+            marginTop: "15px",
+            paddingBottom: "5px",
+            scrollbarWidth: "thin",
+            scrollbarColor: "#ccc transparent"
+        });
+
+        container.appendChild(wrapper);
+        container.appendChild(preview);
+        input.parentNode.insertBefore(container, input);
+        input.parentNode.insertBefore(input, container.nextSibling);
+
+        // Events
+        wrapper.addEventListener("dragover", e => {
+            e.preventDefault();
+            wrapper.style.borderColor = "#007bff";
+            wrapper.style.background = "#f0f8ff";
+        });
+        wrapper.addEventListener("dragleave", e => {
+            e.preventDefault();
+            wrapper.style.borderColor = "#ccc";
+            wrapper.style.background = "#fafafa";
+        });
+        wrapper.addEventListener("drop", e => {
+            e.preventDefault();
+            wrapper.style.borderColor = "#ccc";
+            wrapper.style.background = "#fafafa";
+            handleFiles(e.dataTransfer.files);
+        });
+
+        wrapper.addEventListener("click", () => input.click());
+        input.addEventListener("change", () => handleFiles(input.files));
+
+        function handleFiles(files) {
+            const newFiles = Array.from(files).filter(f => f.type.startsWith("image/"));
+
+            if (!isMultiple) {
+                selectedFiles = newFiles.slice(0, 1); // keep only one
+                preview.innerHTML = ""; // clear previous
+                renderImage(selectedFiles[0]);
+            } else {
+                newFiles.forEach(file => {
+                    const exists = selectedFiles.some(
+                        f => f.name === file.name && f.size === file.size
+                    );
+                    if (!exists) {
+                        selectedFiles.unshift(file); // newest on left
+                        renderImage(file, true);
+                    }
+                });
+            }
+            updateInputFiles();
+        }
+
+        function renderImage(file, prepend = false) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const item = document.createElement("div");
+                item.classList.add("ctr-image-item");
+                Object.assign(item.style, {
+                    position: "relative",
+                    minWidth: "100px",
+                    height: "100px",
+                    flex: "0 0 auto",
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+                    border: "1px solid #eee",
+                });
+
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                Object.assign(img.style, {
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                });
+
+                const close = document.createElement("span");
+                close.innerHTML = "&times;";
+                Object.assign(close.style, {
+                    position: "absolute",
+                    top: "4px",
+                    left: "4px",
+                    background: "#ff4d4d",
+                    color: "white",
+                    borderRadius: "50%",
+                    width: "20px",
+                    height: "20px",
+                    fontSize: "16px",
+                    lineHeight: "20px",
+                    textAlign: "center",
+                    cursor: "pointer",
+                    boxShadow: "0 0 4px rgba(0,0,0,0.3)"
+                });
+
+                close.addEventListener("click", () => {
+                    selectedFiles = selectedFiles.filter(f => f !== file);
+                    item.remove();
+                    updateInputFiles();
+                });
+
+                item.appendChild(img);
+                item.appendChild(close);
+
+                if (prepend) {
+                    preview.insertBefore(item, preview.firstChild);
+                } else {
+                    preview.appendChild(item);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateInputFiles() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(f => dataTransfer.items.add(f));
+            input.files = dataTransfer.files;
+            //input.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+    }
+
     set_attribute(array) {
         if (array) {
             for (let a in array) {

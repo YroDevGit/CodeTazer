@@ -160,14 +160,42 @@ class Request
         return $data;
     }
 
-    static function file($name, $type = null)
+    private static function fileGetter($name, $type = null, $st = 0)
     {
         try {
-            if (!isset($_FILES[$name]) || ! $_FILES[$name]) {
+            $file = null;
+            if (is_string($name)) {
+                if (!isset($_FILES[$name]) || ! $_FILES[$name]) {
+                    return null;
+                }
+                $file = $_FILES[$name];
+            } else {
+                $file = $name;
+            }
+
+            $nm = $file['name'] ?? null;
+
+            if (!$nm) {
                 return null;
             }
 
-            $file = $_FILES[$name];
+            if (is_array(($nm))) {
+                $newarr = [];
+                $ret = [];
+                $count = 0;
+                foreach ($nm as $n) {
+                    $newarr['name'] = $file['name'][$count];
+                    $newarr['error'] = $file['error'][$count];
+                    $newarr['full_path'] = $file['full_path'][$count];
+                    $newarr['size'] = $file['size'][$count];
+                    $newarr['tmp_name'] = $file['tmp_name'][$count];
+                    $newarr['type'] = $file['type'][$count];
+                    $fer = self::file($newarr, $type, 1);
+                    $ret[$count] = $fer;
+                    $count++;
+                }
+                return $ret;
+            }
 
             switch ($type) {
                 case 'name':
@@ -229,6 +257,30 @@ class Request
         }
     }
 
+    public static function file($name, $type = null)
+    {
+        if (!isset($_FILES[$name]) || ! $_FILES[$name]) {
+            return null;
+        }
+        $fl = $_FILES[$name]['name'];
+        if (is_array($fl)) {
+            throw new Exception("File $name should be a single file, given (Collections of file)");
+        }
+        return self::fileGetter($name, $type);
+    }
+
+    public static function files($name, $type = null)
+    {
+        if (!isset($_FILES[$name]) || ! $_FILES[$name]) {
+            return null;
+        }
+        $fl = $_FILES[$name]['name'];
+        if (! is_array($fl)) {
+            throw new Exception("File $name should be a multiple file, given (single file)");
+        }
+        return self::fileGetter($name, $type);
+    }
+
     /**
      * Limit the request to backend
      * @param int $limit : max request
@@ -240,8 +292,9 @@ class Request
         return self::ctrratelimit($limit, $seconds, $route);
     }
 
-    public static function x_rate_limit_message(string|null $message){
-        if($message){
+    public static function x_rate_limit_message(string|null $message)
+    {
+        if ($message) {
             self::$xrateMessage = $message;
         }
     }
