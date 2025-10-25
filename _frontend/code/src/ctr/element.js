@@ -183,7 +183,6 @@ class CtrElement {
             delete attr.ckick;
         }
         if (actions) {
-            console.log(typeof actions);
             if (typeof actions == "function") {
                 btn.addEventListener("click", () => {
                     if (hasClicked) return;
@@ -496,12 +495,13 @@ class CtrElement {
         }
 
         const isMultiple = input.hasAttribute("multiple");
-        console.log(isMultiple);
         input.setAttribute("accept", "image/*");
         input.style.display = "none";
         let selectedFiles = [];
-
-        // Custom attributes
+        let alignment = {};
+        if (!isMultiple) {
+            alignment = { justifyContent: "center" };
+        }
         const wd = input.getAttribute("ctr-width") || "100%";
         const bg = input.getAttribute("ctr-bg") || "white";
         const col = input.getAttribute("ctr-color") || "black";
@@ -555,7 +555,8 @@ class CtrElement {
             marginTop: "15px",
             paddingBottom: "5px",
             scrollbarWidth: "thin",
-            scrollbarColor: "#ccc transparent"
+            scrollbarColor: "#ccc transparent",
+            ...alignment
         });
 
         container.appendChild(wrapper);
@@ -563,7 +564,6 @@ class CtrElement {
         input.parentNode.insertBefore(container, input);
         input.parentNode.insertBefore(input, container.nextSibling);
 
-        // Events
         wrapper.addEventListener("dragover", e => {
             e.preventDefault();
             wrapper.style.borderColor = "#007bff";
@@ -588,8 +588,8 @@ class CtrElement {
             const newFiles = Array.from(files).filter(f => f.type.startsWith("image/"));
 
             if (!isMultiple) {
-                selectedFiles = newFiles.slice(0, 1); // keep only one
-                preview.innerHTML = ""; // clear previous
+                selectedFiles = newFiles.slice(0, 1);
+                preview.innerHTML = "";
                 renderImage(selectedFiles[0]);
             } else {
                 newFiles.forEach(file => {
@@ -597,7 +597,7 @@ class CtrElement {
                         f => f.name === file.name && f.size === file.size
                     );
                     if (!exists) {
-                        selectedFiles.unshift(file); // newest on left
+                        selectedFiles.unshift(file);
                         renderImage(file, true);
                     }
                 });
