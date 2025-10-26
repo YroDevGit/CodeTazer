@@ -473,7 +473,7 @@ class CtrElement {
         return wrapper;
     }
 
-    static image_picker(selector) {
+    static image_picker(selector, clickAction = undefined) {
         const input = typeof selector === "string"
             ? document.querySelector(selector)
             : selector;
@@ -629,6 +629,19 @@ class CtrElement {
                     objectFit: "cover",
                 });
 
+                let details = {
+                    name: file.name,
+                    lastModified: file.lastModified,
+                    type: file.type,
+                    size: file.size,
+                    lastModifiedDate: file.lastModifiedDate,
+                    src: img.src
+                }
+                if (clickAction) {
+                    img.addEventListener("click", () => {
+                        clickAction(details);
+                    });
+                }
                 const close = document.createElement("span");
                 close.innerHTML = "&times;";
                 Object.assign(close.style, {
@@ -652,9 +665,25 @@ class CtrElement {
                     item.remove();
                     updateInputFiles();
                 });
+                let flname = document.createElement("span");
+                flname.style.display = "absolute";
+                Object.assign(flname.style, {
+                    position: "absolute",
+                    bottom: "0",
+                    zIndex: "9999",
+                    left: "0",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    maxWidth: "100%",
+                    background: "white",
+                    opacity: "0.5"
+                });
+                flname.textContent = file.name || "No name";
 
                 item.appendChild(img);
                 item.appendChild(close);
+                item.appendChild(flname);
 
                 if (prepend) {
                     preview.insertBefore(item, preview.firstChild);
@@ -670,6 +699,113 @@ class CtrElement {
             selectedFiles.forEach(f => dataTransfer.items.add(f));
             input.files = dataTransfer.files;
             //input.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+    }
+
+    static popup(options = {}) {
+        const {
+            icon = null,
+            title = "Notification",
+            text = "",
+            imgWidth = 100,
+            imgHeight = 100,
+        } = options;
+
+        const overlay = document.createElement("div");
+        overlay.className = "popup-overlay";
+        Object.assign(overlay.style, {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0, 0, 0, 0.4)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "99999",
+            padding: "15px",
+            boxSizing: "border-box",
+        });
+
+        const box = document.createElement("div");
+        box.className = "popup-box";
+        Object.assign(box.style, {
+            background: "#fff",
+            borderRadius: "12px",
+            boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+            padding: "25px 30px",
+            textAlign: "center",
+            maxWidth: "90%",
+            width: "350px",
+            animation: "popupFadeIn 0.25s ease",
+        });
+
+        if (icon) {
+            const img = new Image();
+            let src = icon;
+            if (icon.startsWith("@")) {
+                src = "_frontend/assets/" + icon.replace("@", "");
+            }
+            img.src = src;
+            img.width = imgWidth;
+            img.height = imgHeight;
+            img.style.objectFit = "contain";
+            img.style.marginBottom = "10px";
+            box.appendChild(img);
+        }
+
+        if (title) {
+            const h3 = document.createElement("h3");
+            h3.textContent = title;
+            Object.assign(h3.style, {
+                margin: "5px 0 10px",
+                fontSize: "1.2rem",
+                color: "#333",
+                fontWeight: "600",
+            });
+            box.appendChild(h3);
+        }
+
+        if (text) {
+            const msg = document.createElement("div");
+            msg.innerHTML = text;
+            Object.assign(msg.style, {
+                fontSize: "0.95rem",
+                color: "#555",
+                marginBottom: "20px",
+            });
+            box.appendChild(msg);
+        }
+
+        const okBtn = CtrElement.button({
+            text: "OKAY",
+            bg: "primary",
+            style: "padding:8px 20px;border-radius:6px;font-weight:500;"
+        }, () => {
+            overlay.remove();
+        });
+        box.appendChild(okBtn);
+
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        if (!document.getElementById("popup-style")) {
+            const style = document.createElement("style");
+            style.id = "popup-style";
+            style.textContent = `
+            @keyframes popupFadeIn {
+              from { opacity: 0; transform: scale(0.9); }
+              to { opacity: 1; transform: scale(1); }
+            }
+            @media (max-width: 480px) {
+              .popup-box {
+                width: 90% !important;
+                padding: 20px !important;
+              }
+            }
+          `;
+            document.head.appendChild(style);
         }
     }
 
