@@ -42,7 +42,7 @@ class CtrTableClass {
         this.perPage = this.data.length || 999999;
         this._render();
     }
-    
+
     _mapHeaders() {
         this.headers = [];
         this.includeMap = [];
@@ -382,7 +382,7 @@ class CtrTableClass {
                 }
                 this.headers.forEach(k => {
                     const td = document.createElement("td");
-                    let cont =  r[k] ?? "";
+                    let cont = r[k] ?? "";
                     if (Array.isArray(cont)) {
                         cont.forEach(item => {
                             if (item instanceof HTMLElement) {
@@ -391,10 +391,10 @@ class CtrTableClass {
                                 td.insertAdjacentHTML('beforeend', item);
                             }
                         });
-                    } 
+                    }
                     else if (cont instanceof HTMLElement) {
                         td.appendChild(cont);
-                    } 
+                    }
                     else {
                         td.innerHTML = cont;
                     }
