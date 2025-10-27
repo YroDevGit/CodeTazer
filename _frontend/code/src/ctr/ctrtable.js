@@ -28,6 +28,21 @@ class CtrTableClass {
         return new CtrTableClass(selector);
     }
 
+    static plain(selector) {
+        const table = new CtrTableClass(selector);
+        table._destroyControls();
+        return table;
+    }
+
+    _destroyControls() {
+        const top = this.container.previousElementSibling;
+        if (top && top.classList.contains("ctrtable-top")) top.remove();
+        const bottom = this.container.nextElementSibling;
+        if (bottom && bottom.classList.contains("ctrtable-bottom")) bottom.remove();
+        this.perPage = this.data.length || 999999;
+        this._render();
+    }
+    
     _mapHeaders() {
         this.headers = [];
         this.includeMap = [];

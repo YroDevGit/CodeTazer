@@ -809,6 +809,235 @@ class CtrElement {
         }
     }
 
+
+    static card_section(parent = null, options = {}, cards = []) {
+        let {
+            bg = "#fff",
+            color = "#000",
+            rowCards = 4,
+            maxCards = 8,
+            attributes = {},
+            title = "",
+            description = "",
+        } = options;
+
+        // Main section container
+        const section = document.createElement("section");
+        Object.assign(section.style, {
+            background: bg,
+            color: color,
+            padding: "30px 20px",
+            boxSizing: "border-box",
+        });
+
+        for (const [key, val] of Object.entries(attributes)) {
+            section.setAttribute(key, val);
+        }
+
+        // Optional header
+        if (title || description) {
+            const header = document.createElement("div");
+            Object.assign(header.style, {
+                textAlign: "center",
+                marginBottom: "25px",
+            });
+
+            if (title) {
+                const h2 = document.createElement("h2");
+                h2.textContent = title;
+                Object.assign(h2.style, {
+                    fontSize: "1.8rem",
+                    margin: "0 0 10px",
+                    color: color,
+                });
+                header.appendChild(h2);
+            }
+
+            if (description) {
+                const p = document.createElement("p");
+                p.textContent = description;
+                Object.assign(p.style, {
+                    fontSize: "1rem",
+                    color: "#555",
+                    margin: 0,
+                });
+                header.appendChild(p);
+            }
+
+            section.appendChild(header);
+        }
+
+        // Cards grid container
+        const grid = document.createElement("div");
+        rowCards++;
+        Object.assign(grid.style, {
+            display: "grid",
+            gridTemplateColumns: `repeat(auto-fill, minmax(${100 / rowCards}%, 1fr))`,
+            gap: "20px",
+        });
+        section.appendChild(grid);
+
+        // Track cards and state
+        let allCards = cards || [];
+        let visibleCount = 0;
+
+        // Create card
+        const createCard = (cardData) => {
+            const { title, text, html, content, image, onClick, click, align } = cardData;
+            const card = document.createElement("div");
+            card.className = "card";
+            let drc = {};
+            if (image) {
+                drc = { flexDirection: "column" };
+            }
+            Object.assign(card.style, {
+                background: "#fff",
+                color: "#333",
+                borderRadius: "10px",
+                boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
+                overflow: "hidden",
+                display: "flex",
+                justifyContent: "space-between",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                cursor: onClick ? "pointer" : "default",
+                padding: "10px 0px",
+                ...drc
+            });
+
+            card.addEventListener("mouseenter", () => {
+                card.style.transform = "translateY(-5px)";
+                card.style.boxShadow = "0 5px 15px rgba(0,0,0,0.2)";
+            });
+            card.addEventListener("mouseleave", () => {
+                card.style.transform = "";
+                card.style.boxShadow = "0 3px 10px rgba(0,0,0,0.1)";
+            });
+
+            if (onClick) card.addEventListener("click", onClick);
+
+            // Image
+            if (image) {
+                const img = new Image();
+                img.src = image.startsWith("@")
+                    ? "_frontend/assets/" + image.replace("@", "")
+                    : image;
+                Object.assign(img.style, {
+                    width: "100%",
+                    height: "180px",
+                    objectFit: "cover",
+                    flexShrink: "0",
+                });
+                card.appendChild(img);
+            } else {
+                const spacer = document.createElement("div");
+                spacer.style.height = "180px";
+                card.appendChild(spacer);
+            }
+
+            // Body
+            const body = document.createElement("div");
+            Object.assign(body.style, {
+                padding: "15px",
+                flexGrow: "1",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+            });
+
+            if (title) {
+                const h4 = document.createElement("h4");
+                h4.textContent = title;
+                Object.assign(h4.style, {
+                    fontSize: "1.1rem",
+                    margin: "0 0 10px",
+                    color: color,
+                });
+                body.appendChild(h4);
+            }
+
+            if (text) {
+                const content = document.createElement("div");
+                if (/<[a-z][\s\S]*>/i.test(text)) content.innerHTML = text;
+                else content.textContent = text;
+                Object.assign(content.style, {
+                    fontSize: "0.95rem",
+                    color: "#555",
+                });
+                body.appendChild(content);
+            }
+            let alg = align ?? "center";
+            if (alg) {
+                body.setAttribute("align", alg);
+            }
+
+            card.appendChild(body);
+            return card;
+        };
+
+        // Render cards
+        const renderCards = () => {
+            grid.innerHTML = "";
+            const showCount = Math.min(visibleCount + maxCards, allCards.length);
+            for (let i = 0; i < showCount; i++) {
+                const card = createCard(allCards[i]);
+                grid.appendChild(card);
+            }
+            visibleCount = showCount;
+
+            // Show More button
+            if (visibleCount < allCards.length) {
+                const showMoreBtn = document.createElement("button");
+                showMoreBtn.textContent = "Show More";
+                Object.assign(showMoreBtn.style, {
+                    gridColumn: "1 / -1",
+                    justifySelf: "center",
+                    padding: "10px 20px",
+                    border: "none",
+                    borderRadius: "6px",
+                    background: "#007bff",
+                    color: "#fff",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    marginTop: "10px",
+                });
+                showMoreBtn.addEventListener("click", renderCards);
+                grid.appendChild(showMoreBtn);
+            }
+        };
+
+        // Initial render
+        renderCards();
+
+        // Add CSS once
+        if (!document.getElementById("card-section-style")) {
+            const style = document.createElement("style");
+            style.id = "card-section-style";
+            style.textContent = `
+            @media (max-width: 768px) {
+              section div[style*="grid"] {
+                grid-template-columns: 1fr !important;
+              }
+            }
+          `;
+            document.head.appendChild(style);
+        }
+
+        // Dynamic add card
+        section.add_card = (cardData) => {
+            allCards.push(cardData);
+            renderCards();
+        };
+
+        // Append to parent
+        if (parent) {
+            const parentEl =
+                typeof parent === "string" ? document.querySelector(parent) : parent;
+            if (parentEl) parentEl.appendChild(section);
+        }
+
+        return section;
+    }
+
     set_attribute(array) {
         if (array) {
             for (let a in array) {
