@@ -28,7 +28,7 @@ class CtrTableClass {
         return new CtrTableClass(selector);
     }
 
-    static plain(selector, addons = {}) {
+    static plain(selector, addons = undefined, triggerSearch = true) {
         const table = new CtrTableClass(selector);
         table._destroyControls();
 
@@ -90,9 +90,9 @@ class CtrTableClass {
 
         let hasSearch = undefined;
         if (typeof addons == "function") {
-            hasSearch = addons;
+            hasSearch = addons ?? undefined;
         } else {
-            hasSearch = addons.search;
+            hasSearch = addons.search ?? undefined;
         }
 
         if (hasSearch) {
@@ -117,6 +117,10 @@ class CtrTableClass {
             input.addEventListener("keypress", (e) => {
                 if (e.key === "Enter") handleSearch();
             });
+
+            if(triggerSearch){
+                hasSearch("", table);
+            }
 
             searchDiv.appendChild(input);
             searchDiv.appendChild(btn);

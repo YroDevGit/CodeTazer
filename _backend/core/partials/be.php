@@ -992,6 +992,13 @@ if (! function_exists("current_be")) {
     }
 }
 
+if(! function_exists("wildcard")){
+    function wildcard(string|null $value){
+        $val = $value ?? "";
+        return "%"+$val+"%";
+    }
+}
+
 if (! function_exists("server_headers")) {
     function server_headers(string|null $searchKey = null)
     {
