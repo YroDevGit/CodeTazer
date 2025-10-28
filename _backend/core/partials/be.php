@@ -1000,10 +1000,17 @@ if (! function_exists("wildcard")) {
     }
 }
 
-if (! function_exists("paginate")) {
-    function paginate($page = 1, $limit = 10)
+if (! function_exists("paginate_offset")) {
+    function paginate_offset($page = 1, $limit = 10)
     {
         return max(0, ((int)$page - 1) * $limit);
+    }
+}
+
+if (! function_exists("db_paginate")) {
+    function db_paginate($page = 1, $limit = 10)
+    {
+        return ["limit" => $limit, "offset" => paginate_offset($page, $limit)];
     }
 }
 
