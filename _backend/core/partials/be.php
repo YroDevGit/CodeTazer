@@ -995,7 +995,7 @@ if (! function_exists("current_be")) {
 if(! function_exists("wildcard")){
     function wildcard(string|null $value){
         $val = $value ?? "";
-        return "%"+$val+"%";
+        return "%".$val."%";
     }
 }
 
