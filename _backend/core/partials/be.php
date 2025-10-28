@@ -860,7 +860,7 @@ if (! function_exists("use_middleware")) {
     function use_middleware(string $middleware)
     {
         $model = substr($middleware, -4) == ".php" ? $middleware : $middleware . ".php";
-        if(! file_exists("_backend/middleware/" . $model)){
+        if (! file_exists("_backend/middleware/" . $model)) {
             throw new Exception("Middleware '$middleware' not exist.!");
         }
         include "_backend/middleware/" . $model;
@@ -992,10 +992,17 @@ if (! function_exists("current_be")) {
     }
 }
 
-if(! function_exists("wildcard")){
-    function wildcard(string|null $value){
+if (! function_exists("wildcard")) {
+    function wildcard(string|null $value)
+    {
         $val = $value ?? "";
-        return "%".$val."%";
+        return "%" . $val . "%";
+    }
+}
+
+if (! function_exists("paginate")) {
+    function paginate($page = 1, $limit = 10) {
+        return max(0, ((int)$page - 1) * $limit);
     }
 }
 
