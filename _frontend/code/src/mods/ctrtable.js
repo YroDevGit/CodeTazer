@@ -31,7 +31,7 @@ class CtrTableClass {
     static plain(selector, addons = {}) {
         const table = new CtrTableClass(selector);
         table._destroyControls();
-    
+
         if (!document.getElementById("ctrplain-style")) {
             const style = document.createElement("style");
             style.id = "ctrplain-style";
@@ -79,38 +79,45 @@ class CtrTableClass {
             `;
             document.head.appendChild(style);
         }
-    
+
         const top = document.createElement("div");
         top.className = "ctrplain-top";
         const bottom = document.createElement("div");
         bottom.className = "ctrplain-bottom";
-    
+
         table.container.parentNode.insertBefore(top, table.container);
         table.container.after(bottom);
-    
-        if (addons.search) {
+
+        let hasSearch = undefined;
+        if (typeof addons == "function") {
+            hasSearch = addons;
+        } else {
+            hasSearch = addons.search;
+        }
+
+        if (hasSearch) {
             const searchDiv = document.createElement("div");
             searchDiv.className = "ctrplain-search";
-    
+
             const input = document.createElement("input");
             input.type = "text";
             input.placeholder = "Search...";
             input.className = "ctrplain-search-input";
-    
+
             const btn = document.createElement("button");
             btn.textContent = "Search";
             btn.className = "ctrplain-search-btn";
-    
+
             const handleSearch = () => {
                 const value = input.value.trim();
-                addons.search.call(table, value, table);
+                hasSearch(value, table);
             };
-    
+
             btn.addEventListener("click", handleSearch);
             input.addEventListener("keypress", (e) => {
                 if (e.key === "Enter") handleSearch();
             });
-    
+
             searchDiv.appendChild(input);
             searchDiv.appendChild(btn);
             top.appendChild(searchDiv);
@@ -118,11 +125,11 @@ class CtrTableClass {
         const pagDiv = document.createElement("div");
         pagDiv.className = "ctrplain-paginate";
         bottom.appendChild(pagDiv);
-    
+
         table.paginate = (totalPages, callback, autotrigger = true) => {
             pagDiv.innerHTML = "";
             if (!totalPages || totalPages <= 1) return;
-    
+
             const select = document.createElement("select");
             for (let i = 1; i <= totalPages; i++) {
                 const opt = document.createElement("option");
@@ -131,22 +138,22 @@ class CtrTableClass {
                 select.appendChild(opt);
             }
 
-            if(autotrigger){
+            if (autotrigger) {
                 const page = 1;
                 callback.call(table, page, table);
             }
-    
+
             select.addEventListener("change", (e) => {
                 const page = parseInt(e.target.value);
                 callback.call(table, page, table);
             });
-    
+
             pagDiv.appendChild(select);
         };
-    
+
         return table;
     }
-     
+
     _destroyControls() {
         const top = this.container.previousElementSibling;
         if (top && top.classList.contains("ctrtable-top")) top.remove();
