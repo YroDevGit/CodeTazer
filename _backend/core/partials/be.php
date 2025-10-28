@@ -1001,7 +1001,8 @@ if (! function_exists("wildcard")) {
 }
 
 if (! function_exists("paginate")) {
-    function paginate($page = 1, $limit = 10) {
+    function paginate($page = 1, $limit = 10)
+    {
         return max(0, ((int)$page - 1) * $limit);
     }
 }
