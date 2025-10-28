@@ -97,10 +97,12 @@ class CtrTableClass {
         table.container.after(bottom);
 
         let hasSearch = undefined;
-        if (typeof addons == "function") {
-            hasSearch = addons ?? undefined;
-        } else {
-            hasSearch = addons.search ?? undefined;
+        if (addons) {
+            if (typeof addons == "function") {
+                hasSearch = addons ?? undefined;
+            } else {
+                hasSearch = addons.search ?? undefined;
+            }
         }
 
         if (hasSearch) {
