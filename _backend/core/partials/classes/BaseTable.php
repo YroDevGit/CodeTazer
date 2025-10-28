@@ -275,13 +275,15 @@ class BaseTable
     {
         $clauses = [];
         foreach ($where as $key => $val) {
-            if (strtolower($key) === "or") {
-                [$subClause, $subBindings] = $this->buildWhere($val, "OR", $bindings, $paramIndex);
-                $clauses[] = "($subClause)";
-                $bindings = array_merge($bindings, $subBindings);
-            } elseif (strtolower($key) === "and") {
-                [$subClause, $subBindings] = $this->buildWhere($val, "AND", $bindings, $paramIndex);
-                $clauses[] = "($subClause)";
+            if (strtolower($key) === "or" || strtolower($key) === "and") {
+                $subClauses = [];
+                $subBindings = [];
+                foreach ($val as $cond) {
+                    [$clause, $bind] = $this->buildWhere($cond, strtoupper($key), $bindings, $paramIndex);
+                    if ($clause) $subClauses[] = $clause;
+                    $subBindings = array_merge($subBindings, $bind);
+                }
+                $clauses[] = "(" . implode(" " . strtoupper($key) . " ", $subClauses) . ")";
                 $bindings = array_merge($bindings, $subBindings);
             } elseif (strtolower($key) === "like") {
                 foreach ($val as $col => $v) {

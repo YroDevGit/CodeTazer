@@ -24,6 +24,12 @@ class CtrTableClass {
         this._render();
     }
 
+    clear() {
+        this.data = [];
+        this.filtered = [...this.data];
+        this._render(true);
+    }
+
     static init(selector) {
         return new CtrTableClass(selector);
     }
@@ -40,7 +46,7 @@ class CtrTableClass {
                 display: flex;
                 justify-content: flex-end;
                 align-items: center;
-                padding: 8px;
+                padding: 8px 0px;
                 flex-wrap: wrap;
                 gap: 10px;
             }
@@ -55,6 +61,7 @@ class CtrTableClass {
                 border-radius: 6px;
                 min-width: 180px;
                 font-size: 14px;
+                outline: none;
             }
             .ctrplain-search-btn {
                 padding: 6px 12px;
@@ -75,6 +82,7 @@ class CtrTableClass {
                 border-radius: 6px;
                 background: #f8f9fa;
                 font-size: 14px;
+                outline: none;
             }
             `;
             document.head.appendChild(style);
@@ -100,7 +108,7 @@ class CtrTableClass {
             searchDiv.className = "ctrplain-search";
 
             const input = document.createElement("input");
-            input.type = "text";
+            input.type = "search";
             input.placeholder = "Search...";
             input.className = "ctrplain-search-input";
 
@@ -113,12 +121,20 @@ class CtrTableClass {
                 hasSearch(value, table);
             };
 
+            input.addEventListener('input', (e) => {
+                setTimeout(() => {
+                    if (input.value === '') {
+                        handleSearch();
+                    }
+                }, 0);
+            });
+
             btn.addEventListener("click", handleSearch);
             input.addEventListener("keypress", (e) => {
                 if (e.key === "Enter") handleSearch();
             });
 
-            if(triggerSearch){
+            if (triggerSearch) {
                 hasSearch("", table);
             }
 
@@ -132,8 +148,7 @@ class CtrTableClass {
 
         table.paginate = (totalPages, callback, autotrigger = true) => {
             pagDiv.innerHTML = "";
-            if (!totalPages || totalPages <= 1) return;
-
+            totalPages = totalPages || 1;
             const select = document.createElement("select");
             for (let i = 1; i <= totalPages; i++) {
                 const opt = document.createElement("option");
