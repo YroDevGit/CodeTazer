@@ -810,7 +810,7 @@ class CtrElement {
     }
 
 
-    static card_section(parent = null, options = {}, cards = []) {
+    static card_section(parent = null, options = {}, cards = [], loadmore = undefined) {
         let {
             bg = "#fff",
             color = "#000",
@@ -821,7 +821,6 @@ class CtrElement {
             description = "",
         } = options;
 
-        // Main section container
         const section = document.createElement("section");
         Object.assign(section.style, {
             background: bg,
@@ -834,7 +833,6 @@ class CtrElement {
             section.setAttribute(key, val);
         }
 
-        // Optional header
         if (title || description) {
             const header = document.createElement("div");
             Object.assign(header.style, {
@@ -867,7 +865,6 @@ class CtrElement {
             section.appendChild(header);
         }
 
-        // Cards grid container
         const grid = document.createElement("div");
         rowCards++;
         Object.assign(grid.style, {
@@ -877,13 +874,13 @@ class CtrElement {
         });
         section.appendChild(grid);
 
-        // Track cards and state
         let allCards = cards || [];
         let visibleCount = 0;
 
-        // Create card
         const createCard = (cardData) => {
-            const { title, text, html, content, image, onClick, click, align } = cardData;
+            let { title, text, html, content, image, onClick, click, action, align } = cardData;
+            onClick = onClick ?? click ?? action ?? undefined;
+            text = text ?? html ?? content ?? undefined;
             const card = document.createElement("div");
             card.className = "card";
             let drc = {};
@@ -915,7 +912,6 @@ class CtrElement {
 
             if (onClick) card.addEventListener("click", onClick);
 
-            // Image
             if (image) {
                 const img = new Image();
                 img.src = image.startsWith("@")
@@ -933,8 +929,6 @@ class CtrElement {
                 spacer.style.height = "180px";
                 card.appendChild(spacer);
             }
-
-            // Body
             const body = document.createElement("div");
             Object.assign(body.style, {
                 padding: "15px",
@@ -974,20 +968,37 @@ class CtrElement {
             return card;
         };
 
-        // Render cards
+        let temp = document.createElement("div");
+        let btncontainer = document.createElement("div");
         const renderCards = () => {
             grid.innerHTML = "";
             const showCount = Math.min(visibleCount + maxCards, allCards.length);
+            if(showCount == 0){
+                temp.setAttribute("align", "center");
+                Object.assign(temp.style, {
+                    padding: "20px",
+                    display: "block"
+                });
+                let tx = document.createElement("span");
+                tx.textContent = "No data available";
+                btncontainer.style.display = "none";
+                temp.appendChild(tx);
+                section.appendChild(temp);
+            }else{
+                temp.style.display = "none";
+                btncontainer.style.display = "block";
+            }
+            
             for (let i = 0; i < showCount; i++) {
                 const card = createCard(allCards[i]);
                 grid.appendChild(card);
             }
             visibleCount = showCount;
 
-            // Show More button
             if (visibleCount < allCards.length) {
                 const showMoreBtn = document.createElement("button");
                 showMoreBtn.textContent = "Show More";
+                showMoreBtn.style.display = "none";
                 Object.assign(showMoreBtn.style, {
                     gridColumn: "1 / -1",
                     justifySelf: "center",
@@ -1005,10 +1016,8 @@ class CtrElement {
             }
         };
 
-        // Initial render
         renderCards();
 
-        // Add CSS once
         if (!document.getElementById("card-section-style")) {
             const style = document.createElement("style");
             style.id = "card-section-style";
@@ -1022,17 +1031,53 @@ class CtrElement {
             document.head.appendChild(style);
         }
 
-        // Dynamic add card
         section.add_card = (cardData) => {
             allCards.push(cardData);
             renderCards();
         };
 
-        // Append to parent
         if (parent) {
             const parentEl =
                 typeof parent === "string" ? document.querySelector(parent) : parent;
             if (parentEl) parentEl.appendChild(section);
+        }
+
+        if (loadmore) {
+            if (typeof loadmore == "function") {
+                makeLoadMore(loadmore);
+            } else if (typeof loadmore == "array") {
+                if (loadmore.action && typeof loadmore.action == "function") {
+                    let txt = loadmore.text || "Load more";
+                    let bg = loadmore.bg || "#007bff";
+                    let col = loadmore.color || "white";
+                    makeLoadMore(loadmore.action, txt, bg, col);
+                }
+            }
+
+            function makeLoadMore(action, text = "Load more", bg = "#007bff", color = "white") {
+                btncontainer.setAttribute("align", "center");
+                Object.assign(btncontainer.style, {
+                    padding: "20px 0px",
+                });
+                let btn = document.createElement("button");
+                Object.assign(btn.style, {
+                    border: "none",
+                    padding: "0.3rem 0.8rem",
+                    borderRadius: "4px",
+                    fontSize: "0.9rem",
+                    cursor: "pointer",
+                    background: bg,
+                    color: color
+                });
+                btn.textContent = text;
+                if (typeof action == "function") {
+                    btn.addEventListener("click", () => {
+                        action(section, btn);
+                    });
+                }
+                btncontainer.append(btn);
+                section.append(btncontainer);
+            }
         }
 
         return section;
