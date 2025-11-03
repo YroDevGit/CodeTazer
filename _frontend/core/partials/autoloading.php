@@ -142,12 +142,26 @@ if (! function_exists("import_func")) {
 if (!function_exists("import_script")) {
     function import_script(string ...$filenames)
     {
+        /**
+         * This is modern import_script, works for modern browsers
+         * For new CodeTazeR import_script()
+         * run: php ctr update file _frontend\core\partials\importer.js --mkdir
+         * 
+         */
+        $scripts = [];
         foreach ($filenames as $flx) {
             $fl = str_ends_with($flx, '.js') ? $flx : $flx . '.js';
-            echo '<script type="module" src="' . htmlspecialchars(codepath('script/' . $fl), ENT_QUOTES) . '"></script>' . PHP_EOL;
+            $scripts[] = htmlspecialchars(codepath('script/' . $fl), ENT_QUOTES);
         }
+        /**
+         * This line is hidden after script execution
+         * only import script at the head for coding best practices.
+         * @author CodeTazeR -- Tyrone Limen Malocon
+         */
+        echo '<script type="module" src="' . '_frontend/core/partials/importer.js' . '" data-import=\'' . json_encode($scripts) . '\'></script>' . PHP_EOL;
     }
 }
+
 /**
  * Generic import package for ctr js files,
  * You can use js file name with or without .js extension
