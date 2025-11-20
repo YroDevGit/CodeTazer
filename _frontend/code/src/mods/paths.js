@@ -41,6 +41,10 @@ class CtrPath {
         }
         return url;
     }
+
+    assets(file){
+        return `_frontend/assets/${file}`;
+    }
 }
 
 const PATH = new CtrPath();
