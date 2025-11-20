@@ -22,7 +22,7 @@ class CtrTodal {
     }
 
     static bindGlobalButtons() {
-        const buttons = document.querySelectorAll('[todal-type="hide"], [todal-type="show"], [todal-type="close"]');
+        const buttons = document.querySelectorAll('[todal-type="hide"], [todal-type="show"], [todal-type="close"], [todal-type="open"]');
         buttons.forEach((btn) => {
             const type = btn.getAttribute("todal-type");
             const target = btn.getAttribute("todal-target");
@@ -34,7 +34,7 @@ class CtrTodal {
 
             const instance = new CtrTodal(modalSelector);
             btn.addEventListener("click", () =>
-                type === "show" ? instance.show() : instance.hide()
+                type === "show" || type === "open" ? instance.show() : instance.hide()
             );
         });
     }
@@ -385,7 +385,7 @@ export default Todal;
 
 /**
  *Usage 
- * <button parent="todal" todal-type="open" todal-target="#tdl">click me</button>
+ * <button parent="todal" todal-type="show" todal-target="#tdl">click me</button>
     <div id="tdl" class="todal todal-title='CTR TODAL'">
         <div class="todal-body">
             <p>This is a Todal modal window!</p>
