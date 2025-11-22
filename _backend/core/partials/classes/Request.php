@@ -257,6 +257,11 @@ class Request
         }
     }
 
+    public static function page()
+    {
+        return self::headers("ctr_pgntn_x_page");
+    }
+
     public static function file($name, $type = null)
     {
         if (!isset($_FILES[$name]) || ! $_FILES[$name]) {

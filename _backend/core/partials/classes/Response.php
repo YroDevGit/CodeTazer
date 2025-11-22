@@ -6,6 +6,7 @@ class Response
 {
     protected static $code = 200;
     protected static $data = null;
+    protected static $count = null;
     protected static $details = null;
     protected static $errors = null;
     protected static $message = null;
@@ -177,6 +178,13 @@ class Response
         return new self;
     }
 
+    public static function count(int|null $count)
+    {
+        $message = is_null($count) ? 0 : $count;
+        self::$count = $message;
+        return new self;
+    }
+
     public static function text(mixed $text)
     {
         $text = is_null($text) ? "" : $text;
@@ -212,6 +220,7 @@ class Response
         $data = self::$data;
         $errors = self::$errors;
         $message =  self::$message;
+        $count =  self::$count;
         $code = self::$code;
         $text = self::$text;
         $parameters = self::$param;
@@ -221,6 +230,9 @@ class Response
         }
         if (! is_null($errors)) {
             $response['errors'] = $errors;
+        }
+        if (! is_null($count)) {
+            $response['count'] = $count;
         }
         if (! is_null($details)) {
             $response['details'] = $details;

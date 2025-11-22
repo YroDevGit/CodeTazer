@@ -152,7 +152,8 @@ const opt = {
     test: undefined,
     inspect: undefined,
     csrf: true,
-    route: undefined
+    route: undefined,
+    page: undefined,
 };
 
 const tyrax = { // tyrux default config :: CodeTazeR
