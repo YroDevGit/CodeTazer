@@ -271,4 +271,17 @@ class Response
     {
         self::push($status);
     }
+
+    public static function dump($details = null){
+        $response = [
+            "code" => getenv("error_code"),
+            "post" => postdata(),
+            "get" => $_GET,
+            "headers" => server_headers()
+        ];
+        if($details){
+            $response['details'] = $details;
+        }
+        self::json($response, $status);
+    }
 }

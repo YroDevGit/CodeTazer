@@ -22,15 +22,28 @@ require_once 'vendor/autoload.php';
  * Definitions of important constants
  */
 
+/**
+ * Define front-end path as fe
+ */
 if (! defined("fe")) {
     define("fe", "_frontend");
 }
+//end fe
+
+/**
+ * fe_page is page path
+ */
 if (! defined("fe_page")) {
     define("fe_page", "_frontend/pages");
 }
+//End fe_page
+/**
+ * be is for backend path
+ */
 if (! defined("be")) {
     define("be", "_backend");
 }
+//end be
 /**
  * Some basic and global functions here...
  */

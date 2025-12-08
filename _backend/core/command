@@ -595,6 +595,43 @@ if ($route == "+script") {
     }
 }
 
+if ($route == "+routing") {
+    if ($filename == "") {
+        echo "❌ Please provide a filename for the routing.\n";
+        exit(1);
+    }
+    $phpFile = "_backend/auto/routing/" . $filename . ".php";
+
+    $phpContent = <<<EOT
+    <?php
+    use Classes\Routing;
+
+
+    \$routes = [
+        //Add routes here...
+    ];
+
+    Routing::group_route(\$routes, function () {
+        // Add auto load function here...
+        
+    });
+
+    EOT;
+
+    if (file_exists($phpFile)) {
+        echo "❌ File already exists. Please choose a different name.\n";
+        exit(1);
+    } else {
+        if (file_put_contents($phpFile, $phpContent) !== false) {
+            echo "✔️ Routng file created successfully: $phpFile\n";
+            exit(0);
+        } else {
+            echo "❌ Failed to create Routing file.\n";
+            exit(1);
+        }
+    }
+}
+
 if ($route == "+model") {
     if ($filename == "") {
         echo "❌ Please provide a filename for the model.\n";
