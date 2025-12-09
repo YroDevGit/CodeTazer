@@ -25,6 +25,7 @@ class BaseTable
     private static $totalRecords;
     private static $totalPages;
     private static $currentPage;
+    private static $isActive = 3;
 
     protected $attributes = [];
 
@@ -147,11 +148,37 @@ class BaseTable
         return sizeof($find);
     }
 
+    /**
+     * Initialize current table to fetch only
+     * if: true / 1 -> display all active = 1
+     * if: false / 0 -> display all active = 0
+     */
+    public static function init_active(int|bool $active)
+    {
+        if (is_bool($active)) {
+            if ($active) {
+                self::$isActive = 1;
+            } else {
+                self::$isActive = 0;
+            }
+        } else {
+            self::$isActive = $active;
+        }
+    }
+
     public static function get(array $where, array $extra = []): array
     {
         $self = static::instance();
         $bindings = [];
         $sql = "SELECT * FROM `{$self->table}`";
+
+        if ($self::$isActive != 3) {
+            if ($self::$isActive == 0) {
+                $where['active'] = 0;
+            } else {
+                $where['active'] = 1;
+            }
+        }
 
         if (!empty($where)) {
             [$whereClause, $bindings] = $self->buildWhere($where);
@@ -193,6 +220,14 @@ class BaseTable
         $self = static::instance();
         if (!is_array($where)) {
             throw new \InvalidArgumentException("Where conditions must be an associative array.");
+        }
+
+        if ($self::$isActive != 3) {
+            if ($self::$isActive == 0) {
+                $where['active'] = 0;
+            } else {
+                $where['active'] = 1;
+            }
         }
 
         $select = "*";
@@ -457,6 +492,18 @@ class BaseTable
     public static function insert(array $data)
     {
         return self::create($data);
+    }
+
+    public static function deactivate($where)
+    {
+        $data['active'] = 0;
+        return self::update($where, $data);
+    }
+
+    public static function activate($where)
+    {
+        $data['active'] = 1;
+        return self::update($where, $data);
     }
 
     public static function update(array $where, array $data)

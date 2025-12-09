@@ -52,7 +52,7 @@ class Migration
         }
     }
 
-    public static function table(string $tablename, array $columns, bool $timestamp = false): bool
+    public static function table(string $tablename, array $columns, bool $timestamp = false, $active = false): bool
     {
         $db = getenv("database");
         if (empty($db)) {
@@ -64,6 +64,9 @@ class Migration
         if ($timestamp) {
             $columns['created_at'] = "datetime";
             $columns['updated_at'] = "datetime";
+        }
+        if($active){
+            $columns['active'] = ["int"=>1, "default"=>1];
         }
 
         $pdo = pdo($db);
@@ -168,7 +171,7 @@ class Migration
 
     public static function table_ts(string $tablename, array $columns)
     {
-        return self::table($tablename, $columns, true);
+        return self::table($tablename, $columns, true, true);
     }
 
     private static function buildColumnDefinition(string $colName, $definition, bool $includeNullDefault = true): string
