@@ -141,10 +141,12 @@ function BasixsErrorException($e, $bee, string $errorcode = "backend_error_code"
             "msg" => $message,
             "message" => $cmsg,
             "data" => [],
-            "post" => postdata(),
-            "get" => $_GET,
-            "route" => $myerror['backend'] ?? $bee
-
+            "request" => [
+                "post" => postdata(),
+                "get" => $_GET,
+                "route" => $myerror['backend'] ?? $bee,
+                "headers" => server_headers()
+            ]
         ];
     }
     add_sql_log($message . " :: Trace= " . $getMessage, "be_errors", $hascode . " @" . $bee);
