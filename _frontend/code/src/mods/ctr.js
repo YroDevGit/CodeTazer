@@ -158,7 +158,7 @@ class CtrClass {
                         attrs[attr.name] = attr.value;
                     }
                     element.addEventListener("click", function () {
-                        callable(attrs);
+                        callable(element, attrs);
                     });
                 });
             } else {
