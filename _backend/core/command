@@ -684,6 +684,15 @@ if ($route == "+model") {
         echo "❌ Please provide a valid route name, Example: admin/add.\n";
         exit(1);
     }
+
+    $apipath = "";
+    if ($extra) {
+        if ($extra != "--api") {
+            echo "❌ unable add route format.\n";
+            exit(1);
+        }
+        $apipath = "api/";
+    }
     $newname = ucfirst($filename);
     $exp = explode("/", $filename);
     $fdr = $exp[0];
@@ -700,7 +709,7 @@ if ($route == "+model") {
     $counter = 0;
     echo "\n";
     foreach ($exp1 as $ee) {
-        $filename = $fpath . "/" . $ee;
+        $filename = $apipath . $fpath . "/" . $ee;
         $phpFile = "_backend/_routes/" . $filename . ".php";
 
         $phpContent = <<<EOT

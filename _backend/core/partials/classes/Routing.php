@@ -18,10 +18,21 @@ class Routing
         }
     }
 
-    public static function route_middleware(array $routes, string $midleware, $included = true){
-        self::route_filtering($routes, function(){
+    public static function route_middleware(array $routes, string $midleware, $included = true)
+    {
+        self::route_filtering($routes, function () {
             use_middleware($midleware);
         }, $included);
+    }
+
+
+    public static function api_group(array $api, callable $callable)
+    {
+        $arr = [];
+        foreach ($api as $a) {
+            $arr[] = "api/" . $a;
+        }
+        return self::group_route($arr, $callable);
     }
 
     private static function route_filtering(array $routes, callable $func, $included = true)

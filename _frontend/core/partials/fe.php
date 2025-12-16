@@ -441,4 +441,34 @@ if (! function_exists("php_file")) {
     }
 }
 
+if (! function_exists("ctr_read_all_routes")) {
+    function ctr_all_routes($phpfile = false)
+    {
+        $baseDir = '_backend/_routes';
+        $arrs = [];
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $item) {
+            $relativePath = str_replace($baseDir . DIRECTORY_SEPARATOR, '', $item->getPathname());
+
+            $relativePath = str_replace(DIRECTORY_SEPARATOR, "/", $relativePath);
+            if ($item->isDir()) {
+                continue;
+            } else {
+                if(str_starts_with($relativePath, "api/")) continue;
+                if($phpfile){
+                    $arrs[] = $relativePath;
+                }else{
+                    $arrs[] = basixs_php_rem($relativePath);
+                }
+            }
+        }
+        return $arrs;
+    }
+}
+
 define('page', page(""));
