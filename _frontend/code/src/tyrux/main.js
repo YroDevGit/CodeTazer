@@ -1,5 +1,6 @@
 import { Tyrux } from "./lib/tyrux.js";
 import { headerHandler, errorHandler } from "./config.js";
+import { Loading } from "../mods/loading.js";
 
 
 const baseURL = "";   //Backend url end-point
@@ -101,6 +102,12 @@ const tyrequest = { // For raw/universal request :: CodeYRO
 const configure = {
     _mergeOptions(option, tyrax) {
         const global = tyrax.config || {};
+        if(! option?.wait){
+            option.wait = () => Loading.load(true);
+        }
+        if(! option?.done){
+            option.done = () => Loading.load(false);
+        }
         const merged = {
             ...global,
             ...option,
