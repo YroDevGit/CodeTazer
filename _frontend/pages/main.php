@@ -1,6 +1,6 @@
 <?php
 $v = "v9.5";
-
+$version = 9;
 $code = [
   "_frontend\pages\main.php",
   "_backend/_routes/test/sample.php",
