@@ -252,13 +252,18 @@ if ($route == "update") {
         $targetFile = $root . DIRECTORY_SEPARATOR . $extra;
         $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/" . str_replace('\\', '/', $extra);
 
-        if ($extra == "index.php") {
+        if ($extra == "index.php" || $extra == "index") {
             $targetFile = $root . DIRECTORY_SEPARATOR . "index.php";
             $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/index.php";
         }
         if ($extra == "command") {
             $targetFile = $root . DIRECTORY_SEPARATOR . "_backend\core\command";
             $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/_backend/core/command";
+        }
+
+        if ($ext == "--main") {
+            $targetFile = $root . DIRECTORY_SEPARATOR . "_backend\core\command";
+            $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/_frontend/pages/main.php";
         }
 
         if (!file_exists($targetFile)) {
@@ -310,17 +315,31 @@ if ($route == "update") {
     }
 }
 
-if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import") {
+if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import" || $route == "dbtables") {
     include "_frontend/core/partials/loadenv.php";
     $dbname = getenv("database");
     if (! $dbname) {
-        echo "❌ No Database found @ .env";
+        echo "❌ No Database found @ .env\n\n";
         exit;
     }
 
     if ($filename == "") {
         echo "❌ Please filename for migration.\n";
         exit(1);
+    }
+
+    if ($route == "dbtables") {
+        if ($extra == "--auto" || $extra == "--reflect" || $extra == "--sync") {
+            echo "\n\n";
+            echo "Auto sync base table, please wait....";
+            echo "\n\n";
+            AddAllBaseTable($dbname);
+            echo "\n-------\n\n";
+            echo "✔️ Done\n";
+        } else {
+            echo "❌ Invalid dbtables command (You mean: php ctr dbtables --reflect ?).\n\n";
+            exit(1);
+        }
     }
 
     include "_backend/core/partials/be.php";
