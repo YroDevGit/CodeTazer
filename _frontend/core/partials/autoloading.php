@@ -135,7 +135,7 @@ if (! function_exists("import_func")) {
 }
 /**
  * Generic import js script file
- * this import file from :_frontend/code/script
+ * this import file from :_frontend/views/code/script
  * @param string filenames
  * @author Tyrone Limen Malocon
  */
@@ -157,7 +157,7 @@ if (!function_exists("import_packages")) {
     function import_packages(string ...$packages)
     {
         /**
-         * Code path @_frontend/code
+         * Code path @_frontend/views/code
          * @param null no param
          * @author Tyrone Limen Malocon
          * @author CodeYro

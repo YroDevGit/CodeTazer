@@ -11,7 +11,7 @@ class Mail
 
     public static function email_template(string $email_template, array $content = [])
     {
-        $template = "_frontend/pages/" . $email_template . ".php";
+        $template = "_frontend/views/pages/" . $email_template . ".php";
         if (file_exists($template)) {
             if (!empty($content)) {
                 extract($content);

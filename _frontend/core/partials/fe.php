@@ -8,10 +8,10 @@ if (getenv("rootpath") == "" || getenv("rootpath") == null) {
     $_ENV['rootpath'] = $rootpath;
 }
 define('rootpath', getenv('rootpath'));
-define('pages', '_frontend/pages');
+define('pages', '_frontend/views/pages');
 define('_backend', '_backend');
-define('assets', '_frontend/assets');
-define('codepath', '_frontend/code');
+define('assets', '_frontend/views/assets');
+define('codepath', '_frontend/views/code');
 
 define('SUCCESS', getenv('success_code'));
 
@@ -374,13 +374,13 @@ if (! function_exists("view_page")) {
     function view_page(string $page, array $variables = [])
     {
         $page = substr($page, -4) == ".php" ? $page : $page . ".php";
-        if (file_exists("_frontend/pages/$page")) {
+        if (file_exists("_frontend/views/pages/$page")) {
             if (!empty($variables)) {
                 extract($variables);
             }
-            include "_frontend/pages/$page";
+            include "_frontend/views/pages/$page";
         } else {
-            echo "<b style='color:red;background:black;padding:5px;font-weight:bold;'>Page $page doesn't exist.! Please check _frontend/pages/$page</b>";
+            echo "<b style='color:red;background:black;padding:5px;font-weight:bold;'>Page $page doesn't exist.! Please check _frontend/views/pages/$page</b>";
         }
     }
 }
@@ -389,13 +389,13 @@ if (! function_exists("include_page")) {
     function include_page(string $page, array $variables = [])
     {
         $page = substr($page, -4) == ".php" ? $page : $page . ".php";
-        if (file_exists("_frontend/includes/$page")) {
+        if (file_exists("_frontend/views/includes/$page")) {
             if (!empty($variables)) {
                 extract($variables);
             }
-            include "_frontend/includes/$page";
+            include "_frontend/views/includes/$page";
         } else {
-            echo "<b style='color:red;background:black;padding:5px;font-weight:bold;'>Include page $page doesn't exist.! Please check _frontend/includes/$page</b>";
+            echo "<b style='color:red;background:black;padding:5px;font-weight:bold;'>Include page $page doesn't exist.! Please check _frontend/views/includes/$page</b>";
         }
     }
 }

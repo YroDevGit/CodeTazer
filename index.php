@@ -34,7 +34,7 @@ if (! defined("fe")) {
  * fe_page is page path
  */
 if (! defined("fe_page")) {
-    define("fe_page", "_frontend/pages");
+    define("fe_page", "_frontend/views/pages");
 }
 //End fe_page
 /**
@@ -227,7 +227,7 @@ try {
         $bee = $bb[0];
         $param = isset($bb[1]) ? $bb[1] : "";
         $get = substr($bee, -4) == ".php" ? $bee : $bee . ".php";
-        $target = "_frontend/pages/$get";
+        $target = "_frontend/views/pages/$get";
         if ($is_function) {
             $target = "_frontend/functions/$get";
         }
@@ -258,12 +258,12 @@ try {
     } else {
         if ($get == "" || $get == null || $get == false) {
             $mainpage = php_file($mainpage);
-            if (!file_exists("_frontend/pages/$mainpage")) {
+            if (!file_exists("_frontend/views/pages/$mainpage")) {
                 $page = basixs_php_rem($mainpage);
                 include("_frontend/core/errors/$page404");
                 exit;
             }
-            if (!is_file("_frontend/pages/$mainpage")) {
+            if (!is_file("_frontend/views/pages/$mainpage")) {
                 $page = basixs_php_rem($mainpage);
                 include("_frontend/core/errors/$page404");
                 exit;
@@ -273,7 +273,7 @@ try {
             foreach (glob($folder_to_fee . '/*.php') as $filename) {
                 include_once $filename;
             }
-            include("_frontend/pages/$mainpage");
+            include("_frontend/views/pages/$mainpage");
             exit;
         } else {
             die("Page not found!");

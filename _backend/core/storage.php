@@ -5,7 +5,7 @@ function clearBrowserStorage($type = "*")
     $host = getenv("rootpath");
     $root = realpath(__DIR__ . '/../../');
     $pagename = "basixstoragemanager.php";
-    $tempFile = $root . "/_frontend/pages/$pagename";
+    $tempFile = $root . "/_frontend/views/pages/$pagename";
 
     $actions = [
         "localstorage"   => "localStorage.clear();",

@@ -43,7 +43,7 @@ class CtrPath {
     }
 
     assets(file){
-        return `_frontend/assets/${file}`;
+        return `_frontend/views/assets/${file}`;
     }
 }
 

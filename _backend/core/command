@@ -263,7 +263,7 @@ if ($route == "update") {
 
         if ($ext == "--main") {
             $targetFile = $root . DIRECTORY_SEPARATOR . "_backend\core\command";
-            $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/_frontend/pages/main.php";
+            $rawUrl = "https://raw.githubusercontent.com/YroDevGit/CodeTazer/main/_frontend/views/pages/main.php";
         }
 
         if (!file_exists($targetFile)) {
@@ -583,7 +583,7 @@ if ($route == "+script") {
         exit(1);
     }
     $newname = strtolower($filename);
-    $phpFile = "_frontend/code/script/" . $newname . ".js";
+    $phpFile = "_frontend/views/code/script/" . $newname . ".js";
 
     $phpContent = <<<EOT
     //CodeTazeR CTR script: $newname
@@ -861,7 +861,7 @@ if ($route == "+model") {
     }
 } else if ($route == "--secret") {
     $realpath = realpath(__DIR__ . "/../..");
-    $dir = $realpath . "/_frontend/code/src/ctr/";
+    $dir = $realpath . "/_frontend/views/code/src/ctr/";
     if (! is_dir($dir)) {
         $creating = @mkdir($dir, 0777, true);
     }

@@ -745,7 +745,7 @@ class CtrElement {
             const img = new Image();
             let src = icon;
             if (icon.startsWith("@")) {
-                src = "_frontend/assets/" + icon.replace("@", "");
+                src = "_frontend/views/assets/" + icon.replace("@", "");
             }
             img.src = src;
             img.width = imgWidth;
@@ -915,7 +915,7 @@ class CtrElement {
             if (image) {
                 const img = new Image();
                 img.src = image.startsWith("@")
-                    ? "_frontend/assets/" + image.replace("@", "")
+                    ? "_frontend/views/assets/" + image.replace("@", "")
                     : image;
                 Object.assign(img.style, {
                     width: "100%",

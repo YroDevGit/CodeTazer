@@ -2,7 +2,7 @@ class CtrBANNER {
     constructor() {
         this.id = "ctr-banner";
         this.ensureStyle();
-        this.assets = "_frontend/assets";
+        this.assets = "_frontend/views/assets";
     }
 
     ensureStyle() {

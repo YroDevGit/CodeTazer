@@ -1,6 +1,6 @@
 class SOUND {
     constructor(path) {
-        this.basePath = "_frontend/assets/";
+        this.basePath = "_frontend/views/assets/";
         const fullpath = this.basePath + path;
         this.audio = new Audio(fullpath);
         this.audio.preload = "auto";
