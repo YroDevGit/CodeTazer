@@ -169,8 +169,11 @@ class Migration
         }
     }
 
-    public static function table_ts(string $tablename, array $columns)
+    public static function table_ts(string $tablename, array $columns, bool $activeColumn = false)
     {
+        if($activeColumn){
+            $columns['active'] = ["int"=>1, "default"=>1];
+        }
         return self::table($tablename, $columns, true, true);
     }
 

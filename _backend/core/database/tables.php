@@ -2,20 +2,20 @@
 use Classes\Migration;
 
 
-Migration::table("authorization",[
+Migration::table_ts("authorization",[
     "id" => "@primary",
     "key" => "text",
     "user" => ["int"=>11],
     "status" => ["int"=>1, "default"=>1],
 ]);
 
-Migration::table("logs",[
+Migration::table_ts("logs",[
     "id" => "@primary",
     "message" => "text",
     "type" => ["varchar"=>"20"],
 ]);
 
-Migration::table("user", [
+Migration::table_ts("user", [
     "id" => "@primary",
     "username" => "varchar",
     "password" => "varchar",
