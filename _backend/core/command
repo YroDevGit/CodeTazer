@@ -43,11 +43,11 @@ function AddAllBaseTable($dbname)
     EOT;
 
         if (file_exists($phpFile)) {
-            echo "✔️ Base file already created: $phpFile\n";
+            echo "✔️ Base file already created: $phpFile\n\n";
             continue;
         } else {
             if (file_put_contents($phpFile, $phpContent) !== false) {
-                echo "✔️ Base file created successfully: $phpFile\n";
+                echo "✔️ Base file created successfully: $phpFile\n\n";
             } else {
                 continue;
             }
@@ -70,10 +70,10 @@ if ($route == "+functionpage") {
             }
         }
         if (file_put_contents($phpFile, $phpContent) !== false) {
-            echo "✔️ functions folder created: $phpFile\n";
+            echo "✔️ functions folder created: $phpFile\n\n";
             exit(0);
         } else {
-            echo "❌ Failed to create functions folder.\n";
+            echo "❌ Failed to create functions folder.\n\n";
             exit(1);
         }
     }
@@ -324,7 +324,7 @@ if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import" || $r
     }
 
     if ($filename == "") {
-        echo "❌ Please filename for migration.\n";
+        echo "❌ Please filename for migration.\n\n";
         exit(1);
     }
 
@@ -382,7 +382,7 @@ if ($route == "dbload") {
         $stmnt = $pdo->prepare("Create database `$dbname`;");
         $stmnt->execute();
         $rowcount = $stmnt->rowCount();
-        echo "✔️ Database $dbname created";
+        echo "✔️ Database $dbname created\n\n";
         exit;
     } catch (PDOException $e) {
         echo "❌ " . $e->getMessage();
@@ -407,7 +407,7 @@ if ($route == "+dbtable") {
         $stmnt = $pdo->prepare("Create table `$filename` (id int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ");
         $stmnt->execute();
         $row = $stmnt->rowCount();
-        echo "✔️ Table $filename created";
+        echo "✔️ Table $filename created\n\n";
         exit;
     } catch (PDOException $e) {
         echo "❌ " . $e->getMessage();
@@ -461,7 +461,7 @@ if ($route == "+base" || $route == "+base_table" || $route == "+basetable") {
         exit(1);
     } else {
         if (file_put_contents($phpFile, $phpContent) !== false) {
-            echo "✔️ Base file created successfully: $phpFile\n";
+            echo "✔️ Base file created successfully: $phpFile\n\n";
             exit(0);
         } else {
             echo "❌ Failed to create Base file.\n";
@@ -495,7 +495,7 @@ if ($route == "+class") {
         exit(1);
     } else {
         if (file_put_contents($phpFile, $phpContent) !== false) {
-            echo "✔️ Class file created successfully: $phpFile\n";
+            echo "✔️ Class file created successfully: $phpFile\n\n";
             exit(0);
         } else {
             echo "❌ Failed to create Class file.\n";
@@ -530,7 +530,7 @@ if ($route == "+library") {
         exit(1);
     } else {
         if (file_put_contents($phpFile, $phpContent) !== false) {
-            echo "✔️ Library file created successfully: $phpFile\n";
+            echo "✔️ Library file created successfully: $phpFile\n\n";
             exit(0);
         } else {
             echo "❌ Failed to create Library file.\n";
@@ -568,7 +568,7 @@ if ($route == "+middleware") {
         exit(1);
     } else {
         if (file_put_contents($phpFile, $phpContent) !== false) {
-            echo "✔️ Middleware file created successfully: $phpFile\n";
+            echo "✔️ Middleware file created successfully: $phpFile\n\n";
             exit(0);
         } else {
             echo "❌ Failed to create Middleware file.\n";
@@ -642,10 +642,10 @@ if ($route == "+routing") {
         exit(1);
     } else {
         if (file_put_contents($phpFile, $phpContent) !== false) {
-            echo "✔️ Routng file created successfully: $phpFile\n";
+            echo "✔️ Routng file created successfully: $phpFile\n\n";
             exit(0);
         } else {
-            echo "❌ Failed to create Routing file.\n";
+            echo "❌ Failed to create Routing file.\n\n";
             exit(1);
         }
     }
@@ -687,10 +687,10 @@ if ($route == "+model") {
         exit(1);
     } else {
         if (file_put_contents($phpFile, $phpContent) !== false) {
-            echo "✔️ Model file created successfully: $phpFile\n";
+            echo "✔️ Model file created successfully: $phpFile\n\n";
             exit(0);
         } else {
-            echo "❌ Failed to create model file.\n";
+            echo "❌ Failed to create model file.\n\n";
             exit(1);
         }
     }
@@ -740,7 +740,7 @@ if ($route == "+model") {
     EOT;
 
         if (file_exists($phpFile)) {
-            echo "✔️ Route file [$filename] already created @ $phpFile.\n";
+            echo "✔️ Route file [$filename] already created @ $phpFile.\n\n";
         } else {
             $directory = dirname($phpFile);
 
@@ -752,7 +752,7 @@ if ($route == "+model") {
             }
 
             if (file_put_contents($phpFile, $phpContent) !== false) {
-                echo "✔️ Route file [$filename] created successfully @ $phpFile.\n";
+                echo "✔️ Route file [$filename] created successfully @ $phpFile.\n\n";
             } else {
                 echo "❌ Failed to create Route file.\n";
             }
