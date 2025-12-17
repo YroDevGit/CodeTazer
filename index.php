@@ -102,7 +102,7 @@ function basixs_php_rem($path)
  * Please do not modify anything here
  */
 include_once("_backend/core/partials/basixs.php");
-include_once("_frontend/core/partials/fe.php");
+include_once("_frontend/app/core/partials/fe.php");
 /**
  * Generic CodeTazeR routing
  * Please do not modify anything in here, might broke CodeTazeR functionalities
@@ -195,20 +195,20 @@ if ($bee) {
         restore_error_handler();
     }
 }
-include_once "_frontend/core/config/settings.php";
+include_once "_frontend/app/core/config/settings.php";
 define("mainpage", $bconfig['mainpage'] ?? "main");
 $mainpage = mainpage;
 $page404 = php_file($bconfig["error404"] ?? "page404");
 /**
  * CodeTazeR frontend
  */
-include("_frontend/core/partials/autoloading.php");
+include("_frontend/app/core/partials/autoloading.php");
 /**
  * Generic routing for CodeTazeR routing
  * @author Tyrone Limen Malocon
  */
 $get = $_GET['page'] ?? $_GET['p'] ?? $_GET['fe'] ?? $_GET['frontend'] ?? false;
-$folder_to_fee = '_frontend/auto';
+$folder_to_fee = '_frontend/app/auto';
 $is_function = false;
 try {
     $csrfHashCode = encrypted_csrf_codetazer(25);
@@ -236,7 +236,7 @@ try {
                 die("Function page $get not found");
             }
             $page = basixs_php_rem($get);
-            include("_frontend/core/errors/$page404");
+            include("_frontend/app/errors/$page404");
             exit;
         }
         if (!is_file($target)) {
@@ -244,7 +244,7 @@ try {
                 die("Function page $get not found");
             }
             $page = basixs_php_rem($get);
-            include("_frontend/core/errors/$page404");
+            include("_frontend/app/errors/$page404");
             exit;
         }
         $_SESSION['basixs_current_page'] = $get;
@@ -260,12 +260,12 @@ try {
             $mainpage = php_file($mainpage);
             if (!file_exists("_frontend/pages/$mainpage")) {
                 $page = basixs_php_rem($mainpage);
-                include("_frontend/core/errors/$page404");
+                include("_frontend/app/errors/$page404");
                 exit;
             }
             if (!is_file("_frontend/pages/$mainpage")) {
                 $page = basixs_php_rem($mainpage);
-                include("_frontend/core/errors/$page404");
+                include("_frontend/app/errors/$page404");
                 exit;
             }
             $_SESSION['basixs_current_page'] = $mainpage;

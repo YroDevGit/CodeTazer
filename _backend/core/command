@@ -82,16 +82,16 @@ if ($route == "+functionpage") {
 if ($route == "enable" || $route == "activate") {
     if ($filename == "storage") {
         $realpath = realpath(__DIR__ . "/../..");
-        $dir = $realpath . "/_frontend/core/partials/system/storage/";
+        $dir = $realpath . "/_frontend/app/core/partials/system/storage/";
         if (! is_dir($dir)) {
             $creating = @mkdir($dir, 0777, true);
-            file_put_contents($realpath . "/_frontend/core/partials/system/.gitkeep", "");
-            file_put_contents($realpath . "/_frontend/core/partials/system/.gitignore", "storage/*");
+            file_put_contents($realpath . "/_frontend/app/core/partials/system/.gitkeep", "");
+            file_put_contents($realpath . "/_frontend/app/core/partials/system/.gitignore", "storage/*");
             echo "✔️ Storage enabled\n\n";
             exit;
         }
-        file_put_contents($realpath . "/_frontend/core/partials/system/.gitkeep", "");
-        file_put_contents($realpath . "/_frontend/core/partials/system/.gitignore", "storage/*");
+        file_put_contents($realpath . "/_frontend/app/core/partials/system/.gitkeep", "");
+        file_put_contents($realpath . "/_frontend/app/core/partials/system/.gitignore", "storage/*");
         echo "🔃 Storage already enabled\n\n";
         exit;
     } else {
@@ -116,7 +116,7 @@ if ($route == "deployment" || $route == "deploy") {
 }
 
 if ($route == "run" || $route == "serve" || $route == "start") {
-    include "_frontend/core/partials/loadenv.php";
+    include "_frontend/app/core/partials/loadenv.php";
     $host = getenv("rootpath");
     $exp = explode("//", $host);
     $runner = $exp[1];
@@ -316,7 +316,7 @@ if ($route == "update") {
 }
 
 if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import" || $route == "dbtables") {
-    include "_frontend/core/partials/loadenv.php";
+    include "_frontend/app/core/partials/loadenv.php";
     $dbname = getenv("database");
     if (! $dbname) {
         echo "❌ No Database found @ .env\n\n";
@@ -370,7 +370,7 @@ if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import" || $r
 }
 
 if ($route == "dbload") {
-    include "_frontend/core/partials/loadenv.php";
+    include "_frontend/app/core/partials/loadenv.php";
     $dbname = getenv("database");
     if ($dbname == null || $dbname == "") {
         echo "❌ database not found @ .env file\n";
@@ -395,7 +395,7 @@ if ($route == "+dbtable") {
         echo "❌ Please provide a table name.\n";
         exit(1);
     }
-    include "_frontend/core/partials/loadenv.php";
+    include "_frontend/app/core/partials/loadenv.php";
     $dbname = getenv("database");
     if ($dbname == null || $dbname == "") {
         echo "❌ database not found @ .env file\n";
@@ -416,7 +416,7 @@ if ($route == "+dbtable") {
 }
 
 if ($route == "+base" || $route == "+base_table" || $route == "+basetable") {
-    include "_frontend/core/partials/loadenv.php";
+    include "_frontend/app/core/partials/loadenv.php";
     $dbname = getenv("database");
 
     if ($filename == "") {
@@ -767,7 +767,7 @@ if ($route == "+model") {
         exit(1);
     }
     if ($filename == "frontend" || $filename == "backend") {
-        include "_frontend/core/partials/loadenv.php";
+        include "_frontend/app/core/partials/loadenv.php";
         $hostserver = null;
         $ext = "";
         if (getenv("rootpath") == null || getenv("rootpath") == "") {
@@ -786,7 +786,7 @@ if ($route == "+model") {
         }
     }
     if ($filename == "db" || $filename == "database") {
-        include "_frontend/core/partials/loadenv.php";
+        include "_frontend/app/core/partials/loadenv.php";
         echo getenv("database") == null ? "❌ No database yet" : "🗃️  Your Database:  " . getenv("database");
         exit;
     }
@@ -855,7 +855,7 @@ if ($route == "+model") {
         echo "❌ Parameter should be numberic\n\n";
         exit;
     } else {
-        include "_frontend/core/partials/loadenv.php";
+        include "_frontend/app/core/partials/loadenv.php";
         echo "Key generated: " . substr(md5(date("ymdHisA") . getenv("hash_secret")), 0, $filename) . "\n\n";
         exit;
     }

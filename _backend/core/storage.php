@@ -1,7 +1,7 @@
 <?php
 function clearBrowserStorage($type = "*")
 {
-    include "_frontend/core/partials/loadenv.php";
+    include "_frontend/app/core/partials/loadenv.php";
     $host = getenv("rootpath");
     $root = realpath(__DIR__ . '/../../');
     $pagename = "basixstoragemanager.php";

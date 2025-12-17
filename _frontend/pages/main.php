@@ -8,7 +8,7 @@ $code = [
   "_backend/auto/routing/web.php",
   "_backend/core/command",
   "_backend/core/partials/classes/Routing.php",
-  "_frontend/core/partials/fe.php"
+  "_frontend/app/core/partials/fe.php"
 ];
 
 ?>

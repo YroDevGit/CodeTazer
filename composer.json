@@ -27,7 +27,7 @@
       "echo 'Preparing to install Codetazer... Please wait.'"
     ],
      "post-create-project-cmd": [
-      "php _frontend/core/scripts/guide.php"
+      "php _frontend/app/core/scripts/guide.php"
     ]
   }
 }

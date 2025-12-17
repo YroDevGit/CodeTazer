@@ -18,11 +18,11 @@ if (! function_exists("autoload_php")) {
         if (is_array($filename)) {
             foreach ($filename as $f) {
                 $loadpage = substr($f, -4) == ".php" ? $f : $f . ".php";
-                include "_frontend/auto/php/" . $loadpage;
+                include "_frontend/app/auto/php/" . $loadpage;
             }
         } else {
             $loadpage = substr($filename, -4) == ".php" ? $filename : $filename . ".php";
-            include "_frontend/auto/php/" . $loadpage;
+            include "_frontend/app/auto/php/" . $loadpage;
         }
     }
 }
@@ -37,7 +37,7 @@ if (! function_exists("include_error_page")) {
     function include_error_page(string|null $error_page, $variables = [], $exit = true)
     {
         $error_page = substr($error_page, -4) == ".php" ? $error_page : $error_page . ".php";
-        $path = "_frontend/core/errors/$error_page";
+        $path = "_frontend/app/errors/$error_page";
         if (! file_exists($path)) {
             die("Error page '$error_page' not found.!");
         }
@@ -58,9 +58,9 @@ if (! function_exists("ctr_storage")) {
     function ctr_storage($filepath = "")
     {
         if ($filepath) {
-            return "_frontend/core/partials/system/storage/" . str_replace("\\", "/", $filepath);
+            return "_frontend/app/core/partials/system/storage/" . str_replace("\\", "/", $filepath);
         }
-        return "_frontend/core/partials/system/storage";
+        return "_frontend/app/core/partials/system/storage";
     }
 }
 
@@ -80,7 +80,7 @@ if (! function_exists("include_template_page")) {
     {
         $error_page = $template_page;
         $error_page = substr($error_page, -4) == ".php" ? $error_page : $error_page . ".php";
-        $path = "_frontend/core/template/$error_page";
+        $path = "_frontend/app/core/template/$error_page";
         if (! file_exists($path)) {
             die("Template page '$error_page' not found.!");
         }
@@ -98,7 +98,7 @@ if (! function_exists("use_library")) {
     function use_library(string $library)
     {
         $model = substr($library, -4) == ".php" ? $library : $library . ".php";
-        include "_frontend/core/library/" . $model;
+        include "_frontend/app/core/library/" . $model;
     }
 }
 
