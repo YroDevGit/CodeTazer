@@ -459,15 +459,33 @@ if (! function_exists("ctr_read_all_routes")) {
             if ($item->isDir()) {
                 continue;
             } else {
-                if(str_starts_with($relativePath, "api/")) continue;
-                if($phpfile){
+                if (str_starts_with($relativePath, "api/")) continue;
+                if ($phpfile) {
                     $arrs[] = $relativePath;
-                }else{
+                } else {
                     $arrs[] = basixs_php_rem($relativePath);
                 }
             }
         }
         return $arrs;
+    }
+}
+
+if (! function_exists("get_json")) {
+    function get_json(string $jsonfile, string $path = "_backend/auto/json/")
+    {
+        $jsonfile = str_ends_with($jsonfile, ".json") ? $jsonfile : $jsonfile . ".json";
+        $json = file_get_contents($path . $jsonfile);
+        if (! $json) {
+            throw new Exception("Error on reading json file");
+        }
+        $data = json_decode($json, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $data;
+        } else {
+            throw new Exception(json_last_error_msg());
+        }
+        return null;
     }
 }
 
