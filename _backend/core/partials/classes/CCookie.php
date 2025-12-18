@@ -11,7 +11,7 @@ class CCookie
     {
         $newHour = 3600 * $hour;
         if (is_array($value)) {
-            setcookie($key, json_encode($value), time() + $newHour, "/");
+            setcookie($key, json_encode($value), time() + $newHour, "/", true, true);
             return true;
         } else {
             setcookie($key, $value, time() + $newHour, "/");
@@ -22,7 +22,7 @@ class CCookie
 
     public static function delete(string $key): bool
     {
-        setcookie($key, "", time() - 3600, "/");
+        setcookie($key, "", time() - 3600, "/", true, true);
         unset($_COOKIE[$key]);
         return true;
     }
