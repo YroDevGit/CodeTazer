@@ -11,10 +11,10 @@ class CCookie
     {
         $newHour = 3600 * $hour;
         if (is_array($value)) {
-            setcookie($key, json_encode($value), time() + $newHour, "/", true, true);
+            setcookie($key, json_encode(encrypt($value)), time() + $newHour, "/", true, true);
             return true;
         } else {
-            setcookie($key, $value, time() + $newHour, "/");
+            setcookie($key, encrypt($value), time() + $newHour, "/");
             return true;
         }
         return false;
@@ -38,7 +38,7 @@ class CCookie
     public static function get(string $key)
     {
         if (isset($_COOKIE[$key])) {
-            $cookie = $_COOKIE[$key];
+            $cookie = decrypt($_COOKIE[$key]);
             $ret = json_decode($session, true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $ret;
