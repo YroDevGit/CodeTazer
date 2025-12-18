@@ -141,7 +141,7 @@ if ($bee) {
         exit;
     }
     $_SESSION['basixs_current_be'] = $bee;
-    defined("route") || define("ROUTE", $bee);
+    defined("route") || define("ROUTE", basixs_php_rem($bee));
     basixs_param_getter($param);
     include("_backend/core/partials/be.php");
     if (getenv("cross_origin_sharing") == "yes") {
