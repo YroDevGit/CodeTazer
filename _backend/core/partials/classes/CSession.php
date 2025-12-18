@@ -45,6 +45,7 @@ class CSession
             return $ret;
         } else {
             $post = $session;
+            return $post;
         }
     }
 

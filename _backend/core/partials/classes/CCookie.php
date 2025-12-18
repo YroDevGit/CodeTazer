@@ -39,11 +39,12 @@ class CCookie
     {
         if (isset($_COOKIE[$key])) {
             $cookie = decrypt($_COOKIE[$key]);
-            $ret = json_decode($session, true);
+            $ret = json_decode($cookie, true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $ret;
             } else {
                 $post = $cookie;
+                return $post;
             }
         }
         return null;
