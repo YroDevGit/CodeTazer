@@ -138,6 +138,7 @@ if (! function_exists("import_func")) {
  * this import file from :_frontend/code/script
  * @param string filenames
  * @author Tyrone Limen Malocon
+ * - use DOMContentLoaded
  */
 if (!function_exists("import_script")) {
     function import_script(string ...$filenames)
@@ -148,6 +149,38 @@ if (!function_exists("import_script")) {
         }
     }
 }
+
+/**
+ * Generic import js script file
+ * this import file from :_frontend/code/script
+ * @param string files
+ * @author Tyrone Limen Malocon
+ * - use load inside instead of DOMContentLoaded
+ */
+if (!function_exists('code_script')) {
+    function code_script(string ...$files): void
+    {
+        foreach ($files as $file) {
+            $file = str_ends_with($file, '.js') ? $file : $file . '.js';
+            $src  = htmlspecialchars(codepath('script/' . $file), ENT_QUOTES);
+
+            echo <<<HTML
+<script>
+(function () {
+    if (!document.querySelector('script[src="$src"]')) {
+        const s = document.createElement('script');
+        s.type = 'module';
+        s.src = "$src";
+        document.head.appendChild(s);
+    }
+})();
+</script>
+
+HTML;
+        }
+    }
+}
+
 /**
  * Generic import package for ctr js files,
  * You can use js file name with or without .js extension
@@ -284,9 +317,9 @@ if (! function_exists("import_paths")) {
     ?>
         <script type="module" src="<?= codepath('src/ctr/paths.js') ?>"></script>
     <?php
-    /**
-     * This is for frontend function
-     */
+        /**
+         * This is for frontend function
+         */
     }
 }
 
