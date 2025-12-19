@@ -705,12 +705,14 @@ if ($route == "+model") {
     }
 
     $apipath = "";
-    if ($extra) {
-        if ($extra != "--api") {
+    if ($extra && str_starts_with($extra, "--")) {
+        $extra = substr($extra, 2);
+        //$extra = $explode[1] ?? null;
+        if (! $extra) {
             echo "❌ unable add route format.\n";
             exit(1);
         }
-        $apipath = "api/";
+        $apipath = "$extra/";
     }
     $newname = ucfirst($filename);
     $exp = explode("/", $filename);
@@ -894,6 +896,6 @@ if ($route == "+model") {
         $a = 1;
     }
 } else {
-    echo "Invalid command.\n";
+    echo "❌ Invalid command.\n\n";
     exit(1);
 }

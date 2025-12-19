@@ -400,6 +400,17 @@ if (! function_exists("include_page")) {
     }
 }
 
+if (! function_exists("display")) {
+    function display($text)
+    {
+        if (is_array($text)) {
+            print_r($text);
+        } else {
+            echo $text;
+        }
+    }
+}
+
 if (! function_exists("display_error111")) {
     function display_error111(string $message)
     {
@@ -441,7 +452,7 @@ if (! function_exists("php_file")) {
     }
 }
 
-if (! function_exists("ctr_read_all_routes")) {
+if (! function_exists("ctr_all_routes")) {
     function ctr_all_routes($phpfile = false)
     {
         $baseDir = '_backend/_routes';
@@ -464,6 +475,35 @@ if (! function_exists("ctr_read_all_routes")) {
                     $arrs[] = $relativePath;
                 } else {
                     $arrs[] = basixs_php_rem($relativePath);
+                }
+            }
+        }
+        return $arrs;
+    }
+}
+
+if (! function_exists("ctr_get_routes")) {
+    function ctr_get_routes($parent, $phpfile = false)
+    {
+        $baseDir = "_backend/_routes/$parent";
+        $arrs = [];
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $item) {
+            $relativePath = str_replace($baseDir . DIRECTORY_SEPARATOR, '', $item->getPathname());
+
+            $relativePath = str_replace(DIRECTORY_SEPARATOR, "/", $relativePath);
+            if ($item->isDir()) {
+                continue;
+            } else {
+                if ($phpfile) {
+                    $arrs[] = $relativePath;
+                } else {
+                    $arrs[] = $parent . "/" . basixs_php_rem($relativePath);
                 }
             }
         }
