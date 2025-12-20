@@ -2,7 +2,7 @@
 
 namespace Classes;
 
-class CCookie
+class Ccookie
 {
 
     //create a function here...

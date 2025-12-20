@@ -4,7 +4,7 @@ namespace Classes;
 
 use Exception;
 
-class CSession
+class Csession
 {
     public static $errmsg = null;
 
