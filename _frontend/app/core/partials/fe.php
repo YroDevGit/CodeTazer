@@ -511,6 +511,50 @@ if (! function_exists("ctr_get_routes")) {
     }
 }
 
+
+if (! function_exists("ctr_get_files")) {
+    function ctr_get_files($parent = "", $basePath = "", $phpfile = false)
+    {
+        $baseDir = "";
+        if (! $basePath) {
+            $baseDir = $parent;
+        } else {
+            if ($parent) {
+                $baseDir = $basePath . "/" . $parent;
+            } else {
+                $baseDir = $basePath;
+            }
+        }
+        $arrs = [];
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $item) {
+            $relativePath = str_replace($baseDir . DIRECTORY_SEPARATOR, '', $item->getPathname());
+
+            $relativePath = str_replace(DIRECTORY_SEPARATOR, "/", $relativePath);
+            if ($item->isDir()) {
+                continue;
+            } else {
+                if ($phpfile) {
+                    $arrs[] = $relativePath;
+                } else {
+                    $newPath = substr($relativePath, -4) === '.php' ? substr($relativePath, 0, -4) : $relativePath;
+                    if ($parent) {
+                        $arrs[] = $parent . "/" . $newPath;
+                    } else {
+                        $arrs[] = $newPath;
+                    }
+                }
+            }
+        }
+        return $arrs;
+    }
+}
+
 if (! function_exists("get_json")) {
     function get_json(string $jsonfile, string $path = "_backend/auto/json/")
     {

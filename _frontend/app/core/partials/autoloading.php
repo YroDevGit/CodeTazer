@@ -141,9 +141,17 @@ if (! function_exists("import_func")) {
  * - use DOMContentLoaded
  */
 if (!function_exists("import_script")) {
-    function import_script(string ...$filenames)
+    function import_script(string|bool ...$filenames)
     {
+        if(! $filenames){
+            $current = current_page();
+            $filenames = [$current];
+        }
         foreach ($filenames as $flx) {
+            if(is_bool($flx) && $flx == true){
+                unset($flx);
+                $flx = current_page();
+            }
             $fl = str_ends_with($flx, '.js') ? $flx : $flx . '.js';
             echo '<script type="module" src="' . htmlspecialchars(codepath('script/' . $fl), ENT_QUOTES) . '"></script>' . PHP_EOL;
         }
@@ -158,9 +166,17 @@ if (!function_exists("import_script")) {
  * - use load inside instead of DOMContentLoaded
  */
 if (!function_exists('code_script')) {
-    function code_script(string ...$files): void
+    function code_script(string|bool ...$files): void
     {
+        if(! $files){
+            $current = current_page();
+            $files = [$current];
+        }
         foreach ($files as $file) {
+            if(is_bool($file) && $file == true){
+                unset($file);
+                $file = current_page();
+            }
             $file = str_ends_with($file, '.js') ? $file : $file . '.js';
             $src  = htmlspecialchars(codepath('script/' . $file), ENT_QUOTES);
 

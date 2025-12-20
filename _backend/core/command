@@ -11,6 +11,59 @@ $extra = isset($arguments[3]) ? $arguments[3] : '';
 $exxr = isset($arguments[4]) ? $arguments[4] : '';
 
 
+function addScript($filename, $skipMessage = false)
+{
+    $newname = strtolower($filename);
+    $newname = trim($newname);
+    $phpFile = "_frontend/code/script/" . $newname . ".js";
+
+    $phpContent = <<<EOT
+    //CodeTazeR CTR script: $newname
+    
+
+
+
+    EOT;
+
+    if (file_exists($phpFile)) {
+        if ($skipMessage) {
+            echo "🔗 Script '$filename' already created @$phpFile.\n";
+        } else {
+            echo "❌ File already exists. Please choose a different name.\n\n";
+            exit(1);
+        }
+    } else {
+        $directory = dirname($phpFile);
+        if (!is_dir($directory)) {
+            if ($skipMessage) {
+                if (!mkdir($directory, 0777, true)) {
+                    echo "❌ Failed to create directories: $directory";
+                }
+            } else {
+                if (!mkdir($directory, 0777, true)) {
+                    echo "❌ Failed to create directories: $directory";
+                    exit;
+                }
+            }
+        }
+        if (file_put_contents($phpFile, $phpContent) !== false) {
+            if ($skipMessage) {
+                echo "✔️ Script '$filename' created successfully: $phpFile\n";
+            } else {
+                echo "✔️ Script '$filename' created successfully: $phpFile\n\n";
+                exit(0);
+            }
+        } else {
+            if ($skipMessage) {
+                echo "❌ Failed to create script file.\n";
+            } else {
+                echo "❌ Failed to create script file.\n\n";
+                exit(1);
+            }
+        }
+    }
+}
+
 function AddAllBaseTable($dbname)
 {
     $pdo = pdo($dbname);
@@ -582,35 +635,18 @@ if ($route == "+script") {
         echo "❌ Please provide a filename for the script.\n";
         exit(1);
     }
-    $newname = strtolower($filename);
-    $phpFile = "_frontend/code/script/" . $newname . ".js";
+    include "_frontend/app/core/partials/fe.php";
 
-    $phpContent = <<<EOT
-    //CodeTazeR CTR script: $newname
-    
-
-
-
-    EOT;
-
-    if (file_exists($phpFile)) {
-        echo "❌ File already exists. Please choose a different name.\n\n";
-        exit(1);
+    if ($filename == "*") {
+        $files = ctr_get_files("", "_frontend/pages");
+        //print_r($files);exit;
+        foreach ($files as $f) {
+            addScript($f, true);
+        }
+        echo "\n✔️ Done. all page -> script reflected\n\n";
+        exit;
     } else {
-        $directory = dirname($phpFile);
-        if (!is_dir($directory)) {
-            if (!mkdir($directory, 0777, true)) {
-                echo "Failed to create directories: $directory";
-                exit;
-            }
-        }
-        if (file_put_contents($phpFile, $phpContent) !== false) {
-            echo "✔️ Script file created successfully: $phpFile\n\n";
-            exit(0);
-        } else {
-            echo "❌ Failed to create script file.\n\n";
-            exit(1);
-        }
+        addScript($filename);
     }
 }
 
