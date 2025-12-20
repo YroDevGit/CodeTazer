@@ -455,7 +455,14 @@ if (! function_exists("php_file")) {
 if (! function_exists("ctr_all_routes")) {
     function ctr_all_routes($phpfile = false)
     {
-        $baseDir = '_backend/_routes';
+        $baseDir = "";
+        $ep = ctr_endpoint();
+        if($ep == "FE"){
+            $baseDir = '_frontend/pages';
+        }else{
+            $baseDir = '_backend/_routes';
+        }
+
         $arrs = [];
 
         $iterator = new RecursiveIteratorIterator(
@@ -482,11 +489,35 @@ if (! function_exists("ctr_all_routes")) {
     }
 }
 
+if (! function_exists("ctr_endpoint")) {
+    function ctr_endpoint()
+    {
+        if (isset($_GET['be']) || isset($_GET['backend'])) {
+            return "BE";
+        } else {
+            if (isset($_GET['page']) || isset($_GET['p']) || isset($_GET['fe']) || isset($_GET['frontend'])) {
+                return "FE";
+            }
+        }
+        return "FE";
+    }
+}
+
 if (! function_exists("ctr_get_routes")) {
     function ctr_get_routes($parent, $phpfile = false)
     {
-        $baseDir = "_backend/_routes/$parent";
+        $ep = ctr_endpoint();
+        $baseDir = "";
+        if($ep == "FE"){
+            $baseDir = "_frontend/pages/$parent";
+        }else{
+            $baseDir = "_backend/_routes/$parent"; 
+        }
+
         $arrs = [];
+        if(! is_dir($baseDir)){
+            throw new Exception("ctr_get_routes error: $baseDir not exist");
+        }
 
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS),
@@ -511,7 +542,6 @@ if (! function_exists("ctr_get_routes")) {
     }
 }
 
-
 if (! function_exists("ctr_get_files")) {
     function ctr_get_files($parent = "", $basePath = "", $phpfile = false)
     {
@@ -526,6 +556,10 @@ if (! function_exists("ctr_get_files")) {
             }
         }
         $arrs = [];
+
+        if(! is_dir($baseDir)){
+            throw new Exception("ctr_get_files error: $baseDir not exist");
+        }
 
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS),
@@ -556,8 +590,16 @@ if (! function_exists("ctr_get_files")) {
 }
 
 if (! function_exists("get_json")) {
-    function get_json(string $jsonfile, string $path = "_backend/auto/json/")
+    function get_json(string $jsonfile, string $path = null)
     {
+        if (! $path) {
+            $ep = ctr_endpoint();
+            if ($ep == "FE") {
+                $path = "_frontend/app/auto/json/";
+            } else {
+                $path = "_backend/auto/json/";
+            }
+        }
         $jsonfile = str_ends_with($jsonfile, ".json") ? $jsonfile : $jsonfile . ".json";
         $json = file_get_contents($path . $jsonfile);
         if (! $json) {
@@ -570,6 +612,36 @@ if (! function_exists("get_json")) {
             throw new Exception(json_last_error_msg());
         }
         return null;
+    }
+}
+
+if (! function_exists("autoload_routing")) {
+    function autoload_routing(string|array $filename)
+    {
+        if (!$filename) {
+            return false;
+        }
+        $ep = ctr_endpoint();
+        $fl = "";
+        if($ep == "FE"){
+            $fl = "_frontend/app/auto/routing/";
+        }else{
+            $fl = "_backend/auto/routing/";
+        }
+        if (is_array($filename)) {
+            foreach ($filename as $f) {
+                $loadpage = substr($f, -4) == ".php" ? $f : $f . ".php";
+                if($ep == "FE"){
+                    include $fl . $loadpage;
+                }else{
+                    include $fl . $loadpage;
+                }
+                
+            }
+        } else {
+            $loadpage = substr($filename, -4) == ".php" ? $filename : $filename . ".php";
+            include $fl . $loadpage;
+        }
     }
 }
 

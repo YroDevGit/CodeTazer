@@ -76,6 +76,35 @@ class Routing
         return self::route_filtering($routes, $func, false);
     }
 
+    public static function group_page(string|array $pages, callable ...$args)
+    {
+        if (! $pages) {
+            return false;
+        }
+        if (is_string($pages)) {
+            $path = substr($pages, -4) === ".php" ? $pages : $pages . ".php";
+            if (! file_exists("_frontend/pages/$path")) {
+                //throw new Exception("Group page error: $pages not exist");
+            }
+            $current = current_page();
+            if ($current == $pages) {
+                foreach ($args as $func) {
+                    try {
+                        $func();
+                    } catch (Throwable $e) {
+                        throw new Exception($e->getMessage());
+                    }
+                }
+            }
+        }else if(is_array($pages)){
+            foreach($pages as $page){
+                self::group_page($page, ...$args);
+            }
+        }else{
+            throw new Exception("Group page error: page should be array/string only");
+        }
+    }
+
     public static function set(string|array|null $routes, callable ...$args)
     {
         if (! $routes) {
