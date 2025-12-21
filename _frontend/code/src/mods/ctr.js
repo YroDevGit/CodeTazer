@@ -288,14 +288,11 @@ const CTR = new CtrClass();
 const Ctr = CTR;
 
 if (typeof window !== "undefined") {
-    window.CTR = CTR;
     window.Ctr = CTR;
 }
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
-    module.exports = CTR;
     module.exports = Ctr;
 }
 
-export { Ctr };
-export default CTR;
+export default Ctr;

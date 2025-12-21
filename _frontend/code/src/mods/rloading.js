@@ -109,5 +109,5 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = RLOADING;
     module.exports = RLoading;
 }
-export {RLoading};
-export default RLOADING;
+
+export default RLoading;

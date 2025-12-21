@@ -111,5 +111,5 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = NLOADING;
     module.exports = NLoading;
 }
-export {NLoading};
-export default NLOADING;
+
+export default NLoading;

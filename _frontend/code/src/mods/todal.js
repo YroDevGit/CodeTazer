@@ -386,7 +386,7 @@ export default Todal;
 /**
  *Usage 
  * <button parent="todal" todal-type="show" todal-target="#tdl">click me</button>
-    <div id="tdl" class="todal todal-title='CTR TODAL'">
+    <div id="tdl" class="todal" todal-title="CTR TODAL">
         <div class="todal-body">
             <p>This is a Todal modal window!</p>
         </div>

@@ -76,6 +76,6 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = CURRENCY;
     module.exports = Currency;
 }
-export {Currency};
-export default CURRENCY;
+
+export default Currency;
 

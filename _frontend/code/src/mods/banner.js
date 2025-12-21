@@ -203,5 +203,5 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = BANNER;
     module.exports = Banner;
 }
-export {Banner};
-export default BANNER;
+
+export default Banner;

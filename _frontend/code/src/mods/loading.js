@@ -201,5 +201,5 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = LOADING;
     module.exports = Loading;
 }
-export { Loading };
-export default LOADING;
+
+export default Loading;

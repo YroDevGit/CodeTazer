@@ -90,5 +90,4 @@ class SOUND {
 }
 
 const Sound = SOUND;
-export {Sound};
-export default SOUND;
+export default Sound;

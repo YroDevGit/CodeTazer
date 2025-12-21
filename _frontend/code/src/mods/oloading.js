@@ -162,5 +162,5 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = OLOADING;
     module.exports = OLoading;
 }
-export {OLoading};
-export default OLOADING;
+
+export default OLoading;

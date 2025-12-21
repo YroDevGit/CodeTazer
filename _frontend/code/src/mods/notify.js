@@ -53,5 +53,5 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = NOTIFY;
     module.exports = Notify;
 }
-export {Notify};
-export default NOTIFY;
+
+export default Notify;

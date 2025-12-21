@@ -237,5 +237,5 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = BLOADING;
     module.exports = BLoading;
 }
-export {BLoading};
-export default BLOADING;
+
+export default BLoading;

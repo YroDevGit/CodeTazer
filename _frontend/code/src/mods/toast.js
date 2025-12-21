@@ -219,5 +219,4 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = Toast;
 }
 
-export {Toast};
-export default TOAST;
+export default Toast;

@@ -60,5 +60,5 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = PATH;
     module.exports = Path;
 }
-export {Path};
-export default PATH;
+
+export default Path;

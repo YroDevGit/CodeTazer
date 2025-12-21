@@ -119,6 +119,7 @@ class SHLOADING {
 }
 
 const SHULOADING = new SHLOADING();
+const SHULoading = SHLOADING;
 
 if (typeof window !== "undefined") {
     window.SHULOADING = SHULOADING;
@@ -128,4 +129,4 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = SHULOADING;
 }
 
-export default SHULOADING;
+export default SHULoading;
