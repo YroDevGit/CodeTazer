@@ -12,4 +12,5 @@ autoload_php([
 autoload_routing([
     "web",
     //"api",
+    //"path",
 ]);

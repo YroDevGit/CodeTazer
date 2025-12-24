@@ -934,11 +934,11 @@ if (! function_exists("autoload_php")) {
         if (is_array($filename)) {
             foreach ($filename as $f) {
                 $loadpage = substr($f, -4) == ".php" ? $f : $f . ".php";
-                include "_backend/auto/php/" . $loadpage;
+                include "_backend/application/php/" . $loadpage;
             }
         } else {
             $loadpage = substr($filename, -4) == ".php" ? $filename : $filename . ".php";
-            include "_backend/auto/php/" . $loadpage;
+            include "_backend/application/php/" . $loadpage;
         }
     }
 }
@@ -952,11 +952,11 @@ if (! function_exists("autoload_api")) {
         if (is_array($filename)) {
             foreach ($filename as $f) {
                 $loadpage = substr($f, -4) == ".php" ? $f : $f . ".php";
-                include "_backend/auto/api/" . $loadpage;
+                include "_backend/application/api/" . $loadpage;
             }
         } else {
             $loadpage = substr($filename, -4) == ".php" ? $filename : $filename . ".php";
-            include "_backend/auto/api/" . $loadpage;
+            include "_backend/application/api/" . $loadpage;
         }
     }
 }

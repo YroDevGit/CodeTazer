@@ -597,7 +597,7 @@ if (! function_exists("get_json")) {
             if ($ep == "FE") {
                 $path = "_frontend/app/auto/json/";
             } else {
-                $path = "_backend/auto/json/";
+                $path = "_backend/application/json/";
             }
         }
         $jsonfile = str_ends_with($jsonfile, ".json") ? $jsonfile : $jsonfile . ".json";
@@ -626,7 +626,7 @@ if (! function_exists("autoload_routing")) {
         if($ep == "FE"){
             $fl = "_frontend/app/auto/routing/";
         }else{
-            $fl = "_backend/auto/routing/";
+            $fl = "_backend/application/routing/";
         }
         if (is_array($filename)) {
             foreach ($filename as $f) {

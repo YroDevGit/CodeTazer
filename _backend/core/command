@@ -655,7 +655,7 @@ if ($route == "+routing") {
         echo "❌ Please provide a filename for the routing.\n";
         exit(1);
     }
-    $phpFile = "_backend/auto/routing/" . $filename . ".php";
+    $phpFile = "_backend/application/routing/" . $filename . ".php";
 
     $phpContent = <<<EOT
     <?php

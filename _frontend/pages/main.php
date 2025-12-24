@@ -4,8 +4,8 @@ $version = 9;
 $code = [
   "_frontend\pages\main.php",
   "_backend/_routes/test/sample.php",
-  "_backend/auto/routing/api.php",
-  "_backend/auto/routing/web.php",
+  "_backend/application/routing/api.php",
+  "_backend/application/routing/web.php",
   "_backend/core/command",
   "_backend/core/partials/classes/Routing.php",
   "_frontend/app/core/partials/fe.php"

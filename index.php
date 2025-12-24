@@ -169,7 +169,7 @@ if ($bee) {
         set_error_handler(function ($errno, $errstr, $errfile, $errline) {
             throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
         });
-        $folder_to_bee = '_backend/auto';
+        $folder_to_bee = '_backend/application';
         include_once $folder_to_bee . "/loader.php";
 
         include("_backend/_routes/$bee");
