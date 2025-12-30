@@ -12,7 +12,7 @@ if (file_exists(".env")) {
                 $value  = trim($value);
                 $cenv = getenv($key);
 
-                if ($cenv && $cenv == $value) {
+                if ($cenv && $cenv === $value) {
                     continue;
                 }
                 putenv("$key=$value");
