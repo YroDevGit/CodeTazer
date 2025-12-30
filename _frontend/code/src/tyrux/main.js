@@ -1,6 +1,6 @@
 import { Tyrux } from "./lib/tyrux.js";
 import { headerHandler, errorHandler } from "./config.js";
-import { Loading } from "../mods/loading.js";
+import Loading from "../mods/loading.js";
 
 
 const baseURL = "";   //Backend url end-point
