@@ -10,14 +10,16 @@ if (file_exists(".env")) {
 
                 $key    = trim($key);
                 $value  = trim($value);
+                $cenv = getenv($key);
 
-                if (!getenv($key)) {
-                    putenv("$key=$value");
-                    $_ENV[$key]     = $value;
+                if ($cenv && $cenv == $value) {
+                    continue;
                 }
+                putenv("$key=$value");
+                $_ENV[$key]     = $value;
             }
         }
         fclose($env_file);
     }
 }
-?>
+if (! defined("ctr_secure_key")) define("ctr_secure_key", "csrf_ctrsk_" . getenv('secure_key'));

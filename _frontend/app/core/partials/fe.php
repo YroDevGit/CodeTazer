@@ -116,7 +116,7 @@ if (! function_exists("decrypt_csrf_codetazer")) {
 if (! function_exists("csrf")) {
     function csrf()
     {
-        $tkn = $_SESSION['csrf_codetazer_session_sec'] ?? null;
+        $tkn = $_SESSION[ctr_secure_key] ?? null;
         return "<input type='hidden' name='csrf_ctr_field' value='$tkn'>";
     }
 }
@@ -124,7 +124,7 @@ if (! function_exists("csrf")) {
 if (! function_exists("csrf_token")) {
     function csrf_token()
     {
-        return $_SESSION['csrf_codetazer_session_sec'] ?? null;
+        return $_SESSION[ctr_secure_key] ?? null;
     }
 }
 

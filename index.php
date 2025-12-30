@@ -213,7 +213,7 @@ $folder_to_fee = '_frontend/app/auto';
 $is_function = false;
 try {
     $csrfHashCode = encrypted_csrf_codetazer(25);
-    $_SESSION['csrf_codetazer_session_sec'] = $csrfHashCode;
+    $_SESSION[ctr_secure_key] = $csrfHashCode;
     if (! $get) {
         if ($_GET['funcpage'] ?? false) {
             $get =  $_GET['funcpage'];
