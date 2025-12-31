@@ -30,6 +30,12 @@ class Routing
     {
         $arr = [];
         foreach ($api as $a) {
+            if (str_contains($a, "/*")) {
+                $exp = explode("/*", $a);
+                $parent = $exp[0];
+                self::api_group(ctr_get_routes("api/" . $parent), $callable);
+                continue;
+            }
             $arr[] = "api/" . $a;
         }
         return self::group_route($arr, $callable);
@@ -41,6 +47,12 @@ class Routing
             return false;
         }
         foreach ($routes as $r) {
+            if (str_contains($r, "/*")) {
+                $exp = explode("/*", $r);
+                $parent = $exp[0];
+                self::route_filtering(ctr_get_routes($parent), $func, $included);
+                continue;
+            }
             $path = substr($r, -4) == ".php" ? $r : $r . ".php";
             if (! file_exists("_backend/_routes/$path")) {
                 Response::code(notfound_code)->message("In group route, backend route $r not found.!")->send(notfound_code);
@@ -82,6 +94,11 @@ class Routing
             return false;
         }
         if (is_string($pages)) {
+            if (str_contains($pages, "/*")) {
+                $exp = explode("/*", $pages);
+                $parent = $exp[0];
+                return self::group_page(ctr_get_routes($parent), ...$args);
+            }
             $path = substr($pages, -4) === ".php" ? $pages : $pages . ".php";
             if (! file_exists("_frontend/pages/$path")) {
                 //throw new Exception("Group page error: $pages not exist");
@@ -96,13 +113,14 @@ class Routing
                     }
                 }
             }
-        }else if(is_array($pages)){
-            foreach($pages as $page){
+        } else if (is_array($pages)) {
+            foreach ($pages as $page) {
                 self::group_page($page, ...$args);
             }
-        }else{
+        } else {
             throw new Exception("Group page error: page should be array/string only");
         }
+        return true;
     }
 
     public static function set(string|array|null $routes, callable ...$args)
