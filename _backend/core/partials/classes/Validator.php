@@ -250,9 +250,14 @@ class Validator
         return self::data();
     }
 
-    public static function check($postname, $label, $rules)
+    public static function check($postname, $label, $rules, $allpost = null)
     {
-        $postdata = postdata();
+        $postdata = [];
+        if($allpost){
+            $postdata = $allpost;
+        }else{
+            $postdata = postdata();
+        }
         if (!isset($postdata[$postname])) {
             $postdata[$postname] = null;
         }

@@ -10,7 +10,7 @@ const backend = "?be=";  // This app default backend path
 const headers = headerHandler;
 
 const config = {
-    error: (err, message)=>{ // Tyrax error handler ::CodeTazer
+    error: (err, message) => { // Tyrax error handler ::CodeTazer
         errorHandler(err, message);
     },
 
@@ -102,10 +102,10 @@ const tyrequest = { // For raw/universal request :: CodeYRO
 const configure = {
     _mergeOptions(option, tyrax) {
         const global = tyrax.config || {};
-        if(! option?.wait){
+        if (!option?.wait) {
             option.wait = () => Loading.load(true);
         }
-        if(! option?.done){
+        if (!option?.done) {
             option.done = () => Loading.load(false);
         }
         const merged = {
@@ -214,20 +214,23 @@ const tyrax = { // tyrux default config :: CodeTazeR
         });
     },
 
-    ctrql(option = {...opt, method: "POST", param: undefined, action: undefined, where: undefined, table: undefined, encodeImages: undefined, extra: undefined, accept: undefined, update: undefined, query: undefined, validation: undefined, validationType: "default"}){
+    ctrql(option = { ...opt, method: "POST", param: undefined, action: undefined, where: undefined, table: undefined, encodeImages: undefined, extra: undefined, accept: undefined, columns: undefined, update: undefined, query: undefined, validation: undefined, validationType: "default", unique: undefined }) {
         option.url = "ctr/ctrql";
         option.request = {
             action: option?.action ?? undefined,
-            param: option?.param ?? option?.where ?? option.request ?? undefined,
+            param: option?.param ?? option?.where ?? option.request ?? option.data ?? undefined,
             update: option?.update,
-            accept: option?.accept,
+            columns: option.columns ?? option?.accept,
             extra: option?.extra,
             table: option?.table,
             encodeImages: option?.encodeImages,
             query: option?.query ?? option.sql,
-            validation: option.validation,
-            validationType: option.validationType
-        }
+            validation: option?.validation,
+            validationType: option?.validationType,
+            unique: option?.unique
+        };
+        delete option.data;
+        option.method = "POST";
         tyrux(configure._mergeOptions(option, this));
     }
 };
