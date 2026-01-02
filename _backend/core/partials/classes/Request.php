@@ -323,4 +323,8 @@ class Request
     {
         return self::x_rate_details("all");
     }
+
+    public static function ql(string $type){
+        return self::post($type);
+    }
 }

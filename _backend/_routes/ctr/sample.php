@@ -1,4 +1,4 @@
-<?php //route: test/sample
+<?php //route: ctr/sample
 
 use Classes\Response;
 

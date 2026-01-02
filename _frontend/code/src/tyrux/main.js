@@ -212,6 +212,23 @@ const tyrax = { // tyrux default config :: CodeTazeR
                 error: err => reject(err)
             });
         });
+    },
+
+    ctrql(option = {...opt, method: "POST", param: undefined, action: undefined, where: undefined, table: undefined, encodeImages: undefined, extra: undefined, accept: undefined, update: undefined, query: undefined, validation: undefined, validationType: "default"}){
+        option.url = "ctr/ctrql";
+        option.request = {
+            action: option?.action ?? undefined,
+            param: option?.param ?? option?.where ?? option.request ?? undefined,
+            update: option?.update,
+            accept: option?.accept,
+            extra: option?.extra,
+            table: option?.table,
+            encodeImages: option?.encodeImages,
+            query: option?.query ?? option.sql,
+            validation: option.validation,
+            validationType: option.validationType
+        }
+        tyrux(configure._mergeOptions(option, this));
     }
 };
 

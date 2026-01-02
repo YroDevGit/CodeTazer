@@ -3,7 +3,7 @@ $v = "v9.7";
 $version = 9;
 $code = [
   "_frontend\pages\main.php",
-  "_backend/_routes/test/sample.php",
+  "_backend/_routes/ctr/sample.php",
   "_backend/application/routing/api.php",
   "_backend/application/routing/web.php",
   "_backend/core/command",

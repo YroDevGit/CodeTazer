@@ -443,7 +443,6 @@ if (! function_exists("array_is_multidimensional")) {
     }
 }
 
-
 if (! function_exists("php_file")) {
     function php_file($pagename)
     {
