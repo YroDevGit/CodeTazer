@@ -45,9 +45,8 @@ Request::x_rate_limit($limit_request_per_minute, 60, "ctrql_" . $action);
 /**
  * Access filtering
  */
-
  Ctrql::check_table($table, $action);
- 
+
 /**
  * Validation area...
  */

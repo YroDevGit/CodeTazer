@@ -216,7 +216,7 @@ const tyrax = { // tyrux default config :: CodeTazeR
 
     ctrql(option = { ...opt, method: "POST", param: undefined, action: undefined, where: undefined, table: undefined, encodeImages: undefined, extra: undefined, accept: undefined, columns: undefined, update: undefined, query: undefined, validation: undefined, validationType: "default", unique: undefined, function: undefined }) {
         option.url = "ctr/ctrql";
-        option.request = {
+        let req = {
             action: option?.action ?? undefined,
             param: option?.param ?? option?.where ?? option.request ?? option.data ?? undefined,
             update: option?.update,
@@ -230,11 +230,39 @@ const tyrax = { // tyrux default config :: CodeTazeR
             unique: option?.unique,
             function: option.function
         };
+
+        option.request = CtrObjectToFormData(req);
         delete option.data;
         option.method = "POST";
         tyrux(configure._mergeOptions(option, this));
     }
 };
+
+function CtrObjectToFormData(obj) {
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(obj)) {
+        if (value instanceof FormData) {
+            for (const [k, v] of value.entries()) {
+                formData.append(`${key}[${k}]`, v);
+            }
+        }
+
+        else if (Array.isArray(value)) {
+            value.forEach(v => formData.append(`${key}[]`, v));
+        }
+        else if (typeof value === "object" && value !== null) {
+            Object.entries(value).forEach(([k, v]) => {
+                formData.append(`${key}[${k}]`, v);
+            });
+        }
+
+        else {
+            formData.append(key, value);
+        }
+    }
+
+    return formData;
+}
 
 const tyrsync = { // For async/await tyrax :: CodeTazeR
     config: {},
