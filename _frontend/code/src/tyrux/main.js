@@ -216,9 +216,18 @@ const tyrax = { // tyrux default config :: CodeTazeR
 
     ctrql(option = { ...opt, method: "POST", param: undefined, action: undefined, where: undefined, table: undefined, encodeImages: undefined, extra: undefined, accept: undefined, columns: undefined, update: undefined, query: undefined, validation: undefined, validationType: "default", unique: undefined, function: undefined }) {
         option.url = "ctr/ctrql";
-        let req = {
+        let par = option?.param ?? option?.where ?? option.request ?? option.data ?? undefined;
+        let newpar = new Object();
+        if(par instanceof FormData){
+            par.forEach((value, key) => {
+                newpar[key] = value;
+            });
+        }else{
+            newpar = par;
+        }
+        option.request = {
             action: option?.action ?? null,
-            param: option?.param ?? option?.where ?? option.request ?? option.data ?? null,
+            param: newpar,
             update: option?.update ?? null,
             columns: option.columns ?? option?.accept ?? null,
             extra: option?.extra ?? null,
@@ -230,8 +239,6 @@ const tyrax = { // tyrux default config :: CodeTazeR
             unique: option?.unique ?? null,
             function: option.function ?? null
         };
-
-        option.request = CtrObjectToFormData(req);
         delete option.data;
         option.method = "POST";
         tyrux(configure._mergeOptions(option, this));
