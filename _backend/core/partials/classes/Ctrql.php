@@ -38,7 +38,13 @@ class Ctrql
             return false;
         }
         Ccookie::delete($ctrqlString);
+        self::refresh_table_filter();
         return true;
+    }
+
+    public static function disable()
+    {
+        self::remove();
     }
 
     public static function getAccess(): array
@@ -180,7 +186,7 @@ class Ctrql
             $action = strtoupper($action);
             $access = strtoupper(self::filterAction($action));
             if (! str_contains($role, $access)) {
-                Response::code(unauthorized_code)->message("ctrql: User is not able to $action data @ '$table' table")->send(unauthorized_code);
+                Response::code(unauthorized_code)->data($accept)->message("ctrql: User is not able to $action data @ '$table' table")->send(unauthorized_code);
             }
         }
     }

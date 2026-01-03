@@ -218,11 +218,11 @@ const tyrax = { // tyrux default config :: CodeTazeR
         option.url = "ctr/ctrql";
         let par = option?.param ?? option?.where ?? option.request ?? option.data ?? undefined;
         let newpar = new Object();
-        if(par instanceof FormData){
+        if (par instanceof FormData) {
             par.forEach((value, key) => {
                 newpar[key] = value;
             });
-        }else{
+        } else {
             newpar = par;
         }
         option.request = {
