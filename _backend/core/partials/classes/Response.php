@@ -272,7 +272,7 @@ class Response
         self::push($status);
     }
 
-    public static function dump($details = null){
+    public static function dump($details = null, $status = 200){
         $response = [
             "code" => getenv("error_code"),
             "post" => postdata(),

@@ -217,18 +217,18 @@ const tyrax = { // tyrux default config :: CodeTazeR
     ctrql(option = { ...opt, method: "POST", param: undefined, action: undefined, where: undefined, table: undefined, encodeImages: undefined, extra: undefined, accept: undefined, columns: undefined, update: undefined, query: undefined, validation: undefined, validationType: "default", unique: undefined, function: undefined }) {
         option.url = "ctr/ctrql";
         let req = {
-            action: option?.action ?? undefined,
-            param: option?.param ?? option?.where ?? option.request ?? option.data ?? undefined,
-            update: option?.update,
-            columns: option.columns ?? option?.accept,
-            extra: option?.extra,
-            table: option?.table,
-            encodeImages: option?.encodeImages,
-            query: option?.query ?? option.sql,
-            validation: option?.validation,
-            validationType: option?.validationType,
-            unique: option?.unique,
-            function: option.function
+            action: option?.action ?? null,
+            param: option?.param ?? option?.where ?? option.request ?? option.data ?? null,
+            update: option?.update ?? null,
+            columns: option.columns ?? option?.accept ?? null,
+            extra: option?.extra ?? null,
+            table: option?.table ?? null,
+            encodeImages: option?.encodeImages ?? null,
+            query: option?.query ?? option.sql ?? null,
+            validation: option?.validation ?? null,
+            validationType: option?.validationType ?? null,
+            unique: option?.unique ?? null,
+            function: option.function ?? null
         };
 
         option.request = CtrObjectToFormData(req);

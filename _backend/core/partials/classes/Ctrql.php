@@ -108,8 +108,8 @@ class Ctrql
 
     public static function refresh_table_filter()
     {
-        self::remove_accept_table();
-        self::remove_ignore_table();
+        self::remove_accept_table_filter();
+        self::remove_ignore_table_filter();
     }
 
     public static function ignore_table(array $tables, $minutes = 60)
