@@ -8,6 +8,7 @@ use Classes\File;
 use Classes\Request;
 use Classes\Response;
 use Classes\Validator;
+use Classes\Ctrql;
 
 /**
  * This is CodeTazeR CTRQL - for direct transaction
@@ -16,6 +17,10 @@ use Classes\Validator;
  * - CodeYro : Tyrone Limen Malocon.
  */
 
+
+/**
+ * Initialization area...
+ */
 $action = Request::ql("action");
 $param = Request::ql("param") ?? [];
 $table = Request::ql("table");
@@ -27,7 +32,25 @@ $query =  Request::ql("query");
 $validation = Request::ql("validation");
 $validationType = Request::ql("validationType") ?? "default";
 $unique = Request::ql("unique");
+$function = Request::ql("function");
 
+
+/**
+ * setup limit request per minute
+ * default is 10
+ */
+$limit_request_per_minute = 10;
+Request::x_rate_limit($limit_request_per_minute, 60, "ctrql_" . $action);
+
+/**
+ * Access filtering
+ */
+
+ Ctrql::check_table($table, $action);
+ 
+/**
+ * Validation area...
+ */
 if ($validation) {
     if (! $validationType) {
         Response::code(badrequest_code)->message("ctrql: validationType is required.!")->send(badrequest_code);
@@ -72,6 +95,7 @@ if (! $action) {
 }
 
 if ($action == "query") {
+    if (! Ctrql::checkAccess("Q")) Response::code(unauthorized_code)->message("ctrql: User is not possible to use query function.!")->send(unauthorized_code);
     $result = DB::query($query, $param);
     if ($encodeImages) {
         $result = File::encode_blob($result, $encodeImages);
@@ -81,6 +105,36 @@ if ($action == "query") {
     }
     $result = Collection::data($result)->get($accept)->exec();
     Response::code(success_code)->message("OK")->data($result)->var(["empty" => $result ? false : true])->send();
+}
+
+if ($action == "model") {
+    if (! Ctrql::checkAccess("M")) Response::code(unauthorized_code)->message("ctrql: User is not possible to use model function.!")->send(unauthorized_code);
+    if (! $function) Response::code(badrequest_code)->message("ctrql: function field is required.!")->send(badrequest_code);
+    $exp = explode("/", $function);
+    $function = $exp[0] ?? "";
+    $method = $exp[1] ?? "";
+    $function = ucfirst($function);
+    $file = "_backend/model/$function.php";
+    if (! file_exists($file)) Response::code(badrequest_code)->message("ctrql: model '$function' not found.!")->send(badrequest_code);
+    include_once $file;
+    $class = "Models\\$function";
+    if (! class_exists($class)) Response::code(badrequest_code)->message("ctrql: model class '$class' not found.!")->send(badrequest_code);
+    $mod = new $class();
+    try {
+        $value = null;
+        if ($param) {
+            if (! is_array($param)) Response::code(badrequest_code)->message("ctrql: param should be array list.!")->send(badrequest_code);
+            if (! array_is_list($param)) {
+                Response::code(badrequest_code)->message("ctrql: param should be array list: []")->send(badrequest_code);
+            }
+            $value = $mod->$method(...$param);
+        } else {
+            $value = $mod->$method();
+        }
+        Response::code(success_code)->message("OK")->var(["value" => $value, "model" => "$function/$method"])->send();
+    } catch (Throwable $e) {
+        Response::code(badrequest_code)->message("ctrql: model error '$function/$method' - " . $e->getMessage())->send(badrequest_code);
+    }
 }
 
 if (! $table) {
@@ -121,9 +175,11 @@ if ($unique) {
 }
 
 if ($action == "create" || $action == "insert") {
+    if (! Ctrql::checkAccess("C")) Response::code(unauthorized_code)->message("ctrql: User is not possible to use insert/create function.!")->send(unauthorized_code);
     $id = DB::insert($table, $param);
     Response::code(success_code)->message("OK")->var(["_id" => $id])->data($param)->send();
 } else if ($action == "read" || $action == "select" || $action == "find" || $action == "get" || $action == "findOne") {
+    if (! Ctrql::checkAccess("R")) Response::code(unauthorized_code)->message("ctrql: User is not possible to use read/select function.!")->send(unauthorized_code);
     $result = [];
     if ($action == "findOne") {
         $result = DB::findOne($table, $param, $extra);
@@ -139,12 +195,14 @@ if ($action == "create" || $action == "insert") {
     $result = Collection::data($result)->get($accept)->exec();
     Response::code(success_code)->message("OK")->data($result)->var(["empty" => $result ? false : true])->send();
 } else if ($action == "delete") {
+    if (! Ctrql::checkAccess("D")) Response::code(unauthorized_code)->message("ctrql: User is not possible to use delete function.!")->send(unauthorized_code);
     if (! $param) {
         Response::code(badrequest_code)->message("ctrql: param/where field is required.!")->send(badrequest_code);
     }
     $result = DB::delete($table, $param);
     Response::code(success_code)->message("OK")->var(["rows" => $result ?? 0])->send();
 } else if ($action == "update") {
+    if (! Ctrql::checkAccess("U")) Response::code(unauthorized_code)->message("ctrql: User is not possible to use update function.!")->send(unauthorized_code);
     if (! $update) {
         Response::code(badrequest_code)->message("ctrql: update field is required.!")->send(badrequest_code);
     }
@@ -155,6 +213,7 @@ if ($action == "create" || $action == "insert") {
     $result = DB::update($table, $update, $param);
     Response::code(success_code)->message("OK")->var(["rows" => $result ?? 0])->send();
 } else if ($action == "count") {
+    if (! Ctrql::checkAccess("R")) Response::code(unauthorized_code)->message("ctrql: User is not possible to use read/count function.!")->send(unauthorized_code);
     $result = DB::find($table, $param, $extra);
     if ($result) {
         Response::code(success_code)->message("OK")->count(sizeof($result))->send();

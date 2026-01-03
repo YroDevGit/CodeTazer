@@ -11,10 +11,14 @@ class Ccookie
     {
         $newHour = 3600 * $hour;
         if (is_array($value)) {
-            setcookie($key, json_encode(encrypt($value)), time() + $newHour, "/", true, true);
+            $val = encrypt(json_encode($value));
+            setcookie($key, $val, time() + $newHour, "/", "", isset($_SERVER['HTTPS']));
+            $_COOKIE[$key] = $val;
             return true;
         } else {
-            setcookie($key, encrypt($value), time() + $newHour, "/");
+            $val = encrypt($value);
+            setcookie($key, $val, time() + $newHour, "/");
+            $_COOKIE[$key] = $val;
             return true;
         }
         return false;
@@ -22,14 +26,14 @@ class Ccookie
 
     public static function delete(string $key): bool
     {
-        setcookie($key, "", time() - 3600, "/", true, true);
+        setcookie($key, "", time() - 3600, "/", "", isset($_SERVER['HTTPS']));
         unset($_COOKIE[$key]);
         return true;
     }
 
-    public static function exist(): bool
+    public static function exist(string $key): bool
     {
-        if (isset($_COOKIE['user'])) {
+        if (isset($_COOKIE[$key])) {
             return true;
         }
         return false;
