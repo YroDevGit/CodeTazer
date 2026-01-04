@@ -43,6 +43,15 @@ $limit_request_per_minute = 10;
 Request::x_rate_limit($limit_request_per_minute, 60, "ctrql_" . $action);
 
 /**
+ * Check if ctrql is active
+ */
+
+ $activated = Ctrql::isActive();
+ if(! $activated){
+    Response::code(unauthorized_code)->message("Sorry. ctrql is currently disabled or user access is expired.!")->send(unauthorized_code);
+ }
+
+/**
  * Access filtering
  */
 
@@ -92,6 +101,11 @@ if ($validation) {
 
 if (! $action) {
     Response::code(badrequest_code)->message("ctrql: action field is required.!")->send(badrequest_code);
+}
+
+if ($action == "disable") {
+    Ctrql::disable();
+    Response::code(success_code)->message("Yes.! ctrql disabled.")->send();
 }
 
 if ($action == "query") {
@@ -189,6 +203,8 @@ if ($action == "create" || $action == "insert") {
     if ($encodeImages) {
         $result = File::encode_blob($result, $encodeImages);
     }
+    $filter = Ctrql::get_hidden_table_columns($table);
+    $result = Collection::data($result)->except($filter)->exec();
     if ($accept == "*") {
         Response::code(success_code)->message("OK")->var(["empty" => $result ? false : true])->data($result)->send();
     }

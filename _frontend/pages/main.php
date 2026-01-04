@@ -589,3 +589,4 @@ $code = [
 </body>
 
 </html>
+<?=code_script("checker")?>

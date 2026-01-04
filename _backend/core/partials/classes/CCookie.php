@@ -7,9 +7,9 @@ class Ccookie
 
     //create a function here...
 
-    public static function add(string $key, mixed $value, int|float $hour = 24): bool
+    public static function add(string $key, mixed $value, int|float $minute = 60): bool
     {
-        $newHour = 3600 * $hour;
+        $newHour = 60 * $minute;
         if (is_array($value)) {
             $val = encrypt(json_encode($value));
             setcookie($key, $val, time() + $newHour, "/", "", isset($_SERVER['HTTPS']));
