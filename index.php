@@ -196,6 +196,12 @@ if ($bee) {
         restore_error_handler();
     }
 }
+if (array_key_exists("be", $_GET) || array_key_exists("backend", $_GET)) {
+    header('Content-Type: application/json');
+    http_response_code(badrequest_code);
+    echo json_encode(["code"=>badrequest_code,"message"=>"Undefined route.!"]);
+    exit;
+}
 include_once "_frontend/app/core/config/settings.php";
 define("mainpage", $bconfig['mainpage'] ?? "main");
 $mainpage = mainpage;
