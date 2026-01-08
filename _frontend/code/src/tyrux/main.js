@@ -214,7 +214,7 @@ const tyrax = { // tyrux default config :: CodeTazeR
         });
     },
 
-    ctrql(option = { ...opt, method: "POST", param: undefined, action: undefined, where: undefined, table: undefined, encodeImages: undefined, extra: undefined, accept: undefined, columns: undefined, update: undefined, query: undefined, validation: undefined, validationType: "default", unique: undefined, function: undefined }) {
+    ctrql(option = { ...opt, method: "POST", param: undefined, action: undefined, where: undefined, table: undefined, encodeImages: undefined, extra: undefined, accept: undefined, columns: undefined, update: undefined, query: undefined, validation: undefined, validationType: "default", unique: undefined, function: undefined, realtime: undefined}) {
         option.url = "ctr/ctrql";
         let par = option?.param ?? option?.where ?? option.request ?? option.data ?? undefined;
         let newpar = new Object();
@@ -237,7 +237,8 @@ const tyrax = { // tyrux default config :: CodeTazeR
             validation: option?.validation ?? null,
             validationType: option?.validationType ?? null,
             unique: option?.unique ?? null,
-            function: option.function ?? null
+            function: option.function ?? null,
+            realtime: option?.realtime
         };
         delete option.data;
         option.method = "POST";

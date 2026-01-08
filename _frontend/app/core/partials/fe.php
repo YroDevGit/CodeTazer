@@ -29,9 +29,23 @@ define("failed_code", getenv("failed_code"));
 
 define("now", date("Y-m-d H:i:s"));
 
+if(getenv("time_zone")){
+    date_default_timezone_set(getenv("time_zone"));
+}
+
 if (! function_exists("now")) {
-    function now($dateformat = "Y-m-d H:i:s")
+    function now(string|null $dateformat = "Y-m-d H:i:s", $timezone = null)
     {
+        $dateformat ??= "Y-m-d H:i:s";
+        if($timezone){
+            $from = date_default_timezone_get();
+            if($from == $timezone){
+                return date($dateformat);
+            }
+            $dt = new DateTime("now", new DateTimeZone($from));
+            $dt->setTimezone(new DateTimeZone($timezone));
+            return $dt->format($dateformat);
+        }
         return date($dateformat);
     }
 }

@@ -9,6 +9,7 @@ use Classes\Request;
 use Classes\Response;
 use Classes\Validator;
 use Classes\Ctrql;
+use Classes\TimeZone;
 
 /**
  * This is CodeTazeR CTRQL - for direct transaction
@@ -21,6 +22,7 @@ use Classes\Ctrql;
 /**
  * Initialization area...
  */
+Ctrql::activate("CRUD");
 $action = Request::ql("action");
 $param = Request::ql("param") ?? [];
 $table = Request::ql("table");
@@ -33,7 +35,15 @@ $validation = Request::ql("validation");
 $validationType = Request::ql("validationType") ?? "default";
 $unique = Request::ql("unique");
 $function = Request::ql("function");
+$realtime = Request::ql("realtime");
 
+if($realtime){
+    if(is_array($realtime)){
+        foreach($realtime as $f=>$v){
+            $param[$v] = now();
+        }
+    }
+}
 
 /**
  * setup limit request per minute
