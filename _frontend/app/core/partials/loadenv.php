@@ -8,7 +8,10 @@ if (file_exists(".env")) {
             if ($line && strpos($line, '=') !== false) {
                 list($key, $value) = explode('=', $line, 2);
 
-                $key    = trim($key);
+                $key = trim($key);
+                if (str_starts_with($key, "#")) {
+                    continue;
+                }
                 $value  = trim($value);
                 $cenv = getenv($key);
 
