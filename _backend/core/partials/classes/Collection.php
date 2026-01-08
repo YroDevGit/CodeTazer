@@ -447,6 +447,27 @@ class Collection
         return $this;
     }
 
+    public function encrypt(string|array $keys): self
+    {
+        if ($this->trulyEmpty($this->items)) {
+            return $this;
+        }
+        if (is_string($keys)) {
+            $keys = [$keys];
+        }
+
+        $this->items = array_map(function ($item) use ($keys) {
+            foreach ($keys as $key) {
+                if (isset($item[$key])) {
+                    $item[$key] = encrypt(strval($item[$key]));
+                }
+            }
+            return $item;
+        }, $this->items);
+
+        return $this;
+    }
+
     public function all(): array|null
     {
         if ($this->trulyEmpty($this->items)) return [];

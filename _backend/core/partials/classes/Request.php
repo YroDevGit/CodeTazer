@@ -26,6 +26,32 @@ class Request
         return $post;
     }
 
+    static function post_decrypt(string $key, $errormessage = null, bool $trim = true)
+    {
+        $post = self::post($key, $trim);
+        if (! $post) {
+            return null;
+        }
+        $post = decrypt($post);
+        if (! $post) {
+            Response::code(badrequest_code)->message($errormessage ?? "POST: '$key' value error.!")->send(badrequest_code);
+        }
+        return $post;
+    }
+
+    static function get_decrypt(string $key, $errormessage = null, bool $trim = true)
+    {
+        $get = self::get($key, $trim);
+        if (! $get) {
+            return null;
+        }
+        $get = decrypt($get);
+        if (! $get) {
+            Response::code(badrequest_code)->message($errormessage ?? "GET: '$key' value error.!")->send(badrequest_code);
+        }
+        return $get;
+    }
+
     static function array(string $key, string|null|int $subkey = null)
     {
         $post = post($key);
@@ -324,7 +350,8 @@ class Request
         return self::x_rate_details("all");
     }
 
-    public static function ql(string $type){
+    public static function ql(string $type)
+    {
         return self::post($type);
     }
 }
