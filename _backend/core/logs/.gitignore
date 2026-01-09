@@ -1,0 +1,5 @@
+be_errors/*
+my_logs/*
+query_logs/*
+sql_errors/*
+sql_logs/*

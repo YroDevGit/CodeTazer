@@ -52,6 +52,10 @@ class Request
         return $get;
     }
 
+    static function get_request_id(){
+        return ctr_get_current_request_id();
+    }
+
     static function array(string $key, string|null|int $subkey = null)
     {
         $post = post($key);

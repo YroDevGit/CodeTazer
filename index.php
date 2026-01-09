@@ -166,6 +166,7 @@ if ($bee) {
      * This is try catch block so system will early catch errors and return json
      */
     try {
+        $_SESSION['ctr_unique_request_id_x0015'] = ctr_generate_request_id();
         set_error_handler(function ($errno, $errstr, $errfile, $errline) {
             throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
         });

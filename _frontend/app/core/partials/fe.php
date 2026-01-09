@@ -305,6 +305,22 @@ if (! function_exists('codepath')) {
     }
 }
 
+if(! function_exists("ctr_generate_request_id")){
+    function ctr_generate_request_id(){
+        $date = date("ymdhis");
+        $arr = ["0", "1", "2", "3", "4", "5","6", "7", "8", "9"];
+        shuffle($arr);
+        $req = $arr[0].$arr[1].$arr[2].$arr[3].$arr[4].$arr[5].$arr[6].$arr[7].$date.$arr[8].$arr[9];
+        return $req;
+    }
+}
+
+if(! function_exists("ctr_get_current_request_id")){
+    function ctr_get_current_request_id(){
+        return $_SESSION["ctr_unique_request_id_x0015"] ?? null;
+    }
+}
+
 if (! function_exists("has_internet_connection")) {
     function has_internet_connection($url = "http://www.google.com")
     {
