@@ -344,6 +344,10 @@ class Request
         return self::x_rate_limit($limit, $seconds);
     }
 
+    public static function throttle(int $limit, int $seconds = 60, string $route = ""){
+        return self::x_rate_limit($limit, $seconds, $route);
+    }
+
     public static function x_rate_details(string|null $route = "")
     {
         return self::ctrratedetails($route);
