@@ -592,6 +592,81 @@ if ($route == "+library") {
     }
 }
 
+if($route == "test"){
+    if ($filename == "") {
+        echo "❌ Please provide a filename of the test script.\n";
+        exit(1);
+    }
+    $exp = explode("/", $filename);
+    $filename = $exp[0] ?? null;
+    $funcname = $exp[1] ?? null;
+    if(! $filename || ! $funcname){
+        echo "\n❌ Invalid test script command. e.g: test/ctr\n\n";
+        exit;
+    }
+    include "test/".$filename;
+    $cfile = ucfirst($filename);
+
+    try{
+        $class = new $cfile();
+        return $class->$funcname();
+    }catch(Throwable $e){
+        echo "\n❌ ". $e->getMessage() . "\n\n";
+    }
+    exit;
+}
+
+if ($route == "+test") {
+    if ($filename == "") {
+        echo "❌ Please provide a filename for the test script.\n";
+        exit(1);
+    }
+    $phpFile = $filename;
+
+    if (!is_dir("test/")) {
+        if (!mkdir("test/", 0777, true)) {
+            echo "Failed to create directories: $directory";
+            exit;
+        }
+    }
+    $bname = ucfirst($phpFile);
+
+    $phpContent = <<<EOT
+    <?php
+    use Classes\CtrTest as Test;
+    require_once 'vendor/autoload.php';
+
+    class Arg{
+        public function __construct() {
+            //
+        }
+
+        //create a function here...
+        function main(){
+            Test::write("Test1", function(){
+                //Write test here
+                
+            });
+        }
+
+    }
+    EOT;
+
+    $phpFile = "test/". $phpFile;
+
+    if (file_exists($phpFile)) {
+        echo "❌ File already exists. Please choose a different name.\n\n";
+        exit(1);
+    } else {
+        if (file_put_contents($phpFile, $phpContent) !== false) {
+            echo "✔️ Library file created successfully: $phpFile\n\n";
+            exit(0);
+        } else {
+            echo "❌ Failed to create Library file.\n\n";
+            exit(1);
+        }
+    }
+}
 
 if ($route == "+middleware") {
     if ($filename == "") {

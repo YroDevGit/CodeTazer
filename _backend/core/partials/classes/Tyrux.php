@@ -10,13 +10,14 @@ class Tyrux
 {
     private static $baseUrl = '';
     private static $lastError = null;
+    private static $statusCode;
 
     public static function setBaseUrl($url)
     {
         self::$baseUrl = rtrim($url, '/');
     }
 
-    private static function request($method, $options)
+    public static function request($method, $options)
     {
         $url = isset($options['url']) ? $options['url'] : '';
         $headers = isset($options['headers']) ? $options['headers'] : [];
@@ -40,6 +41,7 @@ class Tyrux
         curl_setopt_array($ch, $curlOptions);
 
         $response = curl_exec($ch);
+        self::$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
         curl_close($ch);
 
@@ -54,6 +56,10 @@ class Tyrux
     public static function lastError()
     {
         return self::$lastError;
+    }
+
+    public static function statusCode(){
+        return self::$statusCode;
     }
 
     public static function get($options)
