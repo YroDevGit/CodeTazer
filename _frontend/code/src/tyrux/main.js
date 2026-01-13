@@ -243,6 +243,16 @@ const tyrax = { // tyrux default config :: CodeTazeR
         delete option.data;
         option.method = "POST";
         tyrux(configure._mergeOptions(option, this));
+    },
+
+    ctrsync(options){
+        return new Promise((resolve, reject)=>{
+            this.ctrql({
+                ...options,
+                response: (send)=> resolve(send),
+                error: (error) => reject(error)
+            })
+        });
     }
 };
 
