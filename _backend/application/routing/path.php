@@ -3,11 +3,8 @@ use Classes\Routing;
 
 // Enable path inside loader.php
 
-$routes = [
+Routing::use_middleware("", [
+//add routes here
 
-];
 
-Routing::group_route($routes, function(){
-    //add function here...
-    
-});
+]);

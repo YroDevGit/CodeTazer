@@ -11,6 +11,6 @@ autoload_php([
 // Autoload file inside routing folder
 autoload_routing([
     "web",
-    //"api",
-    //"path",
+    "path",
+    "api",  
 ]);

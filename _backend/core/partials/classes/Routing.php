@@ -18,11 +18,24 @@ class Routing
         }
     }
 
+    public static function use_middleware(string|null $middleware, array|string $routes){
+        if(!is_string($middleware)){
+            throw new Exception("middleware should be a string");
+        }
+        if(! $middleware){
+            return false;
+        }
+        if(is_string($routes)){
+            self::in_route($routes, fn()=>use_middleware($middleware));
+        }
+        else if(is_array($routes)){
+            self::route_middleware($routes, $middleware);
+        }
+    }
+
     public static function route_middleware(array $routes, string $midleware, $included = true)
     {
-        self::route_filtering($routes, function () {
-            use_middleware($midleware);
-        }, $included);
+        self::route_filtering($routes, fn()=>use_middleware($midleware), $included);
     }
 
 
