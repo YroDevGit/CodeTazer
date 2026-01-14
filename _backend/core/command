@@ -674,7 +674,7 @@ if ($route == "+middleware") {
         exit(1);
     }
     $newname = $filename;
-    $phpFile = "_backend/middleware/" . $newname . ".php";
+    $phpFile = "_backend/application/middleware/" . $newname . ".php";
 
     $phpContent = <<<EOT
     <?php

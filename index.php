@@ -171,7 +171,7 @@ if ($bee) {
             throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
         });
         $folder_to_bee = '_backend/application';
-        include_once $folder_to_bee . "/loader.php";
+        include_once $folder_to_bee . "/autoload.php";
 
         include("_backend/_routes/$bee");
         exit;
