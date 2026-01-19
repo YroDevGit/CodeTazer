@@ -39,6 +39,21 @@ class Ccookie
         return false;
     }
 
+    public static function validate_cookie(string $key, string $needle, bool $strict = false): bool
+    {
+        if (! self::exist($key)) return false;
+
+        $data = self::get($key);
+        if (! $data) return false;
+        if (! $strict) {
+            if ($needle == $data) return true;
+            else return false;
+        } else {
+            if ($needle === $data) return true;
+            else return false;
+        }
+    }
+
     public static function get(string $key)
     {
         if (isset($_COOKIE[$key])) {
