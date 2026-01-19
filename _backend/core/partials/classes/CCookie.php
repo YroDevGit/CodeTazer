@@ -24,8 +24,48 @@ class Ccookie
         return false;
     }
 
+    public static function add_all(array|null $data, int|float $minute = 60)
+    {
+        if (! $data) {
+            return false;
+        }
+        foreach ($data as $k => $v) {
+            self::add($k, $v, $minute);
+        }
+        return true;
+    }
+
+    public static function delete_more(array|null|string $data)
+    {
+        if (! $data) {
+            return false;
+        }
+        if (is_array($data)) {
+            $all = $data;
+            foreach ($all as $k => $v) {
+                self::delete($v);
+                return true;
+            }
+            return true;
+        }
+        if (is_string($data)) {
+            if ($data == "*") {
+                $all = $_COOKIE;
+                foreach ($all as $k => $v) {
+                    self::delete($k);
+                    return true;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static function delete(string $key): bool
     {
+        if ($key == "*") {
+            return self::delete_more("*");
+        }
         setcookie($key, "", time() - 3600, "/", "", isset($_SERVER['HTTPS']));
         unset($_COOKIE[$key]);
         return true;
