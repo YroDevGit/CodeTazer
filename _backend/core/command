@@ -762,6 +762,30 @@ if ($route == "+routing") {
     }
 }
 
+if($route == "sync"){
+    include "_frontend/app/core/partials/loadenv.php";
+    $dbname = getenv("database");
+
+    if ($filename == "") {
+        echo "❌ Please provide a filename for the base.\n";
+        exit(1);
+    }
+    if (!$dbname) {
+        echo "❌ No database found @ .env\n";
+        exit;
+    }
+    if($filename == "tables"){
+        include "_backend/core/partials/be.php";
+        echo "Auto sync base table, please wait....";
+        echo "\n";
+        AddAllBaseTable($dbname);
+        echo "-------\n";
+        echo "✔️ Done\n\n";exit;
+    }else{
+        echo "\nInvalid sync command.!";exit;
+    }
+}
+
 if ($route == "+model") {
     if ($filename == "") {
         echo "❌ Please provide a filename for the model.\n";
