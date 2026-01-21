@@ -532,6 +532,21 @@ if (! function_exists("ctr_endpoint")) {
     }
 }
 
+if (! function_exists("use_middleware")) {
+    function use_middleware(string $middleware)
+    {
+        $model = substr($middleware, -4) == ".php" ? $middleware : $middleware . ".php";
+        $ep = ctr_endpoint();
+        $gfile = "";
+        if($ep == "FE") $gfile = "_frontend/app/auto/middleware/";
+        else $gfile = "_backend/application/middleware/";
+        if (! file_exists( $gfile . $model)) {
+            throw new Exception("Middleware '$middleware' not exist.!");
+        }
+        include $gfile . $model;
+    }
+}
+
 if (! function_exists("ctr_get_routes")) {
     function ctr_get_routes($parent, $phpfile = false)
     {
