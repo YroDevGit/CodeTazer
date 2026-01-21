@@ -1,5 +1,5 @@
 <?php
-$v = "v9.8";
+$v = "v9.9";
 $version = 9;
 $code = [
   "_frontend\pages\main.php",
