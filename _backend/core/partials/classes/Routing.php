@@ -25,11 +25,16 @@ class Routing
         if(! $middleware){
             return false;
         }
-        if(is_string($routes)){
-            self::in_route($routes, fn()=>use_middleware($middleware));
-        }
-        else if(is_array($routes)){
-            self::route_middleware($routes, $middleware);
+        $ep = ctr_endpoint();
+        if($ep == "FE"){
+            self::group_page($routes, fn()=>use_middleware($middleware));
+        }else{
+            if(is_string($routes)){
+                self::in_route($routes, fn()=>use_middleware($middleware));
+            }
+            else if(is_array($routes)){
+                self::route_middleware($routes, $middleware);
+            }
         }
     }
 
