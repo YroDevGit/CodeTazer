@@ -27,10 +27,9 @@ foreach($json as $k=>$v){
                 }
             }
             continue;
-        }
-
-        Migration::table($table, $columns, $is_ts, $is_ac);
+        }   
     }
+    Migration::table($table, $columns, $is_ts, $is_ac);
 }
 
 echo "\n";
