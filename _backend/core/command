@@ -368,6 +368,38 @@ if ($route == "update") {
     }
 }
 
+if ($route == "jsonimport" || $route == "json_import") {
+    include "_frontend/app/core/partials/loadenv.php";
+    $dbname = getenv("database");
+    if (! $dbname) {
+        echo "❌ No Database found @ .env\n\n";
+        exit;
+    }
+
+    if ($filename == "") {
+        echo "❌ Please input json filename for migration.\n\n";
+        exit(1);
+    }
+
+    if (! file_exists("_backend/core/partials/json.php")) {
+        echo "❌ Invalid migration name\n";
+        exit;
+    }
+
+    include "_backend/core/partials/be.php";
+    include "_backend/core/partials/classes/Migration.php";
+
+    include "_backend/core/partials/json.php";
+
+    echo "Auto sync base table, please wait....";
+    echo "\n";
+    AddAllBaseTable($dbname);
+    echo "-------\n";
+    echo "✔️ Done\n";
+
+    exit;
+}
+
 if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import" || $route == "dbtables") {
     include "_frontend/app/core/partials/loadenv.php";
     $dbname = getenv("database");
@@ -377,17 +409,16 @@ if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import" || $r
     }
 
     if ($filename == "") {
-        echo "❌ Please filename for migration.\n\n";
+        echo "❌ Please input filename for migration.\n\n";
         exit(1);
     }
 
     if ($route == "dbtables") {
         if ($extra == "--auto" || $extra == "--reflect" || $extra == "--sync") {
-            echo "\n\n";
             echo "Auto sync base table, please wait....";
-            echo "\n\n";
+            echo "\n";
             AddAllBaseTable($dbname);
-            echo "\n-------\n\n";
+            echo "-------\n";
             echo "✔️ Done\n";
         } else {
             echo "❌ Invalid dbtables command (You mean: php ctr dbtables --reflect ?).\n\n";
@@ -406,11 +437,10 @@ if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import" || $r
     include "_backend/core/database/$migFile.php";
     if ($extra) {
         if ($extra == "--auto" || $extra == "--reflect" || $extra == "--sync") {
-            echo "\n\n";
             echo "Auto sync base table, please wait....";
-            echo "\n\n";
+            echo "\n";
             AddAllBaseTable($dbname);
-            echo "\n-------\n\n";
+            echo "-------\n";
             echo "✔️ Done\n";
         } else {
             echo "\n\n";
@@ -592,7 +622,7 @@ if ($route == "+library") {
     }
 }
 
-if($route == "test"){
+if ($route == "test") {
     if ($filename == "") {
         echo "❌ Please provide a filename of the test script.\n";
         exit(1);
@@ -600,18 +630,18 @@ if($route == "test"){
     $exp = explode("/", $filename);
     $filename = $exp[0] ?? null;
     $funcname = $exp[1] ?? null;
-    if(! $filename || ! $funcname){
+    if (! $filename || ! $funcname) {
         echo "\n❌ Invalid test script command. e.g: test/ctr\n\n";
         exit;
     }
-    include "test/".$filename;
+    include "test/" . $filename;
     $cfile = ucfirst($filename);
 
-    try{
+    try {
         $class = new $cfile();
         return $class->$funcname();
-    }catch(Throwable $e){
-        echo "\n❌ ". $e->getMessage() . "\n\n";
+    } catch (Throwable $e) {
+        echo "\n❌ " . $e->getMessage() . "\n\n";
     }
     exit;
 }
@@ -652,7 +682,7 @@ if ($route == "+test") {
     }
     EOT;
 
-    $phpFile = "test/". $phpFile;
+    $phpFile = "test/" . $phpFile;
 
     if (file_exists($phpFile)) {
         echo "❌ File already exists. Please choose a different name.\n\n";
@@ -762,7 +792,7 @@ if ($route == "+routing") {
     }
 }
 
-if($route == "sync"){
+if ($route == "sync") {
     include "_frontend/app/core/partials/loadenv.php";
     $dbname = getenv("database");
 
@@ -774,15 +804,17 @@ if($route == "sync"){
         echo "❌ No database found @ .env\n";
         exit;
     }
-    if($filename == "tables"){
+    if ($filename == "tables") {
         include "_backend/core/partials/be.php";
         echo "Auto sync base table, please wait....";
         echo "\n";
         AddAllBaseTable($dbname);
         echo "-------\n";
-        echo "✔️ Done\n\n";exit;
-    }else{
-        echo "\nInvalid sync command.!";exit;
+        echo "✔️ Done\n";
+        exit;
+    } else {
+        echo "\nInvalid sync command.!";
+        exit;
     }
 }
 
