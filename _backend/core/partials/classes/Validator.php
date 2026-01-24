@@ -19,6 +19,8 @@ class Validator
     private array $rules = [];
     private static array $collect = [];
 
+    private static $msg = "";
+
     public function __construct(string $field)
     {
         $this->field = $field;
@@ -149,6 +151,14 @@ class Validator
     public function in_table(string $tablecolumn): self
     {
         $this->rules[] = "in_table:$tablecolumn";
+        return $this;
+    }
+
+    public function unique(string $tablecolumn, string $message = null): self
+    {
+        $this->rules[] = "unique:$tablecolumn";
+        if($message) self::$msg = $message;
+        else self::$msg = "Already exist";
         return $this;
     }
 
@@ -348,6 +358,20 @@ class Validator
                 if (! $result) {
                     self::addError($postname, "$label has invalid value.");
                     self::addErrs($postname, "Invalid value.");
+                }
+            }
+
+            if ($ruleName === "unique") {
+                $exp = explode(":", $ruleParam);
+                $tblname = $exp[0] ?? null;
+                $tblcolumn = $exp[1] ?? null;
+                if (! $tblname || !$tblcolumn) {
+                    throw new Exception("Invalid in_table format, follow table:column format");
+                }
+                $result = \Classes\DB::findOne($tblname, [$tblcolumn => $value]);
+                if ($result) {
+                    self::addError($postname, $label." ".self::$msg);
+                    self::addErrs($postname, self::$msg);
                 }
             }
 
