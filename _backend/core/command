@@ -368,7 +368,7 @@ if ($route == "update") {
     }
 }
 
-if ($route == "jsonimport" || $route == "json_import") {
+if ($route == "jsonimport" || $route == "json_import" || $route == "json:import") {
     include "_frontend/app/core/partials/loadenv.php";
     $dbname = getenv("database");
     if (! $dbname) {
@@ -400,7 +400,43 @@ if ($route == "jsonimport" || $route == "json_import") {
     exit;
 }
 
-if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import" || $route == "dbtables") {
+if ($route == "php:migrate" || $route == "php:import" || $route == "php:execute") {
+    include "_frontend/app/core/partials/loadenv.php";
+    $dbname = getenv("database");
+    if (! $dbname) {
+        echo "❌ No Database found @ .env\n\n";
+        exit;
+    }
+
+    if ($filename == "") {
+        echo "❌ Please input json filename for migration.\n\n";
+        exit(1);
+    }
+
+    if (! file_exists("_backend/core/partials/json.php")) {
+        echo "❌ Invalid migration name\n";
+        exit;
+    }
+
+    include "_backend/core/partials/be.php";
+    include "_backend/core/partials/classes/Migration.php";
+
+    $jsonfile = $filename;
+
+    $jsonfile = str_ends_with($jsonfile, ".php") ? $jsonfile : $jsonfile . ".php";
+
+    include $jsonfile;
+
+    echo "Auto sync base table, please wait....";
+    echo "\n";
+    AddAllBaseTable($dbname);
+    echo "-------\n";
+    echo "✔️ Done\n";
+
+    exit;
+}
+
+if ($route == "dbmigrate" || $route == "db:migrate" || $route == "dbimport" || $route == "db_import" || $route == "dbtables" || $route == "db:tables" || $route == "db:import") {
     include "_frontend/app/core/partials/loadenv.php";
     $dbname = getenv("database");
     if (! $dbname) {
@@ -413,7 +449,7 @@ if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import" || $r
         exit(1);
     }
 
-    if ($route == "dbtables") {
+    if ($route == "dbtables" || $route == "db:tables") {
         if ($extra == "--auto" || $extra == "--reflect" || $extra == "--sync") {
             echo "Auto sync base table, please wait....";
             echo "\n";
@@ -452,7 +488,7 @@ if ($route == "dbmigrate" || $route == "dbimport" || $route == "db_import" || $r
     exit;
 }
 
-if ($route == "dbload") {
+if ($route == "dbload" || $route == "db:load") {
     include "_frontend/app/core/partials/loadenv.php";
     $dbname = getenv("database");
     if ($dbname == null || $dbname == "") {
@@ -473,32 +509,7 @@ if ($route == "dbload") {
     }
 }
 
-if ($route == "+dbtable") {
-    if ($filename == "") {
-        echo "❌ Please provide a table name.\n";
-        exit(1);
-    }
-    include "_frontend/app/core/partials/loadenv.php";
-    $dbname = getenv("database");
-    if ($dbname == null || $dbname == "") {
-        echo "❌ database not found @ .env file\n";
-        exit;
-    }
-    include "_backend/core/partials/be.php";
-    try {
-        $pdo = pdo($dbname);
-        $stmnt = $pdo->prepare("Create table `$filename` (id int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ");
-        $stmnt->execute();
-        $row = $stmnt->rowCount();
-        echo "✔️ Table $filename created\n\n";
-        exit;
-    } catch (PDOException $e) {
-        echo "❌ " . $e->getMessage();
-        exit;
-    }
-}
-
-if ($route == "+base" || $route == "+base_table" || $route == "+basetable") {
+if ($route == "+base" || $route == "+base_table" || $route == "+basetable" || $route == "db:+table") {
     include "_frontend/app/core/partials/loadenv.php";
     $dbname = getenv("database");
 
@@ -1015,7 +1026,7 @@ if ($route == "+model") {
         echo "❌ Invalid clear command";
         exit;
     }
-} else if ($route == "keygen") {
+} else if ($route == "keygen" || $route == "key:generate") {
     if (!$filename) {
         echo "❌ Parameter lenght is missing\n\n";
         exit;
