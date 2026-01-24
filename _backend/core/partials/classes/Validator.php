@@ -146,6 +146,12 @@ class Validator
         return $this;
     }
 
+    public function in_table(string $tablecolumn): self
+    {
+        $this->rules[] = "in_table:$tablecolumn";
+        return $this;
+    }
+
     public function startsWith(string $val): self
     {
         $this->rules[] = "starts_with:$val";
@@ -253,9 +259,9 @@ class Validator
     public static function check($postname, $label, $rules, $allpost = null)
     {
         $postdata = [];
-        if($allpost){
+        if ($allpost) {
             $postdata = $allpost;
-        }else{
+        } else {
             $postdata = postdata();
         }
         if (!isset($postdata[$postname])) {
@@ -328,6 +334,20 @@ class Validator
                 if (strlen((string)$value) < (int)$ruleParam) {
                     self::addError($postname, "$label must be at least $ruleParam characters.");
                     self::addErrs($postname, "must be at least $ruleParam characters.");
+                }
+            }
+
+            if ($ruleName === "in_table") {
+                $exp = explode(":", $ruleParam);
+                $tblname = $exp[0] ?? null;
+                $tblcolumn = $exp[1] ?? null;
+                if (! $tblname || !$tblcolumn) {
+                    throw new Exception("Invalid in_table format, follow table:column format");
+                }
+                $result = \Classes\DB::findOne($tblname, [$tblcolumn => $value]);
+                if (! $result) {
+                    self::addError($postname, "$label has invalid value.");
+                    self::addErrs($postname, "Invalid value.");
                 }
             }
 
