@@ -182,6 +182,42 @@ class CtrClass {
         }
     }
 
+    scroll_to_element(selector, offset = 0) {
+        let elements = [];
+
+        if (typeof selector === "string") {
+            elements = Array.from(document.querySelectorAll(selector));
+        } else if (selector instanceof HTMLElement) {
+            elements = [selector];
+        } else if (Array.isArray(selector)) {
+            elements = selector.filter(el => el instanceof HTMLElement);
+        }
+
+        let el = document.querySelector(selector);
+        if (!el) return;
+
+        const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+
+        window.scrollTo({
+            top: y,
+            behavior: "smooth"
+        });
+    }
+
+    scroll_to_top(top = 0, behavior = "smooth"){
+        window.scrollTo({
+            top: top,
+            behavior: behavior
+        });
+    }
+
+    scroll_to_bottom(reduce = 0, behavior = "smooth"){
+        window.scrollTo({
+            top: document.body.scrollHeight - reduce,
+            behavior: behavior
+        });
+    }
+
     submit(selector, callable, clean = true) {
         let elements = [];
 
