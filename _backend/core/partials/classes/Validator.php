@@ -294,8 +294,12 @@ class Validator
         $value = $postdata[$postname] ?? "";
         $org = $postdata[$postname] ?? null;
 
-        if(in_array("decrypt", $rulesArray)){
+        if(in_array("decrypt", $rulesArray) && $org){
             $org = decrypt($org);
+            if(! $org){
+                throw new Exception("Decryption Error.!");
+            }
+            $value = $org;
         }
 
         if (in_array("trim", $rulesArray)) {
