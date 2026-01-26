@@ -216,6 +216,12 @@ class Validator
         return $this;
     }
 
+    public function decrypt(): self
+    {
+        $this->rules[] = "decrypt";
+        return $this;
+    }
+
     public function validate(): mixed
     {
         $rulesString = implode('|', $this->rules);
@@ -287,6 +293,10 @@ class Validator
         $rulesArray = array_reverse($rulesArray);
         $value = $postdata[$postname] ?? "";
         $org = $postdata[$postname] ?? null;
+
+        if(in_array("decrypt", $rulesArray)){
+            $org = decrypt($org);
+        }
 
         if (in_array("trim", $rulesArray)) {
             $value = trim($org ?? "");
