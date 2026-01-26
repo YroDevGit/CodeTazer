@@ -34,27 +34,49 @@ class CtrTableClass {
         return new CtrTableClass(selector);
     }
 
+    paginate(totalPages = null, callback = () => {}, autotrigger = true) {
+        console.warn("CtrTable.paginate() is only available in .plain() mode");
+    }    
+
     static plain(selector, addons = undefined, triggerSearch = true) {
         const table = new CtrTableClass(selector);
         table._destroyControls();
-
+    
         if (!document.getElementById("ctrplain-style")) {
             const style = document.createElement("style");
             style.id = "ctrplain-style";
             style.textContent = `
-            .ctrplain-top, .ctrplain-bottom {
+            .ctrplain-top {
                 display: flex;
-                justify-content: flex-end;
+                justify-content: space-between;
                 align-items: center;
                 padding: 8px 0px;
                 flex-wrap: wrap;
                 gap: 10px;
             }
+
+            .ctrplain-bottom {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                padding: 8px 0px;
+                gap: 10px;
+            }            
+    
+            .ctrplain-left,
+            .ctrplain-right {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+    
             .ctrplain-search {
                 display: flex;
                 align-items: center;
                 gap: 6px;
             }
+    
             .ctrplain-search-input {
                 padding: 6px 10px;
                 border: 1px solid #ccc;
@@ -63,6 +85,7 @@ class CtrTableClass {
                 font-size: 14px;
                 outline: none;
             }
+    
             .ctrplain-search-btn {
                 padding: 6px 12px;
                 background: #0d6efd;
@@ -73,9 +96,11 @@ class CtrTableClass {
                 font-size: 14px;
                 transition: 0.2s;
             }
+    
             .ctrplain-search-btn:hover {
                 background: #0b5ed7;
             }
+    
             .ctrplain-paginate select {
                 padding: 6px 8px;
                 border: 1px solid #ced4da;
@@ -87,93 +112,119 @@ class CtrTableClass {
             `;
             document.head.appendChild(style);
         }
-
+    
         const top = document.createElement("div");
         top.className = "ctrplain-top";
+    
+        const left = document.createElement("div");
+        left.className = "ctrplain-left";
+    
+        const right = document.createElement("div");
+        right.className = "ctrplain-right";
+    
+        top.appendChild(left);
+        top.appendChild(right);
+    
         const bottom = document.createElement("div");
         bottom.className = "ctrplain-bottom";
-
+    
         table.container.parentNode.insertBefore(top, table.container);
         table.container.after(bottom);
-
+    
         let hasSearch = undefined;
+        let hasExport = undefined;
+    
         if (addons) {
-            if (typeof addons == "function") {
-                hasSearch = addons ?? undefined;
+            if (typeof addons === "function") {
+                hasSearch = addons;
             } else {
                 hasSearch = addons.search ?? undefined;
+                hasExport = addons.export ?? undefined;
             }
         }
-
+      
+        if (Array.isArray(hasExport)) {
+            hasExport.forEach(type => {
+                const btn = document.createElement("button");
+                btn.textContent = type.toUpperCase();
+                btn.className = "ctrplain-search-btn";
+                btn.addEventListener("click", () => table._export(type));
+                left.appendChild(btn);
+            });
+        }
+    
         if (hasSearch) {
             const searchDiv = document.createElement("div");
             searchDiv.className = "ctrplain-search";
-
+    
             const input = document.createElement("input");
             input.type = "search";
             input.placeholder = "Search...";
             input.className = "ctrplain-search-input";
-
+    
             const btn = document.createElement("button");
             btn.textContent = "Search";
             btn.className = "ctrplain-search-btn";
-
+    
             const handleSearch = () => {
                 const value = input.value.trim();
                 hasSearch(value, table);
             };
-
-            input.addEventListener('input', (e) => {
-                setTimeout(() => {
-                    if (input.value === '') {
-                        handleSearch();
-                    }
-                }, 0);
+    
+            input.addEventListener("input", () => {
+                if (input.value === "") handleSearch();
             });
-
+    
             btn.addEventListener("click", handleSearch);
-            input.addEventListener("keypress", (e) => {
+            input.addEventListener("keypress", e => {
                 if (e.key === "Enter") handleSearch();
             });
-
-            if (triggerSearch) {
-                hasSearch("", table);
-            }
-
+    
+            if (triggerSearch) handleSearch();
+    
             searchDiv.appendChild(input);
             searchDiv.appendChild(btn);
-            top.appendChild(searchDiv);
+            right.appendChild(searchDiv);
         }
+    
+        /* -------- PAGINATION -------- */
+    
         const pagDiv = document.createElement("div");
         pagDiv.className = "ctrplain-paginate";
         bottom.appendChild(pagDiv);
-
-        table.paginate = (totalPages, callback, autotrigger = true) => {
+    
+        table.paginate = (totalPages = null, callback = null, autotrigger = true) => {
             pagDiv.innerHTML = "";
-            totalPages = totalPages || 1;
+    
+            let defPages = table.getAttr("ctr-pages") || 1;
+            totalPages = totalPages || defPages || 1;
+    
             const select = document.createElement("select");
+    
             for (let i = 1; i <= totalPages; i++) {
                 const opt = document.createElement("option");
                 opt.value = i;
                 opt.textContent = `Page ${i}`;
                 select.appendChild(opt);
             }
-
-            if (autotrigger) {
-                const page = 1;
-                callback.call(table, page, table);
+    
+            if (autotrigger && typeof callback === "function") {
+                callback.call(table, 1, table);
             }
-
-            select.addEventListener("change", (e) => {
+    
+            select.addEventListener("change", e => {
                 const page = parseInt(e.target.value);
-                callback.call(table, page, table);
+                if (typeof callback === "function") {
+                    callback.call(table, page, table);
+                }
             });
-
+    
             pagDiv.appendChild(select);
         };
-
+    
         return table;
     }
+    
 
     _destroyControls() {
         const top = this.container.previousElementSibling;
@@ -182,6 +233,10 @@ class CtrTableClass {
         if (bottom && bottom.classList.contains("ctrtable-bottom")) bottom.remove();
         this.perPage = this.data.length || 999999;
         this._render();
+    }
+
+    getAttr(attr) {
+        return this.table.getAttribute(attr);
     }
 
     _mapHeaders() {
