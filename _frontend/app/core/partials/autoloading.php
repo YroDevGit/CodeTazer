@@ -158,6 +158,24 @@ if (!function_exists("import_script")) {
     }
 }
 
+if (!function_exists("js")) {
+    function js(string|bool ...$filenames)
+    {
+        if(! $filenames){
+            $current = current_page();
+            $filenames = [$current];
+        }
+        foreach ($filenames as $flx) {
+            if(is_bool($flx) && $flx == true){
+                unset($flx);
+                $flx = current_page();
+            }
+            $fl = str_ends_with($flx, '.js') ? $flx : $flx . '.js';
+            echo '<script type="module" src="' . htmlspecialchars('_frontend/js/' . $fl, ENT_QUOTES) . '"></script>' . PHP_EOL;
+        }
+    }
+}
+
 if(! function_exists("script")){
     function script(string|bool ...$filenames){
         import_script(...$filenames);
