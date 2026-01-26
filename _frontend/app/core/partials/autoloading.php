@@ -158,6 +158,12 @@ if (!function_exists("import_script")) {
     }
 }
 
+if(! function_exists("script")){
+    function script(string|bool ...$filenames){
+        import_script(...$filenames);
+    }
+}
+
 /**
  * Generic import js script file
  * this import file from :_frontend/code/script
