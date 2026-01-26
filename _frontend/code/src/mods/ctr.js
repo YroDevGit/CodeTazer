@@ -218,6 +218,13 @@ class CtrClass {
         });
     }
 
+    reverse_object(object){
+        let reversed = Object.fromEntries(
+            Object.entries(object).reverse()
+        );
+        return reversed;
+    }
+
     submit(selector, callable, clean = true) {
         let elements = [];
 
