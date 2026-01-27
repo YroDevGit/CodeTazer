@@ -148,6 +148,12 @@ class BaseTable
         return sizeof($find);
     }
 
+    public static function count_pages(array|null $where = null, array|int|null $extra = null, $size = 10){
+        $count = self::count($where, $extra);
+        $pages = ceil($count / $size);
+        return $pages;
+    }
+
     /**
      * Initialize current table to fetch only
      * if: true / 1 -> display all active = 1

@@ -381,6 +381,23 @@ class DB
         return self::$rowcount > 0 ? $rows : [];
     }
 
+    public static function count(string $table, array|null $where = null, array|int|null $extra = null): int|null
+    {
+        $find = [];
+        if (is_null($where)) {
+            $find = self::getAll($table);
+        } else {
+            $find = self::find($table, $where, $extra);
+        }
+        return sizeof($find);
+    }
+
+    public static function count_pages(string $table, array|null $where = null, array|int|null $extra = null, $size = 10){
+        $count = self::count($table, $where, $extra);
+        $pages = ceil($count / $size);
+        return $pages;
+    }
+
     public static function getLastQuery($withBindings = true)
     {
         if (!self::$lastQuery) return null;
