@@ -361,7 +361,7 @@ class Validator
                 }
             }
 
-            if ($ruleName === "in_table") {
+            if ($ruleName === "in_table" && $value) {
                 $exp = explode(":", $ruleParam);
                 $tblname = $exp[0] ?? null;
                 $tblcolumn = $exp[1] ?? null;
@@ -375,7 +375,7 @@ class Validator
                 }
             }
 
-            if ($ruleName === "unique") {
+            if ($ruleName === "unique" && $value) {
                 $exp = explode(":", $ruleParam);
                 $tblname = $exp[0] ?? null;
                 $tblcolumn = $exp[1] ?? null;
